@@ -1,0 +1,45 @@
+# Ignore Python bytecode files
+__pycache__/
+
+# Ignore Django migrations
+**/migrations/
+
+# Ignore database files
+db.sqlite3
+
+# Ignore environment files
+.env
+
+# Ignore common IDE files
+.idea/
+.vscode/
+
+# Ignore OS-specific files
+.DS_Store
+
+# Ignore virtual environment folders
+venv/
+env/
+aseenv/
+
+# Ignore log files
+*.log
+
+# Ignore compiled Python files
+*.pyc
+
+# Ignore coverage files
+.coverage
+.coverage.*
+
+# Ignore Docker-related files
+docker-compose.override.yml
+
+# Ignore dependency lock files
+Pipfile.lock
+poetry.lock
+
+# Ignore Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
