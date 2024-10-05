@@ -9,7 +9,7 @@ The minimum value is set to 4 and the maximum value is 20,
 which is a reasonable range to avoid performance issues.
 '''
 
-class inputNForm(forms.Form):
+class InputNForm(forms.Form):
     n = forms.IntegerField(min_value=4, max_value=20, label='')
 
 # View to handle the home page and render the form
@@ -20,7 +20,7 @@ def home(request):
     '''
     if request.method == 'GET':
         return render(request, 'nqueens/home.html', {
-            "form": inputNForm()
+            "form": InputNForm()
         })
 
 # View to handle solving the N-Queens problem based on user input
@@ -35,12 +35,12 @@ def solve(request):
     invalid inputs that might crash the system. 
     '''
     if request.method == 'POST':
-        form = inputNForm(request.POST)
+        form = InputNForm(request.POST)
         # If the form is valid, proceed to solve the N-Queens problem
         if form.is_valid():
             n = form.cleaned_data["n"] # Get the validated input
             # Call the solver to get the solution for the N-Queens problem
-            solution = solver.solve_nqueens(n)
+            solution = solver.solve_n_queens(n)
             # Render the 'solution.html' template, passing the solution and N value
             return render(request, 'nqueens/solution.html', {
                 "solution" : solution, "n" : n
