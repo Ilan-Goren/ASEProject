@@ -1,95 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N-Queens Solver</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-        }
+{% extends "nqueens/layout.html"%}
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-        }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+{% block title %}
+    Solution 
+{% endblock %}
 
-        .board {
-            display: grid;
-            grid-template-columns: repeat({{ n }}, 50px);
-            gap: 5px;
-            justify-content: center;
-            margin-top: 20px;
-        }
+{% block main %}
+    <h3 class="mb-3">Here is a solution for the {{ n }}x{{ n }} board:</h3>
 
-        .square {
-            width: 50px;
-            height: 50px;
-            background-color: #f9f9f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ddd;
-        }
-
-        .square:nth-child(even) {
-            background-color: #ddd;
-        }
-
-        .queen {
-            font-size: 24px;
-            color: #0004fd;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #777;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h1>N-Queens Solver</h1>
-
-        <p>Here is a solution for the {{ n }}x{{ n }} board:</p>
-
-        <div class="board">
-            {% for row in solution %}
-                {% for col in row %}
-                    <div class="square">
-                        {% if col == 1 %}
-                            <span class="queen">♛</span>
-                        {% else %}
-                            &nbsp;
-                        {% endif %}
-                    </div>
-                {% endfor %}
+    <table class="chessboard">
+        {% for row in solution %}
+        <tr>
+            {% for col in row %}
+                <td>
+                    {% if col == 1 %}
+                        <span class="queen">♛</span>
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
             {% endfor %}
-        </div>
+        </tr>
+        {% endfor %}
+    </table>
 
-        <footer>
-            <div>
-                Solved for {{ n }} queens.
-            </div>
-
-            <div>
-                <a href="{% url 'home' %}"> Go Back to Home Page</a>
-            </div>
-        </footer>
-    </div>
-
-</body>
-</html>
+{% endblock %}
