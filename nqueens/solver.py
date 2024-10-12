@@ -1,11 +1,11 @@
-def solve_n_queens(N):
+def solve_n_queens(n):
     #use a 2D array of size NxN to represent the board
-    board = [[0 for _ in range(N)] for _ in range(N)]
+    b = [[0 for _ in range(n)] for _ in range(n)]
 
     """
-        Give a 2D array representing a chess board and a set of coordinates,
-        checks if a the tile on those coordinates on the board is a safe space 
-        to place a queens
+        Given a 2D array (board) representing a chess board and a set of coordinates,
+        (col, row), checks if a the tile on those coordinates on the board is a 
+        safe space to place a queens
     """
     def is_safe(board, col, row):
         """
@@ -17,7 +17,7 @@ def solve_n_queens(N):
         for i in range(row):
             if board[i][col] == 1:
                 return False
-        #Check all spaces vertically adjacent to the space for queens, **is this needed?
+        #Check all spaces vertically adjacent to the space for queens
         for i in range(col):
             if board[row][i] == 1:
                 return False
@@ -26,7 +26,7 @@ def solve_n_queens(N):
             if board[i][j] == 1:
                 return False
         #Check all spaces on the lowe left diagonal
-        for i, j in zip(range(row, -1, -1), range(col, N)):
+        for i, j in zip(range(row, -1, -1), range(col, n)):
             if board[i][j] == 1:
                 return False
         return True
@@ -39,10 +39,10 @@ def solve_n_queens(N):
     """
     def solve(board, row=0):
         # if we have reached the end of the board then we have found a solution
-        if row >= N:
+        if row >= n:
             return True
         # else attempt to find a safe space for each column in the row
-        for col in range(N):
+        for col in range(n):
             if is_safe(board, col, row):
                 # update the col,row on the board with a 1 to represent a placed queen
                 board[row][col] = 1
@@ -55,8 +55,8 @@ def solve_n_queens(N):
         return False
 
     # use the helper functions to solve for the given board
-    if solve(board, 0):
-        return board
+    if solve(b, 0):
+        return b
     # return None if there is no solution
     else:
         return None
