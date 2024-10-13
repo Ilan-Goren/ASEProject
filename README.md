@@ -19,7 +19,7 @@ This project is a Django-based web application that provides a solution the n-qu
    ```
 2. Navigate to the project directory:
    ```bash
-   cd my-project
+   cd ASEProject
    ```
 3. Set up a virtual environment:
    ```bash
