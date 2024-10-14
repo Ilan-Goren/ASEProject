@@ -7,6 +7,7 @@
 {% block main %}
 
 <h1>N-Queens Solver</h1>
+<h4 class = "underline"> Enter number of Queens (N) </h4>
 <form action="{% url 'solve' %}" method="post" class="mb-3">
     {% csrf_token %}
 

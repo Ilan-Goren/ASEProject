@@ -3,6 +3,7 @@
 <html lang="en">
 
     <head>
+       
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, width=device-width">
 
@@ -22,12 +23,13 @@
                 <a class="navbar-brand" href="">
                     <div class="logo">
                         <img src="{% static 'nqueens/icon.jpg' %}" alt="Page Logo">
+                        <p class="home-text">HOME</p>
                     </div>
                 </a>
             </div>
         </nav>
 
-        <main class="container-fluid py-5 text-center">
+        <main class="container-fluid py-5 text-center bg-background">
             {% block main %}{% endblock %}
         </main>
 
