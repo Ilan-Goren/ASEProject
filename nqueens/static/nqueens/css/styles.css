@@ -4,7 +4,7 @@
     text-align:center;
 }
 body {
-    background-image: url('{% static "nqueens/css/background.jpg" %}');
+    background-image: url('{% static "nqueens/background.jpg" %}');
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
@@ -22,7 +22,7 @@ body {
     transition: transform 0.3s ease; 
 }
 .bg-background {
-    background-image: url('{% static "nqueens/css/background.jpg" %}');
+    background-image: url('{% static "nqueens/background.jpg" %}');
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
