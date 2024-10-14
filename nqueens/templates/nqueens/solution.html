@@ -1,18 +1,22 @@
 {% extends "nqueens/layout.html"%}
 
+<!-- page to display the solution to the N queens problem after the user has clicked solve on the home page -->
 
 {% block title %}
     Solution 
 {% endblock %}
 
 {% block main %}
+    <!-- explain page content-->
     <h3 class="mb-3">Here is a solution for the {{ n }}x{{ n }} board:</h3>
 
+    <!--generate a table to represent a chess board from the 2d solution array-->
     <table class="chessboard">
         {% for row in solution %}
         <tr>
             {% for col in row %}
                 <td>
+                    <!-- when there is a queen represented in the array display it on the board using a Unicode emoji-->
                     {% if col == 1 %}
                         <span class="queen">♛</span>
                     {% else %}

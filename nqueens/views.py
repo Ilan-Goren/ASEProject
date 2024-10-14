@@ -14,10 +14,10 @@ class InputNForm(forms.Form):
 
 # View to handle the home page and render the form
 def home(request):
-    '''
+    """
     Renders the 'home.html' template with an empty form.
     This is the landing page where users input the value of N.
-    '''
+    """
     if request.method == 'GET':
         return render(request, 'nqueens/home.html', {
             "form": InputNForm()
@@ -25,7 +25,7 @@ def home(request):
 
 # View to handle solving the N-Queens problem based on user input
 def solve(request):
-    '''
+    """
     Handles the form submission when the user inputs a value for N.
     It checks if the request method is POST and validates the form.
     If the form is valid, it calls the solver to get the N-Queens solution.
@@ -33,7 +33,7 @@ def solve(request):
 
     Any manipulation of the form data is avoided, as that could lead to
     invalid inputs that might crash the system. 
-    '''
+    """
     if request.method == 'POST':
         form = InputNForm(request.POST)
         # If the form is valid, proceed to solve the N-Queens problem
