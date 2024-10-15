@@ -44,23 +44,23 @@ def solve_n_queens(n):
              # Append a deep copy of the board
             solutions.append([row[:] for row in board]) 
             return True
+        count = 0 
         # else attempt to find a safe space for each column in the row
         for col in range(n):
             if is_safe(board, col, row):
                 # update the col,row on the board with a 1 to represent a placed queen
                 board[row][col] = 1
                 # continue attempting to solve with this placed queen
-                if solve(board, row + 1):
-                    return True
+                count += solve(board, row + 1)
                 # backtrack if solution not found
                 board[row][col] = 0
         # if we haven't returned true by now then there is no solution
-        return False
-
+        return count
+    
+    total_solutions = solve(board)
     # use the helper functions to solve for the given board
-    if solve(board):
-        # Return boaard configuration and number of solutions
-        return board, len(solutions)
-    # return None if there is no solution
+    if solutions:
+        # Return the first valid board configuration and the total number of solutions
+        return solutions[0], total_solutions
     else:
-        return None
+        return None, total_solutions  # No solution case
