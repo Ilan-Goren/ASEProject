@@ -12,6 +12,9 @@ which is a reasonable range to avoid performance issues.
 class InputNForm(forms.Form):
     n = forms.IntegerField(min_value=4, max_value=20, label='')
 
+class CheckSolutionForm(forms.Form):
+    board = forms.CharField(label='')
+
 # View to handle the home page and render the form
 def home(request):
     '''
@@ -24,7 +27,7 @@ def home(request):
         })
 
 # View to handle solving the N-Queens problem based on user input
-def solve(request):
+def solution(request):
     '''
     Handles the form submission when the user inputs a value for N.
     It checks if the request method is POST and validates the form.
@@ -39,11 +42,52 @@ def solve(request):
         # If the form is valid, proceed to solve the N-Queens problem
         if form.is_valid():
             n = form.cleaned_data["n"] # Get the validated input
+            button_pressed = request.POST.get("button")
+            if button_pressed == 'go_solution':
+                # Call the solver to get the solution for the N-Queens problem
+                solution = solver.solve_n_queens(n)
+                # Render the 'solution.html' template, passing the solution and N value
+                return render(request, 'nqueens/solution.html', {
+                    "solution" : solution, "n" : n
+                    })
+            elif button_pressed == 'go_puzzle':
+                    return render(request, 'nqueens/puzzle.html', {
+                         "n" : n,
+                         "board" : solver.create_empty_board(n)
+                    })
+        # If the form isn't valid, redirect back to the home page
+        else:
+            return redirect("home")
+    # If the request method is GET (e.g., someone manually navigates to /solve), redirect to home
+    return redirect("home")
+
+def puzzle(request):
+    if request.method == 'GET':
+        form = InputNForm(request.GET)
+        # If the form is valid, proceed to solve the N-Queens problem
+        if form.is_valid():
+            n = form.cleaned_data["n"] # Get the validated input
+
+            return render(request, 'nqueens/puzzle.html', {
+                "n" : n
+                })
+        # If the form isn't valid, redirect back to the home page
+        else:
+            return redirect("home")
+    # If the request method is GET (e.g., someone manually navigates to /solve), redirect to home
+    return redirect("home")
+
+def check_solution(request):
+    if request.method == 'POST':
+        form = CheckSolutionForm(request.POST)
+        # If the form is valid, proceed to solve the N-Queens problem
+        if form.is_valid():
+            board = form.cleaned_data["board"] # Get the validated input
             # Call the solver to get the solution for the N-Queens problem
-            solution = solver.solve_n_queens(n)
+            solution = solver.check_solution(board)
             # Render the 'solution.html' template, passing the solution and N value
-            return render(request, 'nqueens/solution.html', {
-                "solution" : solution, "n" : n
+            return render(request, 'nqueens/puzzle.html', {
+                "solution" : solution
                 })
         # If the form isn't valid, redirect back to the home page
         else:

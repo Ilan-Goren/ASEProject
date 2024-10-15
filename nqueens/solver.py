@@ -1,35 +1,43 @@
+def is_safe(board, col, row):
+    """
+        in the following steps we only check spaces to the
+        left of the space we are checking (inclusively)
+        as we always place pieces from left to right
+    """
+    N = len(board[0])
+    #Check all spaces horizontally adjacent to the space for queens
+    for i in range(row):
+        if board[i][col] == 1:
+            return False
+    #Check all spaces vertically adjacent to the space for queens, **is this needed?
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+    #Check all spaces on the upper left diagonal
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    #Check all spaces on the lowe left diagonal
+    for i, j in zip(range(row, -1, -1), range(col, N)):
+        if board[i][j] == 1:
+            return False
+    return True
+
+def create_empty_board(n):
+    return [[0 for i in range(n)] for i in range(n)]
+
+def check_solution(board):
+    N = len(board[0])
+    for i in range(N):
+        for j in range(N):
+            if board[i][j] == 1 and not is_safe(board, i, j):
+                return False
+    return True
+
+
 def solve_n_queens(N):
     #use a 2D array of size NxN to represent the board
     board = [[0 for _ in range(N)] for _ in range(N)]
-
-    """
-        Give a 2D array representing a chess board and a set of coordinates,
-        checks if a the tile on those coordinates on the board is a safe space 
-        to place a queens
-    """
-    def is_safe(board, col, row):
-        """
-            in the following steps we only check spaces to the
-            left of the space we are checking (inclusively)
-            as we always place pieces from left to right
-        """
-        #Check all spaces horizontally adjacent to the space for queens
-        for i in range(row):
-            if board[i][col] == 1:
-                return False
-        #Check all spaces vertically adjacent to the space for queens, **is this needed?
-        for i in range(col):
-            if board[row][i] == 1:
-                return False
-        #Check all spaces on the upper left diagonal
-        for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-            if board[i][j] == 1:
-                return False
-        #Check all spaces on the lowe left diagonal
-        for i, j in zip(range(row, -1, -1), range(col, N)):
-            if board[i][j] == 1:
-                return False
-        return True
 
     """
         Solves the N-queens problem given a board (and a row number*), 
