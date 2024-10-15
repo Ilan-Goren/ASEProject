@@ -1,7 +1,7 @@
 {% extends "nqueens/layout.html" %}
 
 {% block title %}
-    Solution
+    Puzzle
 {% endblock %}
 
 {% block main %}
@@ -25,7 +25,6 @@
         </table>
     
         <input type="hidden" name="user_board" id="user_board">
-        
         <button type="submit" class="btn btn-primary mt-3" name="action" value="check_board">Check Your Solution</button>
     </form>
 
@@ -36,6 +35,7 @@
     </form>
 
     <script>
+        // toggleQueen function toggles a queen in the table cell.
         function toggleQueen(cell) {    
             if (cell.textContent.trim() === "♛") {
                 cell.textContent = "";
