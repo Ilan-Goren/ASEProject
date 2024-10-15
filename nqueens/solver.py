@@ -1,6 +1,7 @@
 def solve_n_queens(n):
     #use a 2D array of size NxN to represent the board
-    b = [[0 for _ in range(n)] for _ in range(n)]
+    board = [[0 for _ in range(n)] for _ in range(n)]
+    solutions = []  # List to store valid board configurations
 
     """
         Given a 2D array (board) representing a chess board and a set of coordinates,
@@ -40,6 +41,8 @@ def solve_n_queens(n):
     def solve(board, row=0):
         # if we have reached the end of the board then we have found a solution
         if row >= n:
+             # Append a deep copy of the board
+            solutions.append([row[:] for row in board]) 
             return True
         # else attempt to find a safe space for each column in the row
         for col in range(n):
@@ -55,8 +58,9 @@ def solve_n_queens(n):
         return False
 
     # use the helper functions to solve for the given board
-    if solve(b, 0):
-        return b
+    if solve(board):
+        # Return boaard configuration and number of solutions
+        return board, len(solutions)
     # return None if there is no solution
     else:
         return None

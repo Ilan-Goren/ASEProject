@@ -9,7 +9,7 @@
 {% block main %}
     <!-- explain page content-->
     <h3 class="mb-3">Here is a solution for the {{ n }}x{{ n }} board:</h3>
-
+    <h3 class= "mb-3">Number of solutions: {{ count }}</h3>
     <!--generate a table to represent a chess board from the 2d solution array-->
     <table class="chessboard">
         {% for row in solution %}

@@ -40,10 +40,13 @@ def solve(request):
         if form.is_valid():
             n = form.cleaned_data["n"] # Get the validated input
             # Call the solver to get the solution for the N-Queens problem
-            solution = solver.solve_n_queens(n)
+            solution, count = solver.solve_n_queens(n)
             # Render the 'solution.html' template, passing the solution and N value
             return render(request, 'nqueens/solution.html', {
-                "solution" : solution, "n" : n
+                "solution" : solution, 
+                "count" : count,
+                "n" : n
+                
                 })
         # If the form isn't valid, redirect back to the home page
         else:
