@@ -27,12 +27,23 @@
             </div>
         </nav>
 
+        {% if messages %}
+        {% for message in messages %}
+            <header>
+                <div class="alert alert-{{ message.tags }} mb-0 text-center" role="alert">
+                    {{ message }}
+                </div>
+            </header>
+        {% endfor %}
+        {% endif %}
+
         <main class="container-fluid py-5 text-center">
             {% block main %}{% endblock %}
         </main>
 
         <footer class="mb-5 small text-center text-muted">
             <p>&copy; 2024 N Queens Solver All rights reserved.</p>
+            <a href="" style="color: rgb(100, 100, 100);">Return to home</a>
         </footer>
 
     </body>

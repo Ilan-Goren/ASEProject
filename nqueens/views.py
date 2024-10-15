@@ -1,6 +1,9 @@
 from django import forms
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.http import HttpResponse
 from . import solver
+import json
 
 '''
 Form to input the value of N for the N-Queens problem.
@@ -11,9 +14,6 @@ which is a reasonable range to avoid performance issues.
 
 class InputNForm(forms.Form):
     n = forms.IntegerField(min_value=4, max_value=20, label='')
-
-class CheckSolutionForm(forms.Form):
-    board = forms.CharField(label='')
 
 # View to handle the home page and render the form
 def home(request):
@@ -53,24 +53,9 @@ def solution(request):
             elif button_pressed == 'go_puzzle':
                     return render(request, 'nqueens/puzzle.html', {
                          "n" : n,
-                         "board" : solver.create_empty_board(n)
+                         "board" : solver.create_empty_board(n),
+                         "form": InputNForm()
                     })
-        # If the form isn't valid, redirect back to the home page
-        else:
-            return redirect("home")
-    # If the request method is GET (e.g., someone manually navigates to /solve), redirect to home
-    return redirect("home")
-
-def puzzle(request):
-    if request.method == 'GET':
-        form = InputNForm(request.GET)
-        # If the form is valid, proceed to solve the N-Queens problem
-        if form.is_valid():
-            n = form.cleaned_data["n"] # Get the validated input
-
-            return render(request, 'nqueens/puzzle.html', {
-                "n" : n
-                })
         # If the form isn't valid, redirect back to the home page
         else:
             return redirect("home")
@@ -79,18 +64,12 @@ def puzzle(request):
 
 def check_solution(request):
     if request.method == 'POST':
-        form = CheckSolutionForm(request.POST)
-        # If the form is valid, proceed to solve the N-Queens problem
-        if form.is_valid():
-            board = form.cleaned_data["board"] # Get the validated input
-            # Call the solver to get the solution for the N-Queens problem
-            solution = solver.check_solution(board)
-            # Render the 'solution.html' template, passing the solution and N value
-            return render(request, 'nqueens/puzzle.html', {
-                "solution" : solution
-                })
-        # If the form isn't valid, redirect back to the home page
+        user_board = request.POST.get('user_board')
+        board = json.loads(user_board)
+        result = solver.check_solution(board)
+
+        if result == True:
+            messages.success(request, "Well done! Your solution is correct:)")
         else:
-            return redirect("home")
-    # If the request method is GET (e.g., someone manually navigates to /solve), redirect to home
-    return redirect("home")
+            messages.add_message(request, messages.ERROR, "Your answer is incorrect :(", extra_tags='danger')
+    return redirect('home')

@@ -27,12 +27,13 @@ def create_empty_board(n):
     return [[0 for i in range(n)] for i in range(n)]
 
 def check_solution(board):
-    N = len(board[0])
-    for i in range(N):
-        for j in range(N):
-            if board[i][j] == 1 and not is_safe(board, i, j):
-                return False
-    return True
+    N = len(board)
+    for col in range(N):
+        count = sum(board[row][col] for row in range(N))
+        if count != 1:
+            return False
+
+    return True 
 
 
 def solve_n_queens(N):
