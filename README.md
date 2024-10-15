@@ -1,10 +1,12 @@
+# ASEProject - N-Queens Solver
+
 ## Project Description
-This project is a Django-based web application that provides a solution the n-queens problem, where users can input number of queens to be directed to a solution page.
+This project is a Django-based web application that provides a solution to the N-Queens problem. Users can input the number of queens they want, and the application will display a solution for a chessboard of that size.
 
 ## Features
-- n-queens solver
-- User-friendly web interface
-- Supports different board sizes
+- Interactive N-Queens solver
+- User-friendly web interface with visualization
+- Supports different board sizes (4x4, 8x8, etc.)
 
 ## Technologies Used
 - Django
@@ -12,29 +14,61 @@ This project is a Django-based web application that provides a solution the n-qu
 - HTML/CSS
 - Bootstrap (for styling)
 
-## Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Ilan-Goren/ASEProject
+## Installation and Setup
+
+### Prerequisites
+- Python (version 3.6 or higher)
+- Git (optional, for cloning the repository)
+
+### Installation
+
+#### Step 1: Clone the Repository
+Open your terminal or command prompt and clone the repository using Git:
+```bash
+git clone https://github.com/Ilan-Goren/ASEProject.git
+```
+Alternatively, download the project as a ZIP file from GitHub and extract it.
+
+#### Step 2: Navigate to the Project Directory
+```bash
+cd ASEProject
+```
+
+#### Step 3: Install Dependencies
+Use the following command to install all the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### Running the Application
+
+#### On Windows
+1. Open Command Prompt and navigate to the project directory:
+   ```cmd
+   cd ASEProject
    ```
-2. Navigate to the project directory:
+2. Run the Django development server:
+   ```cmd
+   python manage.py runserver
+   ```
+
+#### On macOS and Linux
+1. Open Terminal and navigate to the project directory:
    ```bash
    cd ASEProject
    ```
-3. Set up a virtual environment:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
-4. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-5. Run the development server:
+2. Run the Django development server:
    ```bash
    python manage.py runserver
    ```
 
-### **Usage**
-```markdown
-Navigate to `http://127.0.0.1:8000/` in your web browser to access the application.
+### Access the Application
+After running the server, you can access the web application by navigating to [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your web browser.
+
+## Usage
+- Enter the desired number of queens in the input field.
+- Click "Solve" to be directed to the solution page, which visualizes the N-Queens solution.
+
+## Contact
+If you have any questions or suggestions, please reach out via GitHub.
+
