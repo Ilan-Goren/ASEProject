@@ -67,8 +67,12 @@ After running the server, you can access the web application by navigating to [h
 
 ## Usage
 - Enter the desired number of queens in the input field.
-- Click "Solve" to be directed to the solution page, which visualizes the N-Queens solution.
-
+- Click "Go to solution" to be directed to the solution page, which visualizes the N-Queens solution.
+- Click "Solve it Yourself" to be directed to an N x N board page, where you can try to solve the puzzle.
+- You can place a queen on the board by clicking on a cell in the board.
+- You can also remove a queen by clicking on the already placed queen.
+- Click on "Check Your Solution" to check your solution.
+- Or you can click on "Get a possible solution if you couldn't find the solution"
 ## Contact
 If you have any questions or suggestions, please reach out via GitHub.
 
