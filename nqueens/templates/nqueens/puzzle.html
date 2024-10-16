@@ -1,0 +1,57 @@
+{% extends "nqueens/layout.html" %}
+
+{% block title %}
+    Puzzle
+{% endblock %}
+
+{% block main %}
+    <h3 class="mb-3">Here is the {{ n }}x{{ n }} board:</h3>
+    <h5 class="mb-3">Try to solve it yourself!</h5>
+
+    <form action="{% url 'check_solution' %}" method="POST" class="mt-3" id="nqueens-form" onsubmit="updateBoard()">
+        {% csrf_token %}
+        <table class="chessboard" id="nqueens-board">
+            {% for row in board %}
+            <tr>
+                {% for col in row %}
+                    <td onclick="toggleQueen(this)">
+                        {% if col == 1 %}
+                            ♛
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    
+        <input type="hidden" name="user_board" id="user_board">
+        <button type="submit" class="btn btn-primary mt-3" name="action" value="check_board">Check Your Solution</button>
+    </form>
+
+    <form action="{% url 'solution' %}" method="POST" class="mt-3">
+        {% csrf_token %}
+        <input type="hidden" name="n" value="{{ n }}">
+        <button class="btn btn-success" name="button" value="go_solution">Get a possible solution</button>
+    </form>
+
+    <script>
+        // toggleQueen function toggles a queen in the table cell.
+        function toggleQueen(cell) {    
+            if (cell.textContent.trim() === "♛") {
+                cell.textContent = "";
+            } else {
+                cell.textContent = "♛";
+            }
+        }
+    
+        function updateBoard() {
+            const rows = document.querySelectorAll("#nqueens-board tr");
+            const board = Array.from(rows).map(row => 
+            Array.from(row.querySelectorAll("td")).map(col => 
+            col.textContent.trim() === "♛" ? 1 : 0
+                )
+            );
+            document.getElementById("user_board").value = JSON.stringify(board);
+        }
+    </script>
+{% endblock %}

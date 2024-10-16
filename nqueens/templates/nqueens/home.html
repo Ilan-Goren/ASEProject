@@ -6,17 +6,16 @@
 
 {% block main %}
 
-<h1>N-Queens Solver</h1>
-<form action="{% url 'solve' %}" method="post" class="mb-3">
+<h1>N-Queens</h1>
+<form action="{% url 'solution' %}" method="post" class="mb-3">
     {% csrf_token %}
 
-    <!-- simple input form for user to enter n -->
     <div class="mb-3">
-        {{ form }}
+        {{ form.n }}
     </div>
 
-    <!-- button to take user to solution page -->
-    <button class="btn btn-primary" type="submit">Solve</button>
+    <button class="btn btn-primary" name="button" value="go_puzzle" type="submit">Solve it Yourself</button>
+    <button class="btn btn-success" name="button" value="go_solution" type="submit">Go to Solution</button>
 </form>
 
 {% endblock %}
