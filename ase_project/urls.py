@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from nqueens import views
+from . import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('nqueens.urls')),
+    path('', views.home),
+    path('nqueens', include('nqueens.urls')),
+    path('polysphere', include('polysphere.urls')),
 ]
