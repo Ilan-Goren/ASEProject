@@ -16,12 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
+from django.shortcuts import render
 from . import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home),
+    path('', lambda request: render(request, 'home.html'), name='home'),
     path('nqueens', include('nqueens.urls')),
     path('polysphere', include('polysphere.urls')),
 ]
