@@ -6,7 +6,7 @@
 
 {% block main %}
 
-<h1>N-Queens Solver</h1>
+<h1>N-Queens</h1>
 <form action="{% url 'solution' %}" method="post" class="mb-3">
     {% csrf_token %}
 
@@ -14,7 +14,7 @@
         {{ form.n }}
     </div>
 
-    <button class="btn btn-primary" name="button" value="go_puzzle" type="submit">Solve</button>
+    <button class="btn btn-primary" name="button" value="go_puzzle" type="submit">Solve it Yourself</button>
     <button class="btn btn-success" name="button" value="go_solution" type="submit">Go to Solution</button>
 </form>
 
