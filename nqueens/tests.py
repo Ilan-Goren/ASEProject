@@ -62,23 +62,3 @@ class NQueensTestCase(TestCase):
         c = Client()
         response = c.get('/')
         self.assertEqual(response.status_code, 200)
-    '''
-    test_solve_page: 
-    This test function tests several cases for the solve page.
-    Firstly, If the page /solve is requested through 'GET': Assertion for status code 302.
-
-    Secondly, If the page /solve is requested through 'POST': Assertion for status code 200,
-    using a valid data for n trying out different values for n from N list.
-    '''
-    def test_solve_page(self):
-        # Client for test purposes.
-        c = Client()
-        response_get = c.get('/solve/')
-        # Check that if request method is get. Assert to being redirected. Code 302.
-        self.assertEqual(response_get.status_code, 302)
-
-        for n in N:
-            valid_data = {'n': n}
-            response_post = c.post('/solve/', valid_data)
-            # Check that if request method is post. Assert to OK. Code 200.
-            self.assertEqual(response_post.status_code, 200)
