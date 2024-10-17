@@ -58,13 +58,18 @@ h1, h2, h3, h4, h5{
 
 .puzzle-card tr{
     /* backdrop-filter: blur(20px); */
-    background-color: rgba(255, 255, 255, 0.5);
-    font-weight:bold;
+    background-color: rgba(255, 255, 255, 0.85);
+    font-weight:lighter;
     text-shadow: black;
 }
 
 .puzzle-card th {
-    height: 80px; /* Adjust height for your circular text */
+    height: 85px; /* Adjust height for your circular text */
+    border-radius: 50%;
+}
+
+.puzzle-card:hover th {
+    border-radius: 0%;
 }
 
 .puzzle-card:hover {
@@ -72,10 +77,6 @@ h1, h2, h3, h4, h5{
     width: auto;
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.puzzle-button {
-    display: none;
 }
 
 .puzzle-description-row {
