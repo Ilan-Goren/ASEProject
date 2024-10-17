@@ -1,0 +1,6 @@
+- Version: 0.1
+-- CI platform: Ubuntu 22.04 LTS Laptop computer
+-- Software requirements:
+---- Python: > 3.7
+---- Selenium: >= 4.0.0
+---- Pytest: >= 8.0.0
