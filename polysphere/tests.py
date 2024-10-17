@@ -1,6 +1,7 @@
+from ftplib import print_line
+
 from django.test import TestCase
-from . import solver
-from . import polyominoes
+from . import solver, polyominoes, bitmap_polyominoes, bitmap_transformations
 
 class PolysphereTestCase(TestCase):
     # Create your tests here.
@@ -31,3 +32,14 @@ class PolysphereTestCase(TestCase):
         solver1 = solver.PuzzleSolver(board, pieces)
         solver1.get_first_solution()
         print(solver1.solutions[0])
+
+    def test_rotating_bitmaps(self):
+        pieces = bitmap_polyominoes.POLYOMINOES
+        print("poloyomino 1:")
+        for t in bitmap_transformations.generate_transformations(int(pieces[0]["shape"]), pieces[0]["width"], pieces[0]["height"]):
+            print("{0:b}".format(t[0]),t[1],t[2])
+
+        print("poloyomino 2:") ###need to fix issue when bitmap has leading zeros!!!
+        for t in bitmap_transformations.generate_transformations(int(pieces[1]["shape"]), pieces[1]["width"], pieces[1]["height"]):
+            print("{0:b}".format(t[0]), t[1], t[2])
+
