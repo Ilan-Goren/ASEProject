@@ -1,8 +1,5 @@
-from ftplib import print_line
-from tkinter import BitmapImage
-
 from django.test import TestCase
-from . import solver, polyominoes, bitmap_polyominoes, bitmap_transformations
+from . import solver, polyominoes, bitmap_polyominoes, bitmap_transformations, bitmap_solver
 
 class PolysphereTestCase(TestCase):
     # Create your tests here.
@@ -51,3 +48,15 @@ class PolysphereTestCase(TestCase):
                 bitmap_transformations.list_to_bitmap(pieces[2]["shape"], pieces[2]["width"]), pieces[2]["width"],
                 pieces[2]["height"]):
             print(bitmap_transformations.bitmap_to_list(t[0], t[1], t[2]), t[1], t[2])
+
+    def test_bitmap_solver(self):
+        board = [[0 for _ in range(11)] for _ in range(5)]  # 11x5 empty board
+        polyominoes = bitmap_polyominoes.POLYOMINOES
+
+        first_solution = bitmap_solver.find_first_solution(board, polyominoes, board_width=11, board_height=5)
+        if first_solution:
+            print("First solution found:")
+            for row in first_solution:
+                print(row)
+        else:
+            print("No solution exists.")
