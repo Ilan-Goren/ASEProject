@@ -1,11 +1,263 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}
-    Polysphere
+    Polysphere Puzzle Home
 {% endblock %}
 
 {% block main %}
+    <h3 class="mb-3">Polysphere Puzzle (5x11 Grid)</h3>
+    <h5 class="mb-3">Drag and drop the piece onto the board!</h5>
 
-<h1>Polysphere</h1>
+    <div id="polysphere-board" class="puzzle-grid">
+        <!-- Initialize the 5x11 grid -->
+        {% for row in row_range %}
+            {% for col in col_range %}
+                <div class="cell" data-row="{{ row }}" data-col="{{ col }}"></div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
+    <div id="polysphere-pieces" class="pieces-container">
+        <!-- Create a draggable L-shaped piece using divs -->
+        <div class="piece" data-piece="L-shape" draggable="true" id="l-shape-piece">
+            <div class="sub-cell" style="grid-area: 1 / 1 / 2 / 2;"></div>
+            <div class="sub-cell" style="grid-area: 2 / 1 / 3 / 2;"></div>
+            <div class="sub-cell" style="grid-area: 2 / 2 / 3 / 3;"></div>
+        </div>
+        <button id="rotate-button" class="rotate-button">Rotate</button>
+    </div>
+    
+
+    <script>
+        let currentPiecePositions = []; // Track the current cells occupied by the piece
+        let lastValidPositions = []; // Track the last valid cells occupied by the piece
+        const initialPiece = document.querySelector('.piece');
+        let isDraggingFromBoard = false; // Flag to track if dragging from the board
+
+        const boardCells = document.querySelectorAll('.cell');
+
+        // Function to create a version of the L-shaped piece for when it is being moved around
+        function createDraggingPiece() {
+            const fullSizePiece = document.createElement('div');
+            fullSizePiece.style.position = 'absolute';
+            fullSizePiece.style.display = 'grid';
+            fullSizePiece.style.gridTemplateColumns = 'repeat(2, 50px)'; // Match grid cell size
+            fullSizePiece.style.gridTemplateRows = 'repeat(2, 50px)';
+            fullSizePiece.style.gap = '2px';
+            fullSizePiece.style.backgroundColor = 'transparent';
+            fullSizePiece.style.width = '102px';
+            fullSizePiece.style.height = '102px';
+
+            // Add sub-cells for the L shape
+            const subCellPositions = [
+                { row: 0, col: 0 },
+                { row: 1, col: 0 },
+                { row: 1, col: 1 }
+            ];
+
+            subCellPositions.forEach(pos => {
+                const subCell = document.createElement('div');
+                subCell.style.width = '50px';
+                subCell.style.height = '50px';
+                subCell.style.backgroundColor = '#f5b336'; // Match the piece color
+                subCell.style.border = '1px solid #ddd';
+
+                // Position sub-cells correctly
+                subCell.style.gridRowStart = pos.row + 1;
+                subCell.style.gridColumnStart = pos.col + 1;
+
+                fullSizePiece.appendChild(subCell);
+            });
+
+            document.body.appendChild(fullSizePiece); // Temporarily add to the body
+            return fullSizePiece;
+        }
+
+        // Add drag event listeners to each cell on the board
+        boardCells.forEach(cell => {
+            cell.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            cell.addEventListener('drop', (e) => {
+                const pieceData = e.dataTransfer.getData('text');
+                if (pieceData === 'L-shape') {
+                    movePieceToBoard(e.target);
+                }
+            });
+
+            cell.addEventListener('dragstart', (e) => {
+                // Allow dragging if the cell is part of the currently placed piece
+                if (e.target.classList.contains('filled')) {
+                    e.dataTransfer.setData('text/plain', 'L-shape');
+                    lastValidPositions = [...currentPiecePositions]; // Save the current positions
+                    removeCurrentPiece(); // Temporarily remove the piece to allow moving
+                    isDraggingFromBoard = true;
+
+                    // Set a full-size version of the piece as the drag image
+                    const fullSizePiece = createDraggingPiece();
+                    e.dataTransfer.setDragImage(fullSizePiece, 25, 25); // Center the drag image
+                    setTimeout(() => {
+                        fullSizePiece.remove(); // Clean up after setting the drag image
+                    }, 0);
+                }
+            });
+        });
+
+        // Function to place the piece onto the board at a specified cell
+        function movePieceToBoard(targetCell) {
+            const targetRow = parseInt(targetCell.dataset.row);
+            const targetCol = parseInt(targetCell.dataset.col);
+
+            if (targetRow <= 3 && targetCol <= 9) {
+                const newPositions = [
+                    { row: targetRow, col: targetCol },
+                    { row: targetRow + 1, col: targetCol },
+                    { row: targetRow + 1, col: targetCol + 1 }
+                ];
+
+                const cellsToFill = newPositions.map(pos =>
+                    document.querySelector(`.cell[data-row='${pos.row}'][data-col='${pos.col}']`)
+                );
+
+                if (cellsToFill.every(cell => cell && !cell.classList.contains('filled'))) {
+                    removeCurrentPiece();
+                    initializeLShapePiece(cellsToFill);
+                    currentPiecePositions = cellsToFill;
+                    lastValidPositions = cellsToFill;
+                    isDraggingFromBoard = false;
+
+                    // Make the initial piece appear grayed out
+                    showGrayedOutInitialPiece();
+                } else {
+                    alert("The piece can't be placed here.");
+                    restorePieceToLastValidPosition();
+                }
+            } else {
+                alert("Piece doesn't fit in this position!");
+                restorePieceToLastValidPosition();
+            }
+        }
+
+        // Function to initialize or reset the L-shape piece on the board
+        function initializeLShapePiece(cells) {
+            cells.forEach(cell => {
+                cell.classList.add('filled');
+                cell.style.backgroundColor = '#f5b336'; // Example color for the L-shape
+                cell.setAttribute('draggable', 'true'); // Make cells draggable
+            });
+        }
+
+        // Function to remove the current piece from the board
+        function removeCurrentPiece() {
+            // Clear the cells previously occupied by the piece
+            if (currentPiecePositions.length > 0) {
+                currentPiecePositions.forEach(cell => {
+                    cell.classList.remove('filled');
+                    cell.style.backgroundColor = ''; // Reset the background color
+                    cell.removeAttribute('draggable'); // Remove draggable attribute
+                });
+                currentPiecePositions = [];
+            }
+        }
+
+        // Function to restore the piece to its last valid position
+        function restorePieceToLastValidPosition() {
+            // Restore the piece using the same initialization logic
+            if (lastValidPositions.length === 3) {
+                initializeLShapePiece(lastValidPositions);
+                currentPiecePositions = [...lastValidPositions]; // Update current positions
+            } else {
+                resetInitialPiece(); // Show the initial piece again if no valid placement
+            }
+        }
+
+        // Function to reset the initial piece to its original state
+        function resetInitialPiece() {
+            initialPiece.style.display = 'block'; // Show the initial piece
+            initialPiece.classList.remove('grayed-out'); // Remove the grayed-out class
+            initialPiece.style.pointerEvents = 'auto'; // Make it interactable again
+            initialPiece.style.opacity = '1'; // Reset opacity to normal
+            initialPiece.style.position = 'relative'; // Ensure correct positioning
+
+            // Remove any existing Revert button
+            const revertButton = document.getElementById('revert-button');
+            if (revertButton) {
+                revertButton.remove();
+            }
+
+            // Reset the sub-cells positions
+            const subCells = initialPiece.querySelectorAll('.sub-cell');
+            const positions = [
+                { top: '0px', left: '0px' },    // Top-left
+                { top: '55px', left: '0px' },   // Middle-left (50px + 5px gap)
+                { top: '55px', left: '55px' }   // Bottom-right (50px + 5px gap)
+            ];
+
+            subCells.forEach((subCell, index) => {
+                subCell.style.position = 'absolute'; // Ensure absolute positioning
+                subCell.style.top = positions[index].top; // Set the top coordinate
+                subCell.style.left = positions[index].left; // Set the left coordinate
+            });
+        }
+
+
+        // Function to show a grayed-out version of the initial piece and add a Revert button
+        function showGrayedOutInitialPiece() {
+            initialPiece.classList.add('grayed-out');
+            initialPiece.style.pointerEvents = 'none'; // Disable interaction
+            initialPiece.style.opacity = '0.5'; // Add opacity to create a grayed-out effect
+            initialPiece.style.display = 'block'; // Ensure the piece is visible
+            initialPiece.style.position = 'relative'; // Make sure it stays in its original position
+
+            // Check if Revert button already exists
+            let revertButton = document.getElementById('revert-button');
+            if (!revertButton) {
+                // Create a Revert button
+                revertButton = document.createElement('button');
+                revertButton.innerText = 'Revert';
+                revertButton.id = 'revert-button';
+                initialPiece.parentElement.appendChild(revertButton);
+
+                // Add event listener to the Revert button
+                revertButton.addEventListener('click', () => {
+                    // Remove the piece from the board
+                    removeCurrentPiece();
+                    // Reset the initialPiece
+                    resetInitialPiece();
+                });
+            }
+        }
+
+
+        // Initial setup: Make the original piece draggable to start
+        initialPiece.addEventListener('dragstart', (e) => {
+            if (initialPiece.classList.contains('grayed-out')) {
+                e.preventDefault(); // Prevent drag if the piece is grayed out
+            } else {
+                e.dataTransfer.setData('text/plain', 'L-shape');
+                lastValidPositions = [];
+                setTimeout(() => {
+                    initialPiece.style.display = 'none'; // Hide the piece during drag
+
+                    const fullSizePiece = createDraggingPiece();
+                    e.dataTransfer.setDragImage(fullSizePiece, 25, 25);
+                    setTimeout(() => {
+                        fullSizePiece.remove(); // Clean up after setting the drag image
+                    }, 0);
+                }, 0);
+            }
+        });
+
+        initialPiece.addEventListener('dragend', (e) => {
+            if (currentPiecePositions.length === 0) {
+                resetInitialPiece(); // Reset if the drag didn't succeed
+            } else {
+                initialPiece.style.display = 'block'; // Show the piece again
+            }
+        });
+
+    </script>
 
 {% endblock %}
