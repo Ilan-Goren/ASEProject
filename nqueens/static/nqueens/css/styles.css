@@ -1,0 +1,84 @@
+.header{
+    background-color:#F5E8C7;
+    margin-bottom:2rem;
+    text-align:center;
+}
+body {
+    background-image: url('{% static "nqueens/background.jpg" %}');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+.home-text {
+    margin-top: 4px; 
+    margin-bottom: -5px;
+    font-family: 'Georgia', serif; 
+    font-size: 10px; 
+    color: #444; 
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); 
+    background-color: rgba(255, 255, 255, 0.9); 
+    border-radius: 5px; 
+    padding: 2px 13px; 
+    transition: transform 0.3s ease; 
+}
+.bg-background {
+    background-image: url('{% static "nqueens/background.jpg" %}');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    min-height: 100vh; 
+    color: #fff; 
+}
+
+
+.underline {
+    text-decoration: underline; 
+    text-align: center; 
+    color: #444; 
+    font-family: 'Georgia', serif; 
+}
+
+
+.home-text:hover {
+    transform: scale(1.05); 
+    color: #000; 
+}
+
+.logo img{
+    width:auto;
+    max-width:60px;
+    max-height:60px;
+    border-radius: 50%;
+}
+
+h1, h2, h3, h4, h5{
+    font-weight:lighter;
+    color: #333;
+}
+
+.navbar-nav a {
+    color: #333;
+}
+
+.navbar-nav a:hover {
+    background-color: #f0f0f0;
+    color: #555;
+}
+
+.chessboard {
+    border-collapse: collapse; 
+    margin: 0 auto; 
+}
+
+.chessboard td {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid black;
+    font-size: 36px;
+}
+
+.queen {
+    color: black;
+}
