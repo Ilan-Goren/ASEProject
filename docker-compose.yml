@@ -1,0 +1,9 @@
+# Specify docker-compose version
+version: '3'
+services:
+  aseproject:
+    # Specify Image URI
+    image: ahmedamann/aseproject:latest
+    # Specify Ports
+    ports:
+      - 8000:8000
