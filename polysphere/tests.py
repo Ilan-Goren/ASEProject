@@ -1,4 +1,5 @@
 from ftplib import print_line
+from tkinter import BitmapImage
 
 from django.test import TestCase
 from . import solver, polyominoes, bitmap_polyominoes, bitmap_transformations
@@ -36,10 +37,17 @@ class PolysphereTestCase(TestCase):
     def test_rotating_bitmaps(self):
         pieces = bitmap_polyominoes.POLYOMINOES
         print("poloyomino 1:")
-        for t in bitmap_transformations.generate_transformations(int(pieces[0]["shape"]), pieces[0]["width"], pieces[0]["height"]):
-            print("{0:b}".format(t[0]),t[1],t[2])
+        for t in bitmap_transformations.generate_transformations(bitmap_transformations.list_to_bitmap(pieces[0]["shape"], pieces[0]["width"]), pieces[0]["width"], pieces[0]["height"]):
+            print(bitmap_transformations.bitmap_to_list(t[0],t[1],t[2]),t[1],t[2])
 
-        print("poloyomino 2:") ###need to fix issue when bitmap has leading zeros!!!
-        for t in bitmap_transformations.generate_transformations(int(pieces[1]["shape"]), pieces[1]["width"], pieces[1]["height"]):
-            print("{0:b}".format(t[0]), t[1], t[2])
+        print("poloyomino 2:")
+        for t in bitmap_transformations.generate_transformations(
+                bitmap_transformations.list_to_bitmap(pieces[1]["shape"], pieces[1]["width"]), pieces[1]["width"],
+                pieces[1]["height"]):
+            print(bitmap_transformations.bitmap_to_list(t[0], t[1], t[2]), t[1], t[2])
 
+        print("poloyomino 3:")
+        for t in bitmap_transformations.generate_transformations(
+                bitmap_transformations.list_to_bitmap(pieces[2]["shape"], pieces[2]["width"]), pieces[2]["width"],
+                pieces[2]["height"]):
+            print(bitmap_transformations.bitmap_to_list(t[0], t[1], t[2]), t[1], t[2])

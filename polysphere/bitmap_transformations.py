@@ -53,33 +53,51 @@ def generate_transformations(piece_bitmap, width, height):
     """Generate all unique rotations and flips of a polyomino represented by its bitmap."""
     transformations = set()
 
-    # Add the original bitmap
-    transformations.add((int(str(piece_bitmap),2), width, height))
-    print("original: " + str(piece_bitmap))
+    # Add all rotations of the original piece
+    current_bitmap = piece_bitmap
+    for _ in range(4):
+        transformations.add((current_bitmap, width, height))
+        # Rotate 90 degrees clockwise
+        current_bitmap = rotate_right(current_bitmap, width, height)
+        width, height = height, width  # Swap width and height after each 90-degree rotation
 
-    # Rotate 90 degrees clockwise
-    rotated_right = rotate_right(piece_bitmap, width, height)
-    transformations.add((rotated_right, height, width))  # width and height swap
-    print("90cw: " + "{0:b}".format(rotated_right))
+    # Flip the piece horizontally
+    flipped_bitmap = flip_horizontal(piece_bitmap, width, height)
 
-    # Rotate 180 degrees
-    rotated_180 = rotate_180(piece_bitmap, width, height)
-    transformations.add((rotated_180, width, height))
-    print("180: " + "{0:b}".format(rotated_180))
-
-    # Rotate 90 degrees counterclockwise
-    rotated_left = rotate_left(piece_bitmap, width, height)
-    transformations.add((rotated_left, height, width))  # Width and height swap
-    print("90ccw: " + "{0:b}".format(rotated_left))
-
-    # Flip horizontally
-    flipped_horiz = flip_horizontal(piece_bitmap, width, height)
-    transformations.add((flipped_horiz, width, height))
-    print("hf: " + "{0:b}".format(flipped_horiz))
-
-    # Flip vertically
-    flipped_vert = flip_vertical(piece_bitmap, width, height)
-    transformations.add((flipped_vert, width, height))
-    print("vf: " + "{0:b}".format(flipped_vert))
+    # Add all rotations of the horizontally flipped piece
+    for _ in range(4):
+        transformations.add((flipped_bitmap, width, height))
+        # Rotate 90 degrees clockwise
+        flipped_bitmap = rotate_right(flipped_bitmap, width, height)
+        width, height = height, width  # Swap width and height after each 90-degree rotation
 
     return list(transformations)
+
+def list_to_bitmap(piece_bitmap, width):
+    """Convert a 2D list (with leading zeros) to an integer bitmap, respecting row width."""
+    bitmap = 0
+    for row in piece_bitmap:
+        # Convert each row to an integer with correct width (leading zeros)
+        row_bitmap = 0
+        for cell in row:
+            row_bitmap = (row_bitmap << 1) | cell
+        # Shift the row into the correct position in the overall bitmap
+        bitmap = (bitmap << width) | row_bitmap
+    return bitmap
+
+
+def bitmap_to_list(bitmap, width, height):
+    """Convert an integer bitmap back into a 2D list with the given width and height."""
+    piece_list = []
+
+    # Iterate over each row (from bottom to top, since we're reading bits left-to-right)
+    for row in range(height):
+        row_list = []
+        # Extract each bit in the row by shifting the appropriate number of times
+        for col in range(width):
+            # The bit we're interested in is at the position (row * width + col)
+            bit_position = (height - row - 1) * width + (width - col - 1)
+            row_list.insert(0, (bitmap >> bit_position) & 1)
+        piece_list.append(row_list)
+
+    return piece_list
