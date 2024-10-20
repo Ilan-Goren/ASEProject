@@ -60,3 +60,16 @@ class PolysphereTestCase(TestCase):
                 print(row)
         else:
             print("No solution exists.")
+
+    def test_bitmap_solution_non_empty_board(self):
+        board = [[1, 0, 1,],
+                 [0, 0, 1,],
+                 [1, 0, 0,]]
+        polyominoes = [{'id': 3, 'shape': [[0, 1, 0], [1, 1, 0], [0, 1, 1]], 'width':3, 'height':3}]
+        first_solution = bitmap_solver.find_first_solution(board, polyominoes, board_width=3, board_height=3)
+        if first_solution:
+            print("First solution found:")
+            for row in first_solution:
+                print(row)
+        else:
+            print("No solution exists.")

@@ -1,105 +1,100 @@
 from . import bitmap_transformations
 
-def can_place(board, piece_bitmap, width, height, row, col, board_width, board_height):
+def generate_transformations_memo(polyominoes):
+    transformations_memo = {}
+    for p in polyominoes:
+        piece_bitmap = bitmap_transformations.list_to_bitmap(p['shape'], p['width'])
+        transformations = bitmap_transformations.generate_transformations(piece_bitmap, p['width'], p['height'])
+        transformations_memo[p['id']] = transformations
+    return transformations_memo
+
+
+def can_place(bitmap_board, piece_bitmap, width, height, row, col, board_width, board_height):
     """
-    Check if a piece can be placed on the board at a given row and column.
-    Ensure the piece fits within the board and does not overlap with existing pieces.
+    Check if a piece can be placed on the bitmap board at a given row and column.
     """
-    # Ensure piece fits within board boundaries
     if row + height > board_height or col + width > board_width:
         return False
 
     for i in range(height):
         for j in range(width):
-            # Check if the bit in piece_bitmap is 1 and if it overlaps with any non-zero cell on the board
             bit_position = (height - i - 1) * width + (width - j - 1)
             if (piece_bitmap >> bit_position) & 1:
-                if board[row + i][col + j] != 0:  # Overlapping with another piece
+                board_bit_position = (row + i) * board_width + (col + j)
+                if bitmap_board & (1 << board_bit_position):  # Check if the cell is occupied
                     return False
-
     return True
 
-
-def place_piece(board, piece_bitmap, width, height, row, col, piece_id):
+def place_piece(board, piece_bitmap, width, height, row, col, piece_id, bitmap_board):
     """
     Place the piece on the board at the given row and column, using the piece's bitmap.
+    Also update the bitmap representation.
     """
     for i in range(height):
         for j in range(width):
-            # Check if the bit in piece_bitmap is 1
             bit_position = (height - i - 1) * width + (width - j - 1)
             if (piece_bitmap >> bit_position) & 1:
-                board[row + i][col + j] = piece_id  # Place the piece on the board
-    print(board)
+                board[row + i][col + j] = piece_id  # Update list board
+                # Update the bitmap board (set the bit)
+                bitmap_board |= (1 << ((row + i) * len(board[0]) + (col + j)))
+    return bitmap_board
 
 
-def remove_piece(board, piece_bitmap, width, height, row, col):
+def remove_piece(board, piece_bitmap, width, height, row, col, bitmap_board):
     """
     Remove the piece from the board at the given row and column.
+    Also update the bitmap representation.
     """
     for i in range(height):
         for j in range(width):
-            # Check if the bit in piece_bitmap is 1
             bit_position = (height - i - 1) * width + (width - j - 1)
             if (piece_bitmap >> bit_position) & 1:
-                board[row + i][col + j] = 0  # Remove the piece from the board
+                board[row + i][col + j] = 0  # Update list board
+                # Update the bitmap board (clear the bit)
+                bitmap_board &= ~(1 << ((row + i) * len(board[0]) + (col + j)))
+    return bitmap_board
 
+def list_to_bitmap_board(list_board, board_width, board_height):
+    """
+    Converts a list-based board representation to a bitmap representation.
+    """
+    bitmap_board = 0  # Initialize the bitmap to 0
 
-def solve(board, available_polyominoes, board_width, board_height, placed_pieces, find_all, solutions):
-    """
-    Generalized recursive function to solve the polyomino puzzle with proper tracking of placed pieces.
-    """
-    found_solution = True
     for row in range(board_height):
         for col in range(board_width):
-            if board[row][col] == 0:  # Free cell found
-                found_solution = False
+            if list_board[row][col] != 0:  # Non-zero values represent placed pieces
+                # Set the corresponding bit in the bitmap
+                bit_position = (board_height - row - 1) * board_width + (board_width - col - 1)
+                bitmap_board |= (1 << bit_position)
 
-                # Try to place each available polyomino in this free cell
-                for polyomino in available_polyominoes:
-                    # Generate all transformations (rotations and flips) of the polyomino
-                    transformations = bitmap_transformations.generate_transformations(
-                        bitmap_transformations.list_to_bitmap(polyomino["shape"], polyomino["width"]),
-                        polyomino["width"],
-                        polyomino["height"])
+    return bitmap_board
 
-                    for transformed_bitmap, transformed_width, transformed_height in transformations:
-                        # Convert the transformed shape into a bitmap
-                        transformed_shape = bitmap_transformations.bitmap_to_list(transformed_bitmap, transformed_width, transformed_height)
+def solve(list_board, bitmap_board, available_polyominoes, transformations_memo, board_width, board_height, placed_pieces, find_all, solutions):
+    free_cells = [(r, c) for r in range(board_height) for c in range(board_width) if list_board[r][c] == 0]
+    free_cells.sort(key=lambda x: (x[0], x[1]))  # Leftmost-uppermost cell first
 
-                        # Check if we can place this transformation at (row, col)
-                        if can_place(board, transformed_bitmap, transformed_width, transformed_height, row, col,
-                                     board_width, board_height):
-                            # Place the piece on the board
-                            place_piece(board, transformed_bitmap, transformed_width, transformed_height, row, col,
-                                        polyomino['id'])
-                            placed_pieces.append(polyomino['id'])  # Track placed pieces
-
-                            # Remove the polyomino from available pieces
-                            remaining_polyominoes = [p for p in available_polyominoes if p['id'] != polyomino['id']]
-
-                            # Recurse to place the next piece (depth-first search)
-                            if solve(board, remaining_polyominoes, board_width, board_height, placed_pieces, find_all,
-                                     solutions):
-                                return True  # Return if the first solution was found
-
-                            # Backtrack: Remove the piece and try the next option
-                            remove_piece(board, transformed_bitmap, transformed_width, transformed_height, row, col)
-                            placed_pieces.pop()  # Remove the polyomino from the placed pieces list
-
-                return False  # No valid placement was found, backtrack
-
-    # If no free cells are left, we've found a solution
-    if found_solution:
-        # Deep copy the current board state to avoid referencing issues
-        solutions.append([row[:] for row in board])
-
-        # If we only want the first solution, stop the recursion here
+    if not free_cells:
+        solutions.append([row[:] for row in list_board])
         if not find_all:
-            return True  # Signal that we found the first solution and stop
+            return True
+        return False
 
-    return False  # Continue searching if we want all solutions
+    row, col = free_cells[0]
 
+    for polyomino in available_polyominoes:
+        for transformed_bitmap, transformed_width, transformed_height in transformations_memo[polyomino['id']]:
+            if can_place(bitmap_board, transformed_bitmap, transformed_width, transformed_height, row, col, board_width, board_height):
+                bitmap_board = place_piece(list_board, transformed_bitmap, transformed_width, transformed_height, row, col, polyomino['id'], bitmap_board)
+                placed_pieces.append(polyomino['id'])
+                remaining_polyominoes = [p for p in available_polyominoes if p['id'] != polyomino['id']]
+
+                if solve(list_board, bitmap_board, remaining_polyominoes, transformations_memo, board_width, board_height, placed_pieces, find_all, solutions):
+                    return True
+
+                bitmap_board = remove_piece(list_board, transformed_bitmap, transformed_width, transformed_height, row, col, bitmap_board)
+                placed_pieces.pop()
+
+    return False
 
 def find_first_solution(board, polyominoes, board_width, board_height):
     """
@@ -107,13 +102,13 @@ def find_first_solution(board, polyominoes, board_width, board_height):
     """
     solutions = []
     placed_pieces = []
-    solve(board, polyominoes, board_width, board_height, placed_pieces, find_all=False, solutions=solutions)
+    transformations_memo = generate_transformations_memo(polyominoes)
+    solve(board, list_to_bitmap_board(board, board_width, board_height), polyominoes, transformations_memo, board_width, board_height, placed_pieces, find_all=False, solutions=solutions)
 
     if solutions:
         return solutions[0]  # Return the first solution found
     else:
         return None  # No solution found
-
 
 def find_all_solutions(board, polyominoes, board_width, board_height):
     """
@@ -121,5 +116,6 @@ def find_all_solutions(board, polyominoes, board_width, board_height):
     """
     solutions = []
     placed_pieces = []
-    solve(board, polyominoes, board_width, board_height, placed_pieces, find_all=True, solutions=solutions)
+    transformations_memo = generate_transformations_memo(polyominoes)
+    solve(board, list_to_bitmap_board(board, board_width, board_height), polyominoes, transformations_memo, board_width, board_height, placed_pieces, find_all=True, solutions=solutions)
     return solutions
