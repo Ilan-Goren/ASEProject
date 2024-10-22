@@ -43,7 +43,7 @@ class Matrix:
 
 
 def add_row(matrix, indices):
-    """Appends the sparse row indices to the matrix `m`."""
+    """Appends the sparse row indices to the matrix."""
     # input verification
     last = -1
     for element in indices:
