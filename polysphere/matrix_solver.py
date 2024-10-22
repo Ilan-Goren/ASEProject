@@ -92,10 +92,14 @@ class MatrixSolver:
             matrix = self.packing_matrix_partial_config(polys, w, h, b, id_conversions)
 
         start = time.time()
-        solutions = algorithm_x_functions.find_all(matrix)
+        solution_rows = algorithm_x_functions.find_all(matrix)
         elapsed = time.time() - start
 
-        print(f"Solutions: {len(solutions)}")
+        solutions = []
+        for sr in solution_rows:
+            solutions.append(self.print_packing(sr, w, h))
+
+        print(f"Solutions: {len(solution_rows)}")
         print(f"Time: {elapsed:.4f} seconds")
         return solutions
 
@@ -107,7 +111,6 @@ class MatrixSolver:
 
         # find the unique id's of pieces placed on the board
         placed_piece_ids = list(set(i for j in initial_board for i in j if i != 0))
-        print(placed_piece_ids)
 
         """Construct the exact cover matrix for the packing problem."""
         matrix = algorithm_x_functions.Matrix(w * h + (len(polys) + len(placed_piece_ids)), 0)
@@ -134,7 +137,6 @@ class MatrixSolver:
                         fixed_tiles[i][j] = nextID
                     else:
                         fixed_tiles[i][j] = 0
-            print(fixed_tiles)
             fixed_piece = matrix_polyominoes.Polyomino(fixed_tiles, nextID)
             placed_pieces_fixed.append(fixed_piece)
             id_conversions.append([id, nextID])

@@ -1,3 +1,6 @@
+import copy
+
+
 class Node:
     def __init__(self, col=None, value=0):
         self.up = self.down = self.left = self.right = self
@@ -137,8 +140,9 @@ def solve(matrix, collector, first):
     """Backtracking search using the matrix data structure with MRV heuristic."""
     # Problem is solved
     if matrix.columns[0].left == matrix.columns[0]:
-        solution = [e.value for e in matrix.sol]
-        collector.append(solution)
+        #solution = [e.value for e in matrix.sol]
+        sol_copy = copy.deepcopy(matrix.sol)
+        collector.append(sol_copy)
         return matrix.sol
 
     # MRV heuristic
@@ -204,7 +208,6 @@ def find_rows(matrix):
         while n != e:
             rows[i][n.col.id - 1] = True
             n = n.right
-
     return rows
 
 
@@ -212,7 +215,17 @@ def find_all(matrix):
     """Find all solutions to the exact cover problem."""
     coll = []
     solve(matrix, coll, False)
-    return coll
+    results = []
+    for c in coll:
+        result = [[False] * matrix.num_cols for _ in range(len(c))]
+        for i, e in enumerate(c):
+            result[i][e.col.id - 1] = True
+            n = e.right
+            while n != e:
+                result[i][n.col.id - 1] = True
+                n = n.right
+        results.append(result)
+    return results
 
 
 def pretty_print(matrix):

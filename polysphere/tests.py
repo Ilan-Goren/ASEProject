@@ -74,8 +74,10 @@ class PolysphereTestCase(TestCase):
                  [0,0,0],
                  [0,0,0]]
         s = matrix_solver.MatrixSolver()
-        s.solve_packing(polys, 3, 3)
+        id_conversions = []
+        s.solve_packing(polys, 3, 3,None,id_conversions)
         solutions = s.count_packing(polys,3,3)
-        for s in solutions:
-            print(s)
+        for sol in solutions:
+            s.revert_ids(id_conversions, sol)
+            print(sol)
 
