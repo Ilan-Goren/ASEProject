@@ -33,7 +33,8 @@ class PolysphereTestCase(TestCase):
         for p in matrix_polyominoes.POLYOMINOES:
             poly = matrix_polyominoes.Polyomino(p["tiles"],p["poly_id"])
             polys.append(poly)
-        matrix_solver.solve_packing(polys,11,5)
+        s = matrix_solver.MatrixSolver()
+        s.solve_packing(polys,11,5)
 
 
     def test_matrix_solver2(self):
@@ -46,7 +47,8 @@ class PolysphereTestCase(TestCase):
         poly1 = matrix_polyominoes.Polyomino(tiles1,1)
         poly2 = matrix_polyominoes.Polyomino(tiles2,2)
         polys = [poly1,poly2]
-        matrix_solver.solve_packing(polys, 3, 3)
+        s = matrix_solver.MatrixSolver()
+        s.solve_packing(polys, 3, 3)
 
 
 
@@ -56,7 +58,11 @@ class PolysphereTestCase(TestCase):
         board = [[2,2,2],
                  [0,2,0],
                  [0,0,0]]
-        matrix_solver.solve_packing(polys,3,3,board)
+        s = matrix_solver.MatrixSolver()
+        id_conversions = []
+        solution = s.solve_packing(polys,3,3,board, id_conversions)
+        solution = s.revert_ids(id_conversions, solution)
+        print(solution)
 
     def test_matrix_solver_partial_config2(self):
         p1 = matrix_polyominoes.Polyomino(matrix_polyominoes.POLYOMINOES[0]["tiles"],
@@ -67,8 +73,9 @@ class PolysphereTestCase(TestCase):
         board = [[0,0,0],
                  [0,0,0],
                  [0,0,0]]
-        matrix_solver.solve_packing(polys, 3, 3)
-        solutions = matrix_solver.count_packing(polys,3,3)
+        s = matrix_solver.MatrixSolver()
+        s.solve_packing(polys, 3, 3)
+        solutions = s.count_packing(polys,3,3)
         for s in solutions:
             print(s)
 
