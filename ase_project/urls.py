@@ -25,7 +25,4 @@ urlpatterns = [
     path('', lambda request: render(request, 'home.html'), name='home'),
     path('nqueens', include('nqueens.urls')),
     path('polysphere', include('polysphere.urls')),
-    path('', lambda request: render(request, 'home.html'), name='home'),
-    path('nqueens', include('nqueens.urls')),
-    path('polysphere', include('polysphere.urls')),
 ]
