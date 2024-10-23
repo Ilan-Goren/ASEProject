@@ -1,6 +1,3 @@
-import copy
-
-
 class Node:
     def __init__(self, col=None, value=0):
         self.up = self.down = self.left = self.right = self
@@ -141,9 +138,20 @@ def solve(matrix, collector, first):
     # Problem is solved
     if matrix.columns[0].left == matrix.columns[0]:
         #solution = [e.value for e in matrix.sol]
-        sol_copy = copy.deepcopy(matrix.sol)
-        collector.append(sol_copy)
-        return matrix.sol
+        rows = [[False] * matrix.num_cols for _ in range(len(matrix.sol))]
+
+        for i, e in enumerate(matrix.sol):
+            rows[i][e.col.id - 1] = True
+            n = e.right
+            while n != e:
+                rows[i][n.col.id - 1] = True
+                n = n.right
+
+        collector.append(rows)
+        #sol_copy = copy.deepcopy(matrix.sol)
+        #collector.append(sol_copy)
+        #return matrix.sol
+        return rows
 
     # MRV heuristic
     col = mrv(matrix)
@@ -199,33 +207,14 @@ def find_first(matrix):
 def find_rows(matrix):
     """Find one solution and return the options represented by their row id and content."""
     sol = solve(matrix, [], True)
-
-    rows = [[False] * matrix.num_cols for _ in range(len(sol))]
-
-    for i, e in enumerate(sol):
-        rows[i][e.col.id - 1] = True
-        n = e.right
-        while n != e:
-            rows[i][n.col.id - 1] = True
-            n = n.right
-    return rows
+    return sol
 
 
 def find_all(matrix):
     """Find all solutions to the exact cover problem."""
     coll = []
     solve(matrix, coll, False)
-    results = []
-    for c in coll:
-        result = [[False] * matrix.num_cols for _ in range(len(c))]
-        for i, e in enumerate(c):
-            result[i][e.col.id - 1] = True
-            n = e.right
-            while n != e:
-                result[i][n.col.id - 1] = True
-                n = n.right
-        results.append(result)
-    return results
+    return coll
 
 
 def pretty_print(matrix):
