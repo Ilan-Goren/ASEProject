@@ -1,5 +1,5 @@
 from django.test import TestCase
-from . import solver, polyominoes, matrix_polyominoes, matrix_transformations, matrix_solver
+from . import matrix_polyominoes, matrix_transformations, matrix_solver
 
 class PolysphereTestCase(TestCase):
     def test_rotate_matrix_poly(self):
