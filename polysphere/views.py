@@ -3,31 +3,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 import json
 from .Polysphere import Polysphere
-from django.http import HttpResponse
-from django import forms
+from .matrix_solver import MatrixSolver
 
 # Initialize the solver
 polysphere = Polysphere()
-
-class UpdateBoardForm(forms.Form):
-    row = forms.IntegerField()
-    col = forms.IntegerField()
-    piece_key = forms.CharField(max_length=50)
-
-def update_board(request):
-    if request.method == 'POST':
-        form = UpdateBoardForm(request.POST)
-        if form.is_valid():
-            row = form.cleaned_data['row']
-            col = form.cleaned_data['col']
-            piece_key = form.cleaned_data['piece_key']
-
-            success = polysphere.place_piece(piece_key, (row, col))
-            if not success:
-                return redirect('polysphere_home')
-            return redirect('polysphere_home')
-
-    return redirect('polysphere_home')
+solver = MatrixSolver()
 
 def home(request):
     return render(request, 'polysphere/home.html')
@@ -37,14 +17,15 @@ def puzzle(request):
         button_pressed = request.POST.get("button")
         if button_pressed == 'clear_board':
             polysphere.reset_board()
-        elif button_pressed == 'check_solution':
-            isIt = polysphere.is_board_filled()
-            if isIt:
-                messages.success(request, "Board complete!")
-                redirect('polysphere_home')
-            else:
-                messages.add_message(request, messages.ERROR, "Board not complete :(", extra_tags='danger')
+        # elif button_pressed == 'check_solution':
+        #     isIt = polysphere.is_board_filled()
+        #     if isIt:
+        #         messages.success(request, "Board complete!")
+        #         redirect('polysphere_home')
+        #     else:
+        #         messages.add_message(request, messages.ERROR, "Board not complete :(", extra_tags='danger')
         return redirect('polysphere_puzzle')
+    print(polysphere.board)
     return render(request, 'polysphere/puzzle.html', {
         'pieces': polysphere.pieces_left,
         'board': polysphere.board,
@@ -114,6 +95,17 @@ def flip_piece(request):
     return redirect('polysphere_puzzle')
 
 
-
 def polysphere_solver(request):
-    return render(request, HttpResponse('TO DO'))
+    if request.method == 'POST':
+        button_pressed = request.POST.get('button')
+
+        if button_pressed == 'solve_board':
+            polysphere.solveEmptyBoard()
+            if not polysphere.board:
+                messages.add_message(request, messages.ERROR, "ERROR", extra_tags='danger')
+        elif button_pressed == 'solve_partial_config':
+            response = polysphere.solvePartialConfig()
+            if not response:
+                messages.add_message(request, messages.ERROR, "Can't find a solution with this these pieces:(", extra_tags='danger')
+
+    return redirect('polysphere_puzzle')

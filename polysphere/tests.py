@@ -62,3 +62,38 @@ class PolysphereTestCase(TestCase):
             s.revert_ids(id_conversions, sol)
             print(sol)
 
+    def test_sover_full_board_with_piece_palced(self):
+        #a 11X5 board with a piece with ID 4 on it:
+        board = [[0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,4,0,0,0,0,0],
+                 [0,0,0,0,4,4,4,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,0,0]]
+
+        # get every piece
+        mps = matrix_polyominoes.POLYOMINOES
+        #remove piece with ID 4 as it's already placed
+        mps.remove(matrix_polyominoes.POLYOMINOES[3])
+
+        #create polyomino objects from each piece
+        polys = []
+        for mp in mps:
+            polys.append(matrix_polyominoes.Polyomino(mp["tiles"],mp["poly_id"]))
+
+        #create a solver object
+        s = matrix_solver.MatrixSolver()
+
+        #list to store ID conversions from the solver
+        id_conversions = []
+
+        #call the solver
+        solution = s.solve_packing(polys, 11, 5, board, id_conversions)
+
+        #revert piece ID's to originals
+        solution = s.revert_ids(id_conversions, solution)
+
+        print("list representation of final solution:")
+        print(solution)
+
+
+

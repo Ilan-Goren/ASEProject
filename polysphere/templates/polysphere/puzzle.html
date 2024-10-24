@@ -24,10 +24,11 @@
 
 <!-- The Pieces Deck -->
 <div id="pieces" class="pieces">
+    {% if pieces %}
     <h3>Available Pieces</h3>
     <div class="pieces-container">
         {% for piece_key, block in pieces.items %}
-        <div class="piece" data-piece-key="{{ piece_key }}"  data-piece-array="{{ block }}">
+        <div class="piece" data-piece-key="{{ piece_key }}" data-piece-array="{{ block }}">
             <div class="piece-visual">
                 <table>
                     <tbody>
@@ -44,20 +45,24 @@
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <h3>No pieces left. Looks like they are all placed on the board!</h3>
+    {% endif %}
+</div>
+
+<div class="solver_buttons_container">
+    <!-- Form to handle both completing the board based on partial config or showing all solutions -->
+    <form action="{% url 'polysphere_solver' %}" method="post" class="mb-3">
+        {% csrf_token %}
+        <button class="btn btn-primary" name="button" value='solve_partial_config'>Complete my board</button>
+        <button class='btn btn-success' name="button" value='solve_board'>Show a possible solution</button>
+    </form>
 </div>
 
 <!-- Form to handle both Checking solution or Resesting the board -->
 <form action="{% url 'polysphere_puzzle' %}" method="post" class="mb-3">
     {% csrf_token %}
-    <button class="btn btn-success" name="button" value='check_solution'>Check Solution</button>
     <button class='btn btn-danger' name="button" value='clear_board'>Reset board</button>
-</form>
-
-<!-- Form to handle both completing the board based on partial config or showing all solutions -->
-<form action="{% url 'polysphere_solver' %}" method="post" class="mb-3">
-    {% csrf_token %}
-    <button class="btn btn-info" name="button" value='check_solution'>Complete Board</button>
-    <button class='btn btn-info' name="button" value='clear_board'>Show all possible solutions</button>
 </form>
 
 

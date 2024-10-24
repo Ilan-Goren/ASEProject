@@ -1,4 +1,4 @@
-from copy import deepcopy
+from . import matrix_polyominoes, matrix_transformations, matrix_solver
 
 class Polysphere:
     def __init__(self):
@@ -46,7 +46,6 @@ class Polysphere:
         self.pieces_left = self.pieces.copy()
         self.board_size = (5, 11)
         self.board = [[0 for _ in range(self.board_size[1])] for _ in range(self.board_size[0])]
-        self.piecesAvailabe = list(self.pieces.keys())
         self.piece_positions = {}
 
     def place_piece(self, piece_key, positions):
@@ -71,6 +70,8 @@ class Polysphere:
 
             # Add the position to piece_positions for tracking
             self.piece_positions[piece_key].append(pos)
+
+        print(f'Board after placing key {self.board}')
 
         self.pieces_left.pop(piece_key)
         print(f"Placed {piece_key} at {self.piece_positions[piece_key]}")
@@ -134,6 +135,7 @@ class Polysphere:
         return True
     
     def flip_piece(self, piece_key):
+        """Rotate the specified piece horizontally."""
         if piece_key not in self.pieces_left.keys() or piece_key in self.piece_positions.keys():
             print(f"Flip {piece_key} Error")
             return False
@@ -148,17 +150,86 @@ class Polysphere:
         return True
     
     def reset_board(self):
+        ''' Reset the all class variables'''
         self.board = [[0 for _ in range(self.board_size[1])] for _ in range(self.board_size[0])]
         self.pieces_left = self.pieces.copy()
         self.piece_positions = {}
         return
     
-    def internalConversionFromLetterToPos(self, board):
-        ''' Function changes placed pieces from letters to ID '''
-        rep = { 'A' : 1, 'B': 2, 'C' : 3, 'D' : 4, 'E' : 5, 'F' : 6, 
-               'G': 7, 'H': 8, 'I': 9, 'I': 10, 'J' : 11, 'K' : 12}
-        for row in board:
-            for cell in row:
-                if cell in rep.keys():
-                    cell = rep[cell]
-        return board
+    def solvePartialConfig(self):
+        ''' Solve function for partial configurations '''
+        alreadyPlaced = internalConversionFromLetterToID(self.board)
+
+        alreadyPlacedIDs = {id - 1 for row in alreadyPlaced for id in row if id}
+        print(f"Already place ids : {alreadyPlacedIDs}")
+
+        polys = []
+        for i in range(12):
+            if i in alreadyPlacedIDs:
+                continue
+            polys.append(matrix_polyominoes.Polyomino(matrix_polyominoes.POLYOMINOES[i]["tiles"], i + 1))
+        id_conversions = []
+        solver = matrix_solver.MatrixSolver()
+        solution = solver.solve_packing(polys,11, 5, alreadyPlaced, id_conversions)
+        if not solution:
+            return False
+        solution = solver.revert_ids(id_conversions, solution)
+        solution = internalConversionFromIDToLetter(solution)
+        print(f"Solved after conversion to Letters: {solution}")
+        self.board = solution
+
+        piece_pos = getPiecesPositionsFromBoard(self.board)
+        self.piece_positions = piece_pos.copy()
+        self.pieces_left = {}
+        return True
+    
+    def solveEmptyBoard(self):
+        polys = []
+        for p in matrix_polyominoes.POLYOMINOES:
+            poly = matrix_polyominoes.Polyomino(p["tiles"],p["poly_id"])
+            polys.append(poly)
+        s = matrix_solver.MatrixSolver()
+        solution = s.solve_packing(polys,11,5)
+        solution = internalConversionFromIDToLetter(solution)
+        self.board = solution
+        piece_pos = getPiecesPositionsFromBoard(self.board)
+        self.piece_positions = piece_pos.copy()
+        self.pieces_left = {}
+        return True
+    
+def internalConversionFromLetterToID(board):
+    ''' Function changes placed pieces from letters to ID '''
+    rep = { 'A' : 1, 'B': 2, 'C' : 3, 'D' : 4, 'E' : 5, 'F' : 6, 
+            'G': 7, 'H': 8, 'I': 9, 'J' : 10, 'K' : 11, 'L' : 12}
+    new_board = [[0 for _ in range(11)] for _ in range(5)] # New Board to return
+
+    for row_index, row in enumerate(board):
+        for cell_index, cell in enumerate(row):
+            if cell in rep:
+                new_board[row_index][cell_index] = rep[cell]
+    return new_board
+
+def internalConversionFromIDToLetter(board):
+    ''' Function changes placed pieces from ID to letters '''
+    rep = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 
+           7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K', 12: 'L'}
+    new_board = [[0 for _ in range(11)] for _ in range(5)] # New Board to return
+
+    for row_index, row in enumerate(board):
+        for cell_index, cell in enumerate(row):
+            if cell in rep:
+                new_board[row_index][cell_index] = rep[cell]
+    return new_board
+
+
+def getPiecesPositionsFromBoard(board):
+    piecesPos = {}
+    for row_index, row_data in enumerate(board):
+        for col_index, col_data in enumerate(row_data):
+            if col_data not in piecesPos.keys():
+                piecesPos[col_data] = [(row_index, col_index)]
+            else:
+                piecesPos[col_data].append((row_index, col_index))
+
+    return piecesPos
+

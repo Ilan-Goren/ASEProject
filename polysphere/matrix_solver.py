@@ -75,6 +75,8 @@ class MatrixSolver:
         start = time.time()
         rows = algorithm_x_functions.find_rows(matrix)
         elapsed = time.time() - start
+        if not rows:
+            return False
 
         solution  = self.print_packing(rows, w, h)
         print(f"Time: {elapsed:.4f} seconds")
@@ -163,9 +165,10 @@ class MatrixSolver:
         return matrix
 
     def revert_ids(self, id_conversions, solution):
-        for c in id_conversions:
-            for i in range(len(solution)):
-                for j in range(len(solution[0])):
+        for i in range(len(solution)):
+            for j in range(len(solution[0])):
+                for c in id_conversions:
                     if solution[i][j] == c[1]:
                         solution[i][j] = c[0]
+                        break
         return solution
