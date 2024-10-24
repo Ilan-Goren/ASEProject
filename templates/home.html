@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+<h1 class="mb-3">Puzzle Solver</h1>
+
+<table class="puzzle-card">
+        <tr>
+            <th>N Queens Puzzle</th>
+        </tr>
+        <tr class="puzzle-description-row">
+            <td>First enter the N number of queens as input</td>
+            <td>Choose either to get a direct solution or to solver yousrself.</td>
+            <td>If you choose to solve yourself you will get an empty N x N sized board.</td>
+            <td>You can place or remove a queen by clicking on the cell in the board</td>
+            <td>Check your solution with "Check Solution" Button</td>
+            <td>If you have given up you can click on show possible solution.</td>
+            <td class="puzzle-button">
+                <a class="btn btn-primary mt-5 mb-3" href="/nqueens">Go to puzzle</a>
+            </td>
+        </tr>        
+    
+</table>
+
+<table class="puzzle-card">
+    <tr>
+        <th>Polysphere</th>
+    </tr>
+    <tr class="puzzle-description-row">
+        <td>Solve Polysphere puzzle by placing different shapes in a 5 x 11 rectangular board</td>
+        <td class="puzzle-button">
+            <a class="btn btn-primary mt-3 mb-3" href="/polysphere">Go to puzzle</a>
+        </td>
+    </tr>
+
+</table>
+
+{% endblock %}
