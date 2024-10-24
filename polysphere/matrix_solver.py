@@ -163,9 +163,10 @@ class MatrixSolver:
         return matrix
 
     def revert_ids(self, id_conversions, solution):
-        for c in id_conversions:
-            for i in range(len(solution)):
-                for j in range(len(solution[0])):
+        for i in range(len(solution)):
+            for j in range(len(solution[0])):
+                for c in id_conversions:
                     if solution[i][j] == c[1]:
                         solution[i][j] = c[0]
+                        break
         return solution
