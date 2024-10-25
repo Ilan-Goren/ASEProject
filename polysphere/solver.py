@@ -148,3 +148,33 @@ class PuzzleSolver:
         """Find the first solution."""
         self.solve(find_first=True)
         return self.solutions[0] if self.solutions else None
+    
+    # solver.py
+
+def check_solution(shape):
+    # Define grid size: 5 rows x 11 columns
+    grid_width = 11
+    grid_height = 5
+    cell_size = 80  # This corresponds to the cell size used on the frontend
+
+    # Represent the board as a 2D list
+    grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
+
+    # Convert block positions to grid indices and verify boundaries
+    for block in shape['blocks']:
+        col = block['x'] // cell_size
+        row = block['y'] // cell_size
+
+        # Check if the block is within the grid boundaries
+        if row < 0 or row >= grid_height or col < 0 or col >= grid_width:
+            return False
+
+        # Check if the grid cell is already occupied
+        if grid[row][col] == 1:
+            return False
+
+        # Mark the cell as occupied
+        grid[row][col] = 1
+
+    # If all blocks fit in the grid and do not overlap, return True
+    return True

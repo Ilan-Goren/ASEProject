@@ -1,11 +1,47 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}
     Polysphere
 {% endblock %}
 
 {% block main %}
+<!-- Main Container for Home Page -->
+<div class="container" id="home">
+    <h1 class="display-4 mb-4">Polysphere Game</h1>
+    <p class="lead mb-5">Use your skills to solve the Polysphere puzzle by placing different shapes on a 5 x 11 rectangular board.</p>
+    <button id="start-game-btn" class="btn btn-primary btn-lg">Start Game</button>
+    <button id="instructions-btn" class="btn btn-secondary btn-lg">Instructions</button>
+</div>
 
-<h1>Polysphere</h1>
+<!-- Solver Section -->
+<div class="container" id="solver" style="display: none;">
+    <h2>Solver Page</h2>
+    <div class="game-container">
+        <canvas id="game-canvas" width="880" height="400"></canvas>
+    </div>
+    <div class="controls mt-4">
+        <label for="shape-select">Choose a shape:</label>
+        <select id="shape-select" class="form-control">
+            <option value="0">L-Shape (Blue)</option>
+            <option value="1">T-Shape (Red)</option>
+            <option value="2">Z-Shape (Green)</option>
+            <option value="3">Square (Yellow)</option>
+        </select>
+    </div>
+    <div class="btn-group mt-3" role="group">
+        <button id="rotate-btn" class="btn btn-info">Rotate Piece</button>
+        <button id="flip-btn" class="btn btn-warning">Flip Piece</button>
+        <button id="move-up-btn" class="btn btn-info">Up</button>
+        <button id="move-left-btn" class="btn btn-info">Left</button>
+        <button id="move-right-btn" class="btn btn-info">Right</button>
+        <button id="move-down-btn" class="btn btn-info">Down</button>
+        <button id="calculate-btn" class="btn btn-success">Calculate</button>
+    </div>
+    <div id="result-message" class="mt-4"></div>
+</div>
 
+<!-- Link to external CSS and JavaScript files -->
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<script src="{% static 'script.js' %}" defer></script>
 {% endblock %}
