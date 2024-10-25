@@ -3,7 +3,7 @@
 {% block title %}Puzzle{% endblock %}
 
 {% block main %}
-<h2>Polysphere Puzzle</h2>
+<p> Polysphere Puzzle </p>
 
 <!-- Load custom filers to allow use of enumerate_filter -->
 {% load custom_filters %}
@@ -25,7 +25,7 @@
 <!-- The Pieces Deck -->
 <div id="pieces" class="pieces">
     {% if pieces %}
-    <h3>Available Pieces</h3>
+    <p>Available Pieces</p>
     <div class="pieces-container">
         {% for piece_key, block in pieces.items %}
         <div class="piece" data-piece-key="{{ piece_key }}" data-piece-array="{{ block }}">

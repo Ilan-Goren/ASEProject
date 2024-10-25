@@ -17,6 +17,11 @@ body {
     padding: 30px;
     position: relative;
 }
+.mb-3 {
+    color: #f0f0f0;
+}
+
+
 
 h1 {
     font-size: 3em;
@@ -27,7 +32,7 @@ h1 {
 
 p {
     font-size: 1.2em;
-    color: #555;
+    color: #ffffff;
 }
 
 .btn {
@@ -81,6 +86,32 @@ p {
     cursor: pointer;
 }
 
+.marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 2em; 
+    color: #fbfcfc; 
+}
+
+.marquee span {
+    display: inline-block;
+    padding-left: 100%; 
+    animation: marquee 15s linear infinite;
+    font-weight: bold; 
+}
+
+@keyframes marquee {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(-100%, 0);
+    }
+}
+
+
 .puzzle-card {
     border: 1px solid #747474;
     border-radius: 8px;
@@ -115,18 +146,18 @@ p {
 }
 
 .puzzle_bg tr{
-    /* backdrop-filter: blur(20px); */
+    
     background-color: rgba(255, 255, 255, 0.85);
     font-weight:lighter;
     text-shadow: black;
 }
 .puzzle-card th {
-    height: 85px; /* Adjust height for your circular text */
+    height: 85px; 
     border-radius: 50%;
 }
 
 .puzzle_bg th {
-    height: 85px; /* Adjust height for your circular text */
+    height: 85px; 
     border-radius: 50%;
 }
 
@@ -262,6 +293,7 @@ h1, h2, h3, h4, h5{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    
 }
 
 .piece {
@@ -271,6 +303,7 @@ h1, h2, h3, h4, h5{
     flex-direction: column;
     align-items: center;
     padding: 5px; 
+    border: #f0f0f0 solid 0.5px;
 }
 
 .piece:hover {
