@@ -1,11 +1,26 @@
-{% extends "layout.html" %}
-
-{% block title %}
-    Polysphere
-{% endblock %}
+{% extends 'polysphere/layout.html' %}
+{% block app_name %} Polysphere {% endblock %}
+{% block title %} Home {% endblock %}
 
 {% block main %}
 
-<h1>Polysphere</h1>
+<h1 class="mb-3">Polysphere</h1>
+
+<p>Welcome to the Puzzle game! Here's how you can enjoy playing:</p>
+
+<p>You have a 5x11 board where you need to place colored pieces to solve the puzzle. There are 12 pieces in different colors available in the pieces deck.</p>
+
+<p>Drag pieces from the deck onto the board to place them. To remove a piece from the board, simply click on it.</p>
+
+<p>Click on a piece in the deck to rotate it. Right-click on a piece in the deck to flip it horizontally.</p>
+
+<p>Use the following buttons to manage the game:</p>
+<p>• <strong>Reset Board:</strong> Clears the board to start over.</p>
+<p>• <strong>Solve Board:</strong> Automatically solves the board for you.</p>
+<p>• <strong>Show All Possible Solutions:</strong> Displays all possible solutions to the puzzle.</p>
+
+<p>Enjoy solving the puzzle and exploring different piece arrangements to complete the challenge!</p>
+
+<a href="{% url 'polysphere_puzzle' %}" class="mt-3 mb-3 btn btn-primary">Go to puzzle</a>
 
 {% endblock %}
