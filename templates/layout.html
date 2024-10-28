@@ -22,7 +22,7 @@
         <!-- a navigation bar for the top of each page, currently only used to return to home page -->
         <nav class="bg-light border navbar navbar-expand-md navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="">
+                <a class="navbar-brand" href="{% url 'home' %}">
                     <div class="logo">
                         <img src="{% static 'icon.jpg' %}" alt="Page Logo">
                     </div>
@@ -45,9 +45,18 @@
         </main>
 
         <!-- a footer for each page featuring some typical sample text-->
-        <footer class="mb-5 small text-center text-muted">
-            <p>&copy; 2024 Puzzle Solver All rights reserved.</p>
-            <a href="{% url 'home' %}" style="color: rgb(100, 100, 100);">Return to home</a>
+        <footer class="footer text-dark text-center py-4">
+                <p class="mb-1">&copy; 2024 Puzzle Solver. All rights reserved.</p>
+                {% if request.path == '/polysphere/puzzle' %}
+                    <a class="btn btn-primary mb-3" href="{% url 'polysphere_home' %}">Go Back</a>
+                    <a class="btn btn-outline-dark mb-3" href="{% url 'home' %}">Return to home</a>
+                {% elif request.path == '/nqueens/puzzle' %}
+                    <a class="btn btn-primary mb-3" href="{% url 'nqueens_home' %}">Go Back</a>
+                    <a class="btn btn-outline-dark mb-3" href="{% url 'home' %}">Return to home</a>
+                {% elif request.path == '/' %}
+                {% else %}
+                <a class="btn btn-outline-dark mb-3" href="{% url 'home' %}">Return to home</a>
+                {% endif %}
         </footer>
 
     </body>

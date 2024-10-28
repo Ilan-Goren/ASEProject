@@ -22,33 +22,42 @@
     text-shadow: black;
 }
 
+.puzzle-card:hover tr{
+    /* backdrop-filter: blur(20px); */
+    background-color: transparent;
+}
+
 .puzzle-card th {
-    height: 85px; /* Adjust height for your circular text */
+    height: 70px;
     border-radius: 50%;
 }
 
-.puzzle-card:hover th {
-    border-radius: 0%;
-}
-
 .puzzle-card:hover {
-    height: auto;
+    height: 200px;
     width: auto;
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.puzzle-description-row {
+.puzzle-description-row{
     display: none;
 }
 
-.puzzle-card:hover .puzzle-description-row {
-    display:block;
+.puzzle-button{
+    display: none;
 }
 
+/* .puzzle-card:hover .puzzle-description-row {
+    display:block;
+} */
+
 .puzzle-card:hover .puzzle-button {
-    display: inline;
+    display: block;
 }
+.puzzle-card:hover .puzzle-title {
+    display: none;
+}
+
 
 .header{
     background-color:#F5E8C7;

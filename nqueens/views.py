@@ -27,7 +27,7 @@ def home(request):
         })
 
 # View to handle solving the N-Queens problem based on user input
-def solution(request):
+def puzzle(request):
     '''
     Handles the form submission when the user inputs a value for N.
     It checks if the request method is POST and validates the form.
