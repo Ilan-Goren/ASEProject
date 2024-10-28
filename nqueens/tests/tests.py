@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .solver import solve_n_queens
+from ..solver import solve_n_queens
 from django.test import Client
 
 # List: Some of values for N for the test
