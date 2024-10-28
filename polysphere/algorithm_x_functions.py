@@ -193,6 +193,61 @@ def solve(matrix, collector, first):
     return None
 
 
+def generate_solutions(matrix):
+    """Generator-based backtracking search using the matrix data structure with MRV heuristic."""
+    # Problem is solved
+    if matrix.columns[0].left == matrix.columns[0]:
+        # Create solution grid
+        rows = [[False] * matrix.num_cols for _ in range(len(matrix.sol))]
+
+        for i, e in enumerate(matrix.sol):
+            rows[i][e.col.id - 1] = True
+            n = e.right
+            while n != e:
+                rows[i][n.col.id - 1] = True
+                n = n.right
+
+        yield rows
+        return
+
+    # MRV heuristic
+    col = mrv(matrix)
+    if col.length == 0:
+        return
+
+    cover(col)
+
+    # Classic backtracking algorithm
+    r = col.head.down
+    while r != col.head:
+        # Add r to solution
+        matrix.sol.append(r)
+
+        # Cover r
+        n = r.right
+        while n != r:
+            cover(n.col)
+            n = n.right
+
+        # Recursively yield all solutions from this point
+        yield from generate_solutions(matrix)
+
+        # Remove r from solution
+        undo = matrix.sol.pop()
+        col = undo.col
+
+        # Uncover r
+        n = undo.left
+        while n != undo:
+            uncover(n.col)
+            n = n.left
+
+        r = r.down
+
+    uncover(col)
+    return
+
+
 def find_first(matrix):
     """Find one solution to the exact cover problem."""
     collector = []
