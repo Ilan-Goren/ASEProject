@@ -40,12 +40,8 @@
 <div class="select_boards mt-4 mb-3">
     <form method="post" action="{% url 'polysphere_solutions' %}" class="form-inline">
         {% csrf_token %}
-        <div class="form-group mr-2">
-            <label for="start">From</label>
-            <input type="number" name="start" class="form-control" id="start" placeholder="From" min="1" required>
-        </div>
-        <div class="form-group mr-2">
-            <label for="end">To</label>
+        <div class="form-group d-flex">
+            <input type="number" name="start" class="form-control mr-2" id="start" placeholder="From" min="1" required>
             <input type="number" name="end" class="form-control" id="end" placeholder="To" required min="1">
         </div>
         <button type="submit" name="button" value="show_boards" class="btn btn-secondary mt-3">Show Boards</button>
@@ -64,9 +60,7 @@
 <div class="boards">
     {% for index, board in solutions|enumerate_filter:start %}
     <table class="board_s">
-        <th>
-            {{index}}
-        </th>
+        <caption>Solution {{ index }}</caption>
         <tbody>
             {% for row_data in board %}
             <tr>
@@ -80,66 +74,5 @@
     {% endfor %}
 </div>
 {% endif %}
-
-
-
-<script>
-let intervalID;
-let stopButton = document.getElementById('stop_button');
-let startButton = document.getElementById('start_button');
-let resetButton = document.getElementById('reset_button');
-let sfs = document.querySelector('.s_f_s');
-let wts = document.querySelector('.w_t_s');
-let selectBoards = document.querySelector('.select_boards');
-let boards = document.querySelector('.boards');
-
-// Add event listener for the start button
-document.getElementById('solverForm').addEventListener('submit', startSolver);
-stopButton.addEventListener('click', stopSolver);
-
-// Start solver function
-function startSolver(event) {
-    event.preventDefault();
-    stopButton.style.display = 'inline-block';
-    startButton.style.display = 'none';
-    wts.style.display = 'none';
-    sfs.style.display = 'block';
-
-    fetch('start_generator', { method: 'POST' })
-        .then(response => response.json())
-        .then(data => {
-            updateSolutions();
-        });
-}
-
-// Update solutions function
-function updateSolutions() {
-    intervalID = setInterval(() => {
-        fetch('get-solution-count')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('solutions_found').innerText = data.length;
-            })
-            .catch(error => console.log("Error fetching solution count:", error));
-    }, 50); // Update every 50 ms
-}
-
-// Stop solver function
-function stopSolver() {
-    clearInterval(intervalID); // Stop the interval
-    stopButton.style.display = 'none'; // Don't show stop button
-    startButton.style.display = 'inline-block'; // Show start button
-    selectBoards.style.display = 'inline-block';
-
-    fetch('stop_generator', { method: 'POST' })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                console.error('Error stopping generator');
-            }
-        });
-}
-</script>
 
 {% endblock %}

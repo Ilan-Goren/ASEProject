@@ -241,7 +241,12 @@ h1, h2, h3, h4, h5{
     border: 1px solid #333;
 }
 
+.board_s caption {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
 .select_boards {
-    width: 50%; 
+    width: 30%; 
     margin: 0 auto;
 }

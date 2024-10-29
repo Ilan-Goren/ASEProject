@@ -13,6 +13,16 @@ const boardCols = 11;       // Number of board columns
 const rowOffset = 1;        // Offset for dragging position
 const colOffset = 1;        // Offset for dragging position
 
+
+let intervalID;
+let stopButton = document.getElementById('stop_button');
+let startButton = document.getElementById('start_button');
+let resetButton = document.getElementById('reset_button');
+let sfs = document.querySelector('.s_f_s');
+let wts = document.querySelector('.w_t_s');
+let selectBoards = document.querySelector('.select_boards');
+let boards = document.querySelector('.boards');
+
 /******************************************************************************************
                                 PIECE EVENT LISTENERS
 ******************************************************************************************/
@@ -145,6 +155,14 @@ cells.forEach(cell => {
     });
 });
 
+
+/******************************************************************************************
+                                SOLVER EVENT LISTENERS 
+******************************************************************************************/
+
+document.getElementById('solverForm').addEventListener('submit', startSolver);
+stopButton.addEventListener('click', stopSolver);
+
 /******************************************************************************************
                                 HELPER FUNCTIONS
 ******************************************************************************************/
@@ -255,4 +273,49 @@ function placePiece(startRow, startCol, pieceArray) {
     })
     
     clearHighlight();                              // Clear highlights after placing
+}
+
+// Start solver function
+function startSolver(event) {
+    event.preventDefault();
+    stopButton.style.display = 'inline-block';
+    startButton.style.display = 'none';
+    wts.style.display = 'none';
+    sfs.style.display = 'block';
+
+    fetch('start_generator', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            updateSolutions();
+        });
+}
+
+// Update solutions function
+function updateSolutions() {
+    intervalID = setInterval(() => {
+        fetch('get-solution-count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('solutions_found').innerText = data.length;
+            })
+            .catch(error => console.log("Error fetching solution count:", error));
+    }, 50); // Update every 50 ms
+}
+
+
+// Stop solver function
+function stopSolver() {
+    clearInterval(intervalID); // Stop the interval
+    stopButton.style.display = 'none'; // Don't show stop button
+    startButton.style.display = 'inline-block'; // Show start button
+    selectBoards.style.display = 'inline-block';
+
+    fetch('stop_generator', { method: 'POST' })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                console.error('Error stopping generator');
+            }
+        });
 }
