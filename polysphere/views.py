@@ -1,17 +1,18 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-import threading
+from multiprocessing import Process, Manager
 import json
 from django.http import JsonResponse
 from .Polysphere import Polysphere, get_all_solutions
 from .matrix_solver import MatrixSolver
 
-# Initialize the solver
-polysphere = Polysphere()
+polysphere = Polysphere()     
 solver = MatrixSolver()
-solutions = []
-is_running = False
+manager = Manager()
+solutions = manager.list()
+# processes = []
+process = None
 
 def home(request):
     return render(request, 'polysphere/home.html')
@@ -28,7 +29,6 @@ def puzzle(request):
         'board': polysphere.board,
         'positions' : polysphere.piece_positions
     })
-    
 
 @csrf_exempt 
 def place_piece(request):
@@ -95,37 +95,76 @@ def flip_piece(request):
 def polysphere_solver(request):
     if request.method == 'POST':
         button_pressed = request.POST.get('button')
-        if button_pressed == 'solve_board':
-            return render(request, 'polysphere/solutions.html', {
-            })
+        if button_pressed == 'all_solutions':
+            return redirect('polysphere_solutions')
         elif button_pressed == 'solve_partial_config':
             response = polysphere.solvePartialConfig()
             if not response:
                 messages.add_message(request, messages.ERROR, "Can't find a solution with this these pieces:(", extra_tags='danger')
-
     return redirect('polysphere_puzzle')
+
+@csrf_exempt
+def get_solution_count(request):
+    return JsonResponse({"length": len(solutions)})
 
 
 @csrf_exempt
 def start_generator(request):
+    global process, solutions
     if request.method == 'POST':
-        threading.Thread(target=generate_solutions).start()
-        return JsonResponse({"status": "started", "length": len(solutions)})
+        if process and process.is_alive():
+            return JsonResponse({"status": "already running"})
+
+        process = Process(target=get_all_solutions, args=(solutions,))
+        process.start()
+        return JsonResponse({"status": "started"}, status=200)
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+def stop_generator(request):
+    global processes
+    if request.method == 'POST':
+        for process in processes:
+            if process.is_alive():
+                process.terminate()
+                process.join()
+        processes.clear()
+        return JsonResponse({"status": "stopped"}, status=200)
+
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 @csrf_exempt
-def get_solution_count(request):
-    """Endpoint to get the current length of the solutions list"""
-    return JsonResponse({"length": len(solutions)})
-
-def generate_solutions():
-    global solutions, is_running
-    is_running = True
-    get_all_solutions(solutions)
-
-@csrf_exempt
 def stop_generator(request):
+    global process
     if request.method == 'POST':
-        global is_running
-        is_running = False
-        return JsonResponse({"status": "stopped"})
+        if process and process.is_alive():
+            process.terminate()
+            process.join()  
+            return JsonResponse({"status": "stopped"}, status=200)
+        return JsonResponse({"error": "Solver not running"}, status=400)
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+def polysphere_solutions(request):
+    global solutions
+    selected_boards = []
+    if request.method == 'POST':
+        button_pressed = request.POST.get("button")
+        if button_pressed == 'reset':
+            solutions = manager.list()
+
+        elif button_pressed == 'show_boards':
+            start = int(request.POST.get('start', '1'))
+            end = int(request.POST.get('end')) + 1
+            
+            selected_boards = solutions[start:end]
+            return render(request, 'polysphere/solutions.html', {
+                'solutions': selected_boards,
+                'start': start,
+                'end' : end,
+                'solutions_len' : len(solutions)
+            })
+    return render(request, 'polysphere/solutions.html', {
+        'solutions': selected_boards if selected_boards else solutions,
+        'solutions_len' : len(solutions)
+    })

@@ -7,8 +7,8 @@ def range_filter(value):
     return range(value)
 
 @register.filter
-def enumerate_filter(iterable):
-    return enumerate(iterable)
+def enumerate_filter(iterable, start=0):
+    return enumerate(iterable, start)
 
 @register.filter
 def tuple_in_positions(pos_tuple, positions):

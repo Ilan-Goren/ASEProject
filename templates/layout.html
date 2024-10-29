@@ -47,7 +47,7 @@
         <!-- a footer for each page featuring some typical sample text-->
         <footer class="footer text-dark text-center py-4">
                 <p class="mb-1">&copy; 2024 Puzzle Solver. All rights reserved.</p>
-                {% if request.path == '/polysphere/puzzle' %}
+                {% if request.path == '/polysphere/puzzle' or  request.path == '/polysphere/solutions'%}
                     <a class="btn btn-primary mb-3" href="{% url 'polysphere_home' %}">Go Back</a>
                     <a class="btn btn-outline-dark mb-3" href="{% url 'home' %}">Return to home</a>
                 {% elif request.path == '/nqueens/puzzle' %}

@@ -218,3 +218,30 @@ h1, h2, h3, h4, h5{
 .piece-visual .L, .L {
     background-color: cadetblue;
 }
+
+
+.boards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center; 
+}
+
+.board_s {
+    display: inline-block;
+    border: 1px solid #333;
+    border-collapse: collapse;
+    width: 150px;
+    height: auto;
+}
+
+.board_s td {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #333;
+}
+
+.select_boards {
+    width: 50%; 
+    margin: 0 auto;
+}
