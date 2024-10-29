@@ -47,6 +47,7 @@ class Polysphere:
         self.board_size = (5, 11)
         self.board = [[0 for _ in range(self.board_size[1])] for _ in range(self.board_size[0])]
         self.piece_positions = {}
+        self.allSolutions = []
 
     def place_piece(self, piece_key, positions):
         """Place the piece on the board at the specified list of positions."""
@@ -103,6 +104,14 @@ class Polysphere:
             return True
         return False
     
+    def is_board_empty(self):
+        """Check if no pieces are placed on board"""
+        for row in self.board:
+            for col in row:
+                if col:
+                    return False
+        return True
+    
     def is_valid_placement(self, piece, positions):
         """Check if the piece can be placed on the board at the given positions."""
         for pos in positions:
@@ -154,6 +163,7 @@ class Polysphere:
         self.board = [[0 for _ in range(self.board_size[1])] for _ in range(self.board_size[0])]
         self.pieces_left = self.pieces.copy()
         self.piece_positions = {}
+        self.allSolutions = []
         return
     
     def solvePartialConfig(self):
@@ -161,8 +171,6 @@ class Polysphere:
         alreadyPlaced = internalConversionFromLetterToID(self.board)
 
         alreadyPlacedIDs = {id - 1 for row in alreadyPlaced for id in row if id}
-        print(f"Already place ids : {alreadyPlacedIDs}")
-
         polys = []
         for i in range(12):
             if i in alreadyPlacedIDs:
@@ -181,6 +189,31 @@ class Polysphere:
         piece_pos = getPiecesPositionsFromBoard(self.board)
         self.piece_positions = piece_pos.copy()
         self.pieces_left = {}
+        return True
+    
+    def solveAllPartialConfig(self):
+        alreadyPlaced = internalConversionFromLetterToID(self.board)
+        alreadyPlacedIDs = {id - 1 for row in alreadyPlaced for id in row if id}
+        polys = []
+        for i in range(12):
+            if i in alreadyPlacedIDs:
+                continue
+            polys.append(matrix_polyominoes.Polyomino(matrix_polyominoes.POLYOMINOES[i]["tiles"], i + 1))
+
+        s = matrix_solver.MatrixSolver()
+        id_conversions = []
+
+        for rows in s.generate_packing_solutions(polys, 11, 5, alreadyPlaced, id_conversions):
+            # Have to now print packing separately from the solver solving function now it's a generator
+            sol = s.print_packing(rows, 11, 5)
+
+            sol_reverted = s.revert_ids(id_conversions, sol)
+            if sol_reverted != None:
+                sol_reverted = internalConversionFromIDToLetter(sol_reverted)
+                self.allSolutions.append(sol_reverted)
+
+        if not self.allSolutions:
+            return False
         return True
     
     def solveEmptyBoard(self):

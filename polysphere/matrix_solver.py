@@ -76,6 +76,9 @@ class MatrixSolver:
         rows = algorithm_x_functions.find_rows(matrix)
         elapsed = time.time() - start
 
+        if not rows:
+            return False
+
         solution  = self.print_packing(rows, w, h)
         print(f"Time: {elapsed:.4f} seconds")
         return solution

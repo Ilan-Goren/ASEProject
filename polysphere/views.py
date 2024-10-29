@@ -11,7 +11,7 @@ polysphere = Polysphere()
 solver = MatrixSolver()
 manager = Manager()
 solutions = manager.list()
-# processes = []
+processes = []
 process = None
 
 def home(request):
@@ -27,7 +27,9 @@ def puzzle(request):
     return render(request, 'polysphere/puzzle.html', {
         'pieces': polysphere.pieces_left,
         'board': polysphere.board,
-        'positions' : polysphere.piece_positions
+        'positions' : polysphere.piece_positions, 
+        'allSolutions': polysphere.allSolutions,
+        'sol_length': len(polysphere.allSolutions) if polysphere.allSolutions else 0
     })
 
 @csrf_exempt 
@@ -96,8 +98,14 @@ def polysphere_solver(request):
     if request.method == 'POST':
         button_pressed = request.POST.get('button')
         if button_pressed == 'all_solutions':
-            return redirect('polysphere_solutions')
-        elif button_pressed == 'solve_partial_config':
+            if polysphere.is_board_empty():
+                 messages.add_message(request, messages.ERROR, "You have to place at least one piece!", extra_tags='danger')
+            else:
+                response = polysphere.solveAllPartialConfig()
+                print(response)
+                if not response:
+                    messages.add_message(request, messages.ERROR, "Can't find a solution with this these pieces:(", extra_tags='danger')
+        elif button_pressed == 'complete_board':
             response = polysphere.solvePartialConfig()
             if not response:
                 messages.add_message(request, messages.ERROR, "Can't find a solution with this these pieces:(", extra_tags='danger')
@@ -152,8 +160,9 @@ def polysphere_solutions(request):
         button_pressed = request.POST.get("button")
         if button_pressed == 'reset':
             solutions = manager.list()
+            return redirect('polysphere_home')
 
-        elif button_pressed == 'show_boards':
+        elif button_pressed == 'filter_boards':
             start = int(request.POST.get('start', '1'))
             end = int(request.POST.get('end')) + 1
             
@@ -163,6 +172,15 @@ def polysphere_solutions(request):
                 'start': start,
                 'end' : end,
                 'solutions_len' : len(solutions)
+            })
+        elif button_pressed == 'partialConfig':
+            solutions = polysphere.allSolutions
+            selected_boards = solutions
+            return render(request, 'polysphere/solutions.html', {
+                'solutions': selected_boards,
+                'start': 1,
+                'end' : len(selected_boards),
+                'solutions_len' : len(selected_boards)
             })
     return render(request, 'polysphere/solutions.html', {
         'solutions': selected_boards if selected_boards else solutions,

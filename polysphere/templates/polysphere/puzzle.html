@@ -3,10 +3,20 @@
 {% block title %}Puzzle{% endblock %}
 
 {% block main %}
-<h2>Polysphere Puzzle</h2>
 
 <!-- Load custom filers to allow use of enumerate_filter -->
 {% load custom_filters %}
+
+{% if allSolutions and sol_length %}
+<form action="{% url 'polysphere_solutions' %}" method="post" class="mb-3">
+    {% csrf_token %}
+    <h5> There are {{sol_length}} solutions for your board </h5>
+    <button name="button" value="partialConfig" class="btn btn-primary">Go see them</button>
+</form>
+
+{% else %}
+<h2>Polysphere Puzzle</h2>
+{% endif %}
 
 <!-- The Board Table -->
   <table id="board" class="board">
@@ -54,15 +64,15 @@
     <!-- Form to handle both completing the board based on partial config or showing all solutions -->
     <form action="{% url 'polysphere_solver' %}" method="post" class="mb-3">
         {% csrf_token %}
-        <button class="btn btn-primary" name="button" value='solve_partial_config'>Complete my board</button>
-        <button class='btn btn-success' name="button" value='all_solutions'>Show all possible solutions</button>
+        <button class="btn btn-primary" name="button" value='complete_board'>Complete my board</button>
+        <button class='btn btn-success' name="button" value='all_solutions'>Show all possible solutions for my board</button>
     </form>
 </div>
 
 <!-- Form to handle both Checking solution or Resesting the board -->
 <form action="{% url 'polysphere_puzzle' %}" method="post" class="mb-3">
     {% csrf_token %}
-    <button class='btn btn-danger' name="button" value='clear_board'>Reset board</button>
+    <button class='btn btn-danger' name="button" value='clear_board'>Reset</button>
 </form>
 
 
