@@ -256,3 +256,18 @@ function placePiece(startRow, startCol, pieceArray) {
     
     clearHighlight();                              // Clear highlights after placing
 }
+
+// function generateSolutions() {
+//     document.getElementById('stop_button').style.display = 'inline-block';
+//     document.getElementById('start_button').style.display = 'none';
+//     document.querySelector('.s_f_s').style.display = 'block';
+
+//     fetch('/get-list-length/')
+//         .then(response => response.json())
+//         .then(data => {
+//             document.getElementById("list-length").innerText = "Current length: " + data.length;
+//         })
+//         .catch(error => console.log("Error fetching list length:", error));
+
+// setInterval(updateListLength, 3000);  // Update every 3 seconds
+// }

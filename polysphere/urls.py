@@ -10,6 +10,7 @@ urlpatterns = [
     path('/rotate_piece', views.rotate_piece, name='rotate_piece'),
     path('/flip_piece', views.flip_piece, name='flip_piece'),
     path('/solver', views.polysphere_solver, name='polysphere_solver'),
-
-    
+    path('/get-solution-count', views.get_solution_count, name='get_solution_count'),
+    path('/start_generator', views.start_generator, name='start_generator'),
+    path('/stop_generator', views.stop_generator, name='stop_generator'),
 ]

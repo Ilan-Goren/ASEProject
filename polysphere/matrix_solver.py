@@ -75,8 +75,6 @@ class MatrixSolver:
         start = time.time()
         rows = algorithm_x_functions.find_rows(matrix)
         elapsed = time.time() - start
-        if not rows:
-            return False
 
         solution  = self.print_packing(rows, w, h)
         print(f"Time: {elapsed:.4f} seconds")
@@ -105,6 +103,20 @@ class MatrixSolver:
         print(f"Solutions: {len(solution_rows)}")
         print(f"Time: {elapsed:.4f} seconds")
         return solutions
+
+    def generate_packing_solutions(self, polys, w, h, b=None, id_conversions=None):
+        """Solve the packing problem and display the search time."""
+        if id_conversions is None:
+            id_conversions = []
+
+        if b is None:
+            matrix = self.packing_matrix(polys, w, h, id_conversions)
+        else:
+            matrix = self.packing_matrix_partial_config(polys, w, h, b, id_conversions)
+
+        yield from algorithm_x_functions.generate_solutions(matrix)
+
+
 
 
     def packing_matrix_partial_config(self, polys, w, h, initial_board=None, id_conversions=None):

@@ -1,0 +1,76 @@
+{% extends 'polysphere/layout.html' %}
+{% block app_name %} Polysphere {% endblock %}
+{% block title %} Solutions {% endblock %}
+
+{% block main %}
+
+<style>
+    #stop_button, .s_f_s { display: none; }
+</style>
+
+<div class="w_t_s">
+    <h1> Solver </h1>
+    <h2> Press start to generate all possible solutions for the 5x11 board </h2>
+
+    <form onsubmit="startSolver(event)">
+        <button id="start_button" type="submit" class="btn btn-primary mb-3">Start</button>
+    </form>
+</div>
+
+<div>
+    <button id="stop_button" class="btn btn-danger mb-3" onclick="stopSolver()">Stop</button>
+</div>
+
+<div class="s_f_s">
+    <h3 class="mb-3">Solutions found so far...</h3>
+    <h3 id="solutions_found">0</h3> 
+</div>
+
+<script>
+let intervalID;
+let stopButton = document.getElementById('stop_button');
+let startButton = document.getElementById('stop_button');
+let sfs = document.querySelector('.s_f_s');
+
+function startSolver(event) {
+    event.preventDefault();
+    stop_button.style.display = 'inline-block';
+    document.getElementById('start_button').style.display = 'none';
+    document.querySelector('.s_f_s').style.display = 'block';
+
+    fetch('start_generator', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            updateSolutions();
+            
+        });
+}
+
+function updateSolutions() {
+    intervalID = setInterval(() => {
+        fetch('get-solution-count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('solutions_found').innerText = data.length;
+            })
+            .catch(error => console.log("Error fetching solution count:", error));
+    }, 50);
+}
+
+function stopSolver() {
+    clearInterval(intervalID);  // Stop the interval
+    document.getElementById('stop_button').style.display = 'none';
+    document.getElementById('start_button').style.display = 'inline-block';
+
+    fetch('stop_generator', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "stopped") {
+                alert("Solver stopped.");
+            }
+        })
+        .catch(error => console.log("Error stopping the solver:", error));
+}
+</script>
+
+{% endblock %}

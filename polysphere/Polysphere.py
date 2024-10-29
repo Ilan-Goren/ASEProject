@@ -197,6 +197,12 @@ class Polysphere:
         self.pieces_left = {}
         return True
     
+
+
+##########################################################################################
+#                                  HELPER FUNCTIONS                                      #
+##########################################################################################
+    
 def internalConversionFromLetterToID(board):
     ''' Function changes placed pieces from letters to ID '''
     rep = { 'A' : 1, 'B': 2, 'C' : 3, 'D' : 4, 'E' : 5, 'F' : 6, 
@@ -232,4 +238,30 @@ def getPiecesPositionsFromBoard(board):
                 piecesPos[col_data].append((row_index, col_index))
 
     return piecesPos
+
+
+def get_all_solutions(solutions):
+    polys = []
+    for p in matrix_polyominoes.POLYOMINOES:
+        poly = matrix_polyominoes.Polyomino(p["tiles"],p["poly_id"])
+        polys.append(poly)
+
+    s = matrix_solver.MatrixSolver()
+    id_conversions = []
+    solution_count = 0
+
+    for rows in s.generate_packing_solutions(polys, 11, 5, None, id_conversions):
+        # Have to now print packing separately from the solver solving function now it's a generator
+            sol = s.print_packing(rows, 11, 5)
+
+            sol_reverted = s.revert_ids(id_conversions, sol)
+
+            if sol_reverted != None:
+                solution_count += 1
+                sol_reverted = internalConversionFromIDToLetter(sol_reverted)
+                solutions.append(sol_reverted)
+                
+                # print("list representation of solution " + str(solution_count) + ":")
+                # print(sol_reverted)
+            
 

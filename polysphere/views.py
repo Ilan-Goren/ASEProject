@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+import threading
 import json
-from .Polysphere import Polysphere
+from django.http import JsonResponse
+from .Polysphere import Polysphere, get_all_solutions
 from .matrix_solver import MatrixSolver
 
 # Initialize the solver
 polysphere = Polysphere()
 solver = MatrixSolver()
+solutions = []
+is_running = False
 
 def home(request):
     return render(request, 'polysphere/home.html')
@@ -17,13 +21,6 @@ def puzzle(request):
         button_pressed = request.POST.get("button")
         if button_pressed == 'clear_board':
             polysphere.reset_board()
-        # elif button_pressed == 'check_solution':
-        #     isIt = polysphere.is_board_filled()
-        #     if isIt:
-        #         messages.success(request, "Board complete!")
-        #         redirect('polysphere_home')
-        #     else:
-        #         messages.add_message(request, messages.ERROR, "Board not complete :(", extra_tags='danger')
         return redirect('polysphere_puzzle')
     print(polysphere.board)
     return render(request, 'polysphere/puzzle.html', {
@@ -98,14 +95,37 @@ def flip_piece(request):
 def polysphere_solver(request):
     if request.method == 'POST':
         button_pressed = request.POST.get('button')
-
         if button_pressed == 'solve_board':
-            polysphere.solveEmptyBoard()
-            if not polysphere.board:
-                messages.add_message(request, messages.ERROR, "ERROR", extra_tags='danger')
+            return render(request, 'polysphere/solutions.html', {
+            })
         elif button_pressed == 'solve_partial_config':
             response = polysphere.solvePartialConfig()
             if not response:
                 messages.add_message(request, messages.ERROR, "Can't find a solution with this these pieces:(", extra_tags='danger')
 
     return redirect('polysphere_puzzle')
+
+
+@csrf_exempt
+def start_generator(request):
+    if request.method == 'POST':
+        threading.Thread(target=generate_solutions).start()
+        return JsonResponse({"status": "started", "length": len(solutions)})
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def get_solution_count(request):
+    """Endpoint to get the current length of the solutions list"""
+    return JsonResponse({"length": len(solutions)})
+
+def generate_solutions():
+    global solutions, is_running
+    is_running = True
+    get_all_solutions(solutions)
+
+@csrf_exempt
+def stop_generator(request):
+    if request.method == 'POST':
+        global is_running
+        is_running = False
+        return JsonResponse({"status": "stopped"})
