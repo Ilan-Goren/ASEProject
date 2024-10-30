@@ -102,7 +102,6 @@ def polysphere_solver(request):
                  messages.add_message(request, messages.ERROR, "You have to place at least one piece!", extra_tags='danger')
             else:
                 response = polysphere.solveAllPartialConfig()
-                print(response)
                 if not response:
                     messages.add_message(request, messages.ERROR, "Can't find a solution with this these pieces:(", extra_tags='danger')
         elif button_pressed == 'complete_board':
@@ -127,18 +126,6 @@ def start_generator(request):
         process.start()
         return JsonResponse({"status": "started"}, status=200)
     
-    return JsonResponse({"error": "Invalid request"}, status=400)
-
-def stop_generator(request):
-    global processes
-    if request.method == 'POST':
-        for process in processes:
-            if process.is_alive():
-                process.terminate()
-                process.join()
-        processes.clear()
-        return JsonResponse({"status": "stopped"}, status=200)
-
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 @csrf_exempt
