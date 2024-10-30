@@ -28,8 +28,10 @@ POLYOMINOES   = [
 
 class Polyomino:
     def __init__(self, tiles, poly_id):
-        self.tiles = tiles  # A 2D list of booleans representing the polyomino shape
-        self.poly_id = poly_id  # ID for the polyomino
+        # A 2D list of booleans representing the polyomino shape
+        self.tiles = tiles
+        # ID for the polyomino
+        self.poly_id = poly_id
 
 def print_polyomino(p):
     for row in p.tiles:
@@ -38,4 +40,4 @@ def print_polyomino(p):
                 print("X", end="")
             else:
                 print(" ", end="")
-        print("")  # Move to the next line after each row
+        print("")
