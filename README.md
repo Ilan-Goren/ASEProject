@@ -76,3 +76,4 @@ After running the server, you can access the web application by navigating to [h
 ## Contact
 If you have any questions or suggestions, please reach out via GitHub.
 
+[polyshpere solver explained.docx](https://github.com/user-attachments/files/17577804/polyshpere.solver.explained.docx)
