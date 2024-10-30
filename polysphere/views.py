@@ -11,7 +11,6 @@ polysphere = Polysphere()
 solver = MatrixSolver()
 manager = Manager()
 solutions = manager.list()
-processes = []
 process = None
 
 def home(request):
@@ -141,35 +140,36 @@ def stop_generator(request):
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 def polysphere_solutions(request):
-    global solutions
-    selected_boards = []
+    global solutions     # Get global variable solutions
+    selected_boards = [] # initialize empty list for filtering
+    start = 1            # intialize the start to 1
+
     if request.method == 'POST':
-        button_pressed = request.POST.get("button")
+        button_pressed = request.POST.get("button") # Get button
         if button_pressed == 'reset':
-            solutions = manager.list()
-            return redirect('polysphere_home')
+            # Check if boards generated were from partial config or all solutions generator.
+            if polysphere.allSolutions:
+                # If from partial config reset the list and return to polysphere puzzle.
+                polysphere.allSolutions = []
+                selected_boards = []
+                solutions = manager.list()
+                return redirect('polysphere_puzzle')
+            else:
+                # If from generator reset the list and return to polysphere home.
+                solutions = manager.list()
+                return redirect('polysphere_home')
 
         elif button_pressed == 'filter_boards':
-            start = int(request.POST.get('start', '1'))
-            end = int(request.POST.get('end')) + 1
-            
-            selected_boards = solutions[start:end]
-            return render(request, 'polysphere/solutions.html', {
-                'solutions': selected_boards,
-                'start': start,
-                'end' : end,
-                'solutions_len' : len(solutions)
-            })
+            start = int(request.POST.get('start', '1')) # Get start number from page.
+            end = int(request.POST.get('end')) + 1      # Get end number from page.
+            selected_boards = solutions[start:end]      # Store selected boards for display
+
         elif button_pressed == 'partialConfig':
-            solutions = polysphere.allSolutions
-            selected_boards = solutions
-            return render(request, 'polysphere/solutions.html', {
-                'solutions': selected_boards,
-                'start': 1,
-                'end' : len(selected_boards),
-                'solutions_len' : len(selected_boards)
-            })
+            solutions = polysphere.allSolutions         # Get solutions from class variable
+            selected_boards = solutions                 # store the solutions in selected boards
+
     return render(request, 'polysphere/solutions.html', {
         'solutions': selected_boards if selected_boards else solutions,
-        'solutions_len' : len(solutions)
+        'solutions_len' : len(solutions),
+        'start': start
     })
