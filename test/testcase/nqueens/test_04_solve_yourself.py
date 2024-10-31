@@ -1,19 +1,7 @@
 # target: chess board in the solution pages
-# method: loop valid queen number to try incorrect solutions
+# method: loop valid queen number to find errors
 
-import pytest, time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-
-# global variables
-homepage_url = "http://127.0.0.1:8000/"
-solutionpage_url = "http://127.0.0.1:8000/solution/"
-
-input_box_id_selector = "id_n"
-button_solve_it_yourself_xpath_selector = "//*[contains(@class, 'btn') and contains(@class, 'btn-primary')]"
-button_check_your_solution_xpath_selector = "//*[contains(@class, 'btn') and contains(@class, 'btn-primary') and contains(@class, 'mt-3')]"
-table_chess_board_xpath_selector = "//table[@id='nqueens-board']"
+from ..utils.glob import *
 
 # configure
 @pytest.fixture(scope="function")
@@ -30,8 +18,8 @@ def test_04_solve_yourself(browser):
     #            button unclickable, guess it is because overlap?
 
     for queen_number in [4, 6, 8, 10]:
-        # open target homepage
-        browser.get(homepage_url)
+        # open target page
+        browser.get(nqueens_page_url)
 
         # wait
         time.sleep(1)
@@ -59,8 +47,8 @@ def test_04_solve_yourself(browser):
 
         # should switch to solution page, check current url
         current_url = browser.current_url
-        if current_url != solutionpage_url:
-            pytest.fail("can not switch to solution page")
+        if current_url != nqueens_solution_page_url:
+            pytest.fail("can not switch to nqueens solution page")
 
         # find chess table in the refreshed solution page
         try:
@@ -87,10 +75,10 @@ def test_04_solve_yourself(browser):
         # wait
         time.sleep(5)
 
-        # should switch to home page, check current url
+        # should switch to nqueens page, check current url
         current_url = browser.current_url
-        if current_url != homepage_url:
-            pytest.fail("can not switch to home page")
+        if current_url != nqueens_page_url:
+            pytest.fail("can not switch to nqueens page")
 
         # suppose to find the feedback div
         try:

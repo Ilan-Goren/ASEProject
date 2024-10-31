@@ -1,21 +1,7 @@
 # target: get solution buttoms in the solution pages
 # method: loop valid queen number to get solutions
 
-import pytest, time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-# global variables
-homepage_url = "http://127.0.0.1:8000/"
-solutionpage_url = "http://127.0.0.1:8000/solution/"
-
-input_box_id_selector = "id_n"
-button_solve_it_yourself_xpath_selector = "//*[contains(@class, 'btn') and contains(@class, 'btn-primary')]"
-button_go_to_solution_xpath_selector = "//*[contains(@class, 'btn') and contains(@class, 'btn-success')]"
-button_get_a_possible_solution_xpath_selector = "//*[contains(@class, 'btn') and contains(@class, 'btn-success')]"
+from ..utils.glob import *
 
 # configure
 @pytest.fixture(scope="function")
@@ -32,11 +18,13 @@ def test_03_go_solution(browser):
     #            button unclickable, guess it is because overlap?
 
     for queen_number in [4, 6, 8, 10]:
-        for target_button_domain in [homepage_url, solutionpage_url]:
-            # which means we are directly going to the solution
-            if target_button_domain == homepage_url:
-                # open target homepage
-                browser.get(homepage_url)
+        for target_button_domain in [nqueens_page_url, nqueens_solution_page_url]:
+            # which means we are directly going to the solution without solving it ourselves
+            if target_button_domain == nqueens_page_url:
+                # open nqueens page
+                # Note: it seems this project does not require some login or prerequist stuff
+                #       so, jut directly visit the nqueens page it seems to be fine...
+                browser.get(nqueens_page_url)
 
                 # wait
                 time.sleep(1)
@@ -65,7 +53,7 @@ def test_03_go_solution(browser):
 
                 # should switch to solution page, check current url
                 current_url = browser.current_url
-                if current_url != solutionpage_url:
+                if current_url != nqueens_solution_page_url:
                     pytest.fail("can not switch to solution page")
 
                 # find elements in the refreshed solution page
@@ -76,9 +64,9 @@ def test_03_go_solution(browser):
                     pytest.fail("can not find element: h3_solution_title")
 
             # which means we are testing after trying to solve the puzzle
-            if target_button_domain == solutionpage_url:
+            if target_button_domain == nqueens_solution_page_url:
                 # open target homepage
-                browser.get(homepage_url)
+                browser.get(nqueens_page_url)
 
                 # wait
                 time.sleep(1)
@@ -106,7 +94,7 @@ def test_03_go_solution(browser):
 
                 # should switch to solution page, check current url
                 current_url = browser.current_url
-                if current_url != solutionpage_url:
+                if current_url != nqueens_solution_page_url:
                     pytest.fail("can not switch to solution page")
 
                 # locate button in the solution page
