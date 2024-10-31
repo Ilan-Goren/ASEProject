@@ -27,7 +27,7 @@ def home(request):
         })
 
 # View to handle solving the N-Queens problem based on user input
-def solution(request):
+def puzzle(request):
     '''
     Handles the form submission when the user inputs a value for N.
     It checks if the request method is POST and validates the form.
@@ -58,9 +58,9 @@ def solution(request):
                     })
         # If the form isn't valid, redirect back to the home page
         else:
-            return redirect("home")
+            return redirect("nqueens_home")
     # If the request method is GET (e.g., someone manually navigates to /solve), redirect to home
-    return redirect("home")
+    return redirect("nqueens_home")
 
 def check_solution(request):
     if request.method == 'POST':
@@ -72,4 +72,4 @@ def check_solution(request):
             messages.success(request, "Well done! Your solution is correct:)")
         else:
             messages.add_message(request, messages.ERROR, "Your answer is incorrect :(", extra_tags='danger')
-    return redirect('home')
+    return redirect('nqueens_home')

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+<h1 class="mb-3">Puzzle Lobby</h1>
+
+<table class="puzzle-card">
+        <tr class="puzzle-title">
+            <th>N Queens</th>
+        </tr>
+            <td class="puzzle-button">
+                <a class="btn btn-info mt-3 mb-3" href="/nqueens">Go to puzzle</a>
+            </td>       
+</table>
+
+<table class="puzzle-card">
+        <tr class="puzzle-title">
+            <th>Polysphere</th>
+        </tr>
+        <td class="puzzle-button">
+            <a class="btn btn-info mt-3 mb-3" href="/polysphere">Go to puzzle</a>
+        </td>
+
+</table>
+
+{% endblock %}

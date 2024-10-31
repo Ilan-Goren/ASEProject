@@ -1,4 +1,4 @@
-{% extends "nqueens/layout.html" %}
+{% extends "layout.html" %}
 
 {% block title %}
     Puzzle
@@ -28,7 +28,7 @@
         <button type="submit" class="btn btn-primary mt-3" name="action" value="check_board">Check Your Solution</button>
     </form>
 
-    <form action="{% url 'solution' %}" method="POST" class="mt-3">
+    <form action="{% url 'puzzle' %}" method="POST" class="mt-3">
         {% csrf_token %}
         <input type="hidden" name="n" value="{{ n }}">
         <button class="btn btn-success" name="button" value="go_solution">Get a possible solution</button>
@@ -54,4 +54,6 @@
             document.getElementById("user_board").value = JSON.stringify(board);
         }
     </script>
+
+
 {% endblock %}

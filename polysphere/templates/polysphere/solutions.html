@@ -1,0 +1,78 @@
+{% extends 'polysphere/layout.html' %}
+{% block app_name %} Polysphere {% endblock %}
+{% block title %} Solutions {% endblock %}
+
+{% block main %}
+
+{% if solutions %}
+<style>
+    #stop_button, #start_button , .w_t_s { display: none; }
+</style>
+{% else %}
+<style>
+    #stop_button, #reset_button, .select_boards, .boards, .s_f_s { display: none; }
+</style>
+{% endif %}
+
+<div class="w_t_s">
+    <h1> Solver </h1>
+    <h3> Press start to generate all possible solutions for the 5x11 board </h3>
+
+    <form onsubmit="startSolver(event)">
+        <button id="start_button" type="submit" class="btn btn-primary mb-3">Start</button>
+    </form>
+</div>
+
+<div class="s_f_s">
+    <h3 id="sols_found" class="mb-3">Solutions found</h3>
+    {% if solutions_len %}
+        <h3>{{ solutions_len }}</h3>
+    {% else %}
+        <h3 id="solutions_found">0</h3>
+    {% endif %}
+</div>
+
+<div>
+    <button id="stop_button" class="btn btn-danger mb-3" onclick="stopSolver()">Stop</button>
+</div>
+
+
+<div class="select_boards mt-4 mb-3">
+    <form method="post" action="{% url 'polysphere_solutions' %}" class="form-inline">
+        {% csrf_token %}
+        <div class="form-group d-flex">
+            <input type="number" name="start" class="form-control mr-2" id="start" placeholder="From" min="1" required>
+            <input type="number" name="end" class="form-control" id="end" placeholder="To" required min="1">
+        </div>
+        <button type="submit" name="button" value="filter_boards" class="btn btn-secondary mt-3">Filter Boards</button>
+    </form>
+</div>
+
+<div>
+    <form method="post" action="{% url 'polysphere_solutions' %}">
+        {% csrf_token %}
+        <button id="reset_button" type="submit" name="button" value="reset" class="btn btn-danger mb-3">Reset</button>
+    </form>
+</div>
+
+{% if solutions and start %}
+{% load custom_filters %}
+<div class="boards">
+    {% for index, board in solutions|enumerate_filter:start %}
+    <table class="board_s">
+        <caption>Solution {{ index }}</caption>
+        <tbody>
+            {% for row_data in board %}
+            <tr>
+                {% for cell in row_data %}
+                <td class="cell {% if cell %}filled {{ cell }}{% endif %}"></td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

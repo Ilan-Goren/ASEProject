@@ -1,0 +1,24 @@
+.board {
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.board .cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.cell.filled {
+    background-color: lightblue;
+}
+
+.pieces {
+    margin-top: 20px;
+}
+
+.piece {
+    margin: 10px;
+    cursor: pointer;
+}

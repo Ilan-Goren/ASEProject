@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+
+{% block app_name %} Polysphere {% endblock %}
+
+{% block links %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static '/polysphere/js/puzzle.js' %}" defer></script>
+{% endblock %}
