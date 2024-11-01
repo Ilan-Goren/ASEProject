@@ -192,6 +192,7 @@ class Polysphere:
         return True
     
     def solveAllPartialConfig(self):
+        self.allSolutions = []
         alreadyPlaced = internalConversionFromLetterToID(self.board)
         alreadyPlacedIDs = {id - 1 for row in alreadyPlaced for id in row if id}
         polys = []
