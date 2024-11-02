@@ -17,15 +17,20 @@
     <form method="post" action="{% url 'polysphere_solutions' %}" class="form-inline" onsubmit="showLoading()">
         {% csrf_token %}
         <div class="form-group d-flex">
+            {% if start and end %}
+            <input type="number" name="start" class="form-control mr-2" id="start" placeholder="From" min="1" value="{{start}}" required>
+            <input type="number" name="end" class="form-control" id="end" placeholder="To" min="1" max="{{solutions_len}}" value="{{end}}" required>
+            {% else %}
             <input type="number" name="start" class="form-control mr-2" id="start" placeholder="From" min="1" required>
             <input type="number" name="end" class="form-control" id="end" placeholder="To" min="1" max="{{solutions_len}}" required>
+            {% endif %}
         </div>
         <button type="submit" name="button" value="filter_boards" class="btn btn-secondary mt-3">Filter Boards</button>
     </form>
 </div>
 
 <div>
-    <button id="back_button" class="btn btn-danger mb-3" onclick="goBack()">Back</button>
+    <button id="back_button" class="btn btn-primary mb-3" onclick="goBack()">Go Back</button>
 </div>
 
 {% if solutions and start %}

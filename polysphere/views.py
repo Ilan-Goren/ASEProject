@@ -72,6 +72,7 @@ def polysphere_solutions(request):
     global selected_boards # initialize empty list for filtering
     start = 1            # intialize the start to 1
     filtered_boards = []
+    end = 0
 
     if request.method == 'POST':
         button_pressed = request.POST.get("button") # Get button
@@ -104,7 +105,8 @@ def polysphere_solutions(request):
         return render(request, 'polysphere/solutions.html', {
             'solutions': filtered_boards if len(filtered_boards) else selected_boards,
             'solutions_len' : len(selected_boards),
-            'start': start
+            'start': start,
+            'end': end - 1 if end else 0
         })
     return redirect('polysphere_home')
 
