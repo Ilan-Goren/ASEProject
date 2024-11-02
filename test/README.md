@@ -1,24 +1,26 @@
-# ASE project CI (version 0.1)
+# ASE project CI (version 1.0)
 
-## Technologies used
+## Tools involved
+1. Chrome browser: all tests are based on the Chrome browser.
+2. Chrome driver: help drive the Chrome pages.
+3. Selenum 4: interacting with Chrome driver.
+4. Pytest 8.3.3: provide module tests.
+5. Allure: formate HTML report.
+6. Jenkins: TBD
 
-1. Selenum 4: interacting with Chrome driver, working on Chrome pages.
-2. Pytest 8.3.3: Module test organizer, also gives reports.
-3. Jenkins: TBD
+## Note for the tools
+- You have to install Chrome and its driver manually
+- Use version 130 and above is fine.
 
-## Testing method
+- Allure should be installed manually and its version
+- should be above 2.32.0 version number.
 
-- From top to buttom.
-- First validation then function.
+## Testing types
+- validation and function tests are supported.
+- benchmark tests are not supported.
 
 ## Naming and annotation specifications
-
-- File: test_<NUMBER>_<NAME>_<NAME>.py: <NUMBER> controls the test order,
-- <NAME>_<NAME> to help tester distinguish the targets.
-
-- Test cases: See pytest.ini for more information
+- File: test_<NUMBER>_<NAME>.py: <NUMBER> controls the test order,
 
 ## How to run test
-
-- On linux platforms using: bash startup_test.sh
-- On Windows platforms using: TBD
+- Test based on linux platforms using bash command: bash startup_selenium_tests.sh

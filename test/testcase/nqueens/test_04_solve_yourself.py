@@ -32,7 +32,7 @@ def test_04_solve_yourself(browser):
 
         # locate button in homepage
         try:
-            button_solve_it_yourself = browser.find_element(By.XPATH, button_solve_it_yourself_xpath_selector)
+            button_solve_it_yourself = browser.find_element(By.XPATH, button_nqueens_solve_it_yourself_xpath_selector)
         except NoSuchElementException:
             pytest.fail("can not find element: button_solve_it_yourself")
 
@@ -52,13 +52,13 @@ def test_04_solve_yourself(browser):
 
         # find chess table in the refreshed solution page
         try:
-            table_chess_board = browser.find_element(By.XPATH, table_chess_board_xpath_selector)
+            table_chess_board = browser.find_element(By.XPATH, table_nqueens_chess_board_xpath_selector)
         except NoSuchElementException:
             pytest.fail("can not find element: table_chess_board")
 
         # find button "check your solution" in the refreshed solution page
         try:
-            button_check_your_solution = browser.find_element(By.XPATH, button_check_your_solution_xpath_selector)
+            button_check_your_solution = browser.find_element(By.XPATH, button_nqueens_check_your_solution_xpath_selector)
         except NoSuchElementException:
             pytest.fail("can not find element: button_check_your_solution")
 

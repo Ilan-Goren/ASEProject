@@ -37,7 +37,7 @@ def test_03_go_solution(browser):
 
                 # locate button in homepage
                 try:
-                    button_go_to_solution = browser.find_element(By.XPATH, button_go_to_solution_xpath_selector)
+                    button_go_to_solution = browser.find_element(By.XPATH, button_nqueens_go_to_solution_xpath_selector)
                 except NoSuchElementException:
                     pytest.fail("can not find element: button_go_to_solution")
 
@@ -79,7 +79,7 @@ def test_03_go_solution(browser):
 
                 # locate button in homepage
                 try:
-                    button_solve_it_yourself = browser.find_element(By.XPATH, button_solve_it_yourself_xpath_selector)
+                    button_solve_it_yourself = browser.find_element(By.XPATH, button_nqueens_solve_it_yourself_xpath_selector)
                 except NoSuchElementException:
                     pytest.fail("can not find element: button_solve_it_yourself")
 
@@ -99,7 +99,7 @@ def test_03_go_solution(browser):
 
                 # locate button in the solution page
                 try:
-                    button_get_a_possible_solution = browser.find_element(By.XPATH, button_get_a_possible_solution_xpath_selector)
+                    button_get_a_possible_solution = browser.find_element(By.XPATH, button_nqueens_get_a_possible_solution_xpath_selector)
                 except NoSuchElementException:
                     pytest.fail("can not find element: button_get_a_possible_solution")
 
