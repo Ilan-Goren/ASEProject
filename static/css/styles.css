@@ -2,6 +2,11 @@
                                     HOME STYLING
 ******************************************************************************************/
 
+.cards {
+    display: flex; /* Use flexbox for inline display */
+    justify-content: center; /* Center align the cards horizontally */
+    gap: 20px; /* Space between the cards */
+}
 .puzzle-card {
     border: 1px solid #747474;
     border-radius: 8px;
@@ -10,9 +15,16 @@
     display: inline-block;
     width: 200px;
     height: 200px;
-    background-image: url('../puzzle_image.jpg');
     background-size: cover;
     transition: transform 0.5s ease-in-out;
+}
+
+.puzzle-card-q {
+    background-image: url('../nqueens.jpg');
+}
+
+.puzzle-card-p {
+    background-image: url('../puzzle.jpg');
 }
 
 .puzzle-card tr{
@@ -46,10 +58,6 @@
 .puzzle-button{
     display: none;
 }
-
-/* .puzzle-card:hover .puzzle-description-row {
-    display:block;
-} */
 
 .puzzle-card:hover .puzzle-button {
     display: block;

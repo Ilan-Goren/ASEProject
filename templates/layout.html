@@ -12,7 +12,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="{% static '/js/main.js' %}" defer></script>
         {% block links %} {% endblock %}
-        <link href="{% static 'icon.jpg' %}" rel="icon">
+        <link href="{% static 'puzzle.jpg' %}" rel="icon">
         <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 
         <title>{% block app_name %}{% endblock %} {% block title %}{% endblock %}</title>
@@ -25,7 +25,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'home' %}">
                     <div class="logo">
-                        <img src="{% static 'icon.jpg' %}" alt="Page Logo">
+                        <img src="{% static 'puzzle.jpg' %}" alt="Page Logo">
                     </div>
                 </a>
             </div>
