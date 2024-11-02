@@ -18,6 +18,8 @@ let intervalID;
 let stopButton = document.getElementById('stop_button');
 let startButton = document.getElementById('start_button');
 let resetButton = document.getElementById('reset_button');
+let see_solutions = document.getElementById('see_sols_button');
+
 let sfs = document.querySelector('.s_f_s');
 let wts = document.querySelector('.w_t_s');
 let selectBoards = document.querySelector('.select_boards');
@@ -160,7 +162,7 @@ cells.forEach(cell => {
                                 SOLVER EVENT LISTENERS 
 ******************************************************************************************/
 
-document.getElementById('solverForm').addEventListener('submit', startSolver);
+document.getElementById('startForm').addEventListener('submit', startSolver);
 stopButton.addEventListener('click', stopSolver);
 
 /******************************************************************************************
@@ -306,20 +308,15 @@ function updateSolutions() {
 // Stop solver function
 function stopSolver() {
     clearInterval(intervalID); // Stop the interval
-    stopButton.style.display = 'none'; // Don't show stop button
-    startButton.style.display = 'inline-block'; // Show start button
-    selectBoards.style.display = 'inline-block';
+    startButton.style.display = 'inline-block'; // Hide stop button
+    stopButton.style.display = 'none'; // Hide stop button
 
     fetch('stop_generator', { method: 'POST' })
         .then(response => {
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                console.error('Error stopping generator');
+            if (response.status === 200) {
+                window.location.reload(); // Reload the page if response is 200
+            } else if (response.status === 400) {
+                alert('Error: Bad Request (400)'); // Alert the user if the response status is 400
             }
-        });
-}
-
-function showLoading() {
-    document.getElementById("loadingOverlay").style.display = "flex";
+        })
 }

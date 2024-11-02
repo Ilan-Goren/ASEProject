@@ -1,4 +1,5 @@
-from . import matrix_polyominoes, matrix_transformations, matrix_solver
+from .solver_functions import matrix_polyominoes, matrix_solver
+from .solver_functions import matrix_transformations
 
 class Polysphere:
     def __init__(self):
@@ -82,7 +83,7 @@ class Polysphere:
         """Remove the piece from the board."""
         if piece_key not in list(self.piece_positions.keys()):
             print(f"Piece {piece_key} not in piece posistions")
-            return  False# No such piece on the board
+            return  False # No such piece on the board
 
         # Get the positions occupied by the piece
         occupied_positions = self.piece_positions[piece_key]
@@ -231,8 +232,6 @@ class Polysphere:
         self.pieces_left = {}
         return True
     
-
-
 ##########################################################################################
 #                                  HELPER FUNCTIONS                                      #
 ##########################################################################################
@@ -275,8 +274,10 @@ def getPiecesPositionsFromBoard(board):
 
 
 def get_all_solutions(solutions):
-    polys = []
+    ''' Function takes a list that will store the solutions in. See documentions on matrix_solver'''
+    polys = []  #Empty list to store polys for board completion
     for p in matrix_polyominoes.POLYOMINOES:
+        # Iterating over all polys to get them all in a list.
         poly = matrix_polyominoes.Polyomino(p["tiles"],p["poly_id"])
         polys.append(poly)
 
@@ -294,8 +295,5 @@ def get_all_solutions(solutions):
                 solution_count += 1
                 sol_reverted = internalConversionFromIDToLetter(sol_reverted)
                 solutions.append(sol_reverted)
-                
-                # print("list representation of solution " + str(solution_count) + ":")
-                # print(sol_reverted)
             
 

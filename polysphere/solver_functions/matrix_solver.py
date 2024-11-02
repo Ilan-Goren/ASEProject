@@ -1,5 +1,7 @@
 import time
-from . import algorithm_x_functions, matrix_transformations, matrix_polyominoes
+
+from . import algorithm_x_functions, matrix_polyominoes
+from . import matrix_transformations
 
 class MatrixSolver:
 

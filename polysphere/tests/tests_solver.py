@@ -2,7 +2,9 @@ from operator import truediv
 
 from django.test import TestCase
 
-from . import matrix_polyominoes, matrix_transformations, matrix_solver
+from ..solver_functions import matrix_polyominoes, matrix_solver
+
+from ..solver_functions import matrix_transformations
 
 class PolysphereTestCase(TestCase):
     def test_rotate_matrix_poly(self):

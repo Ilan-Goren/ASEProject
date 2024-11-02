@@ -14,4 +14,5 @@ urlpatterns = [
     path('/start_generator', views.start_generator, name='start_generator'),
     path('/stop_generator', views.stop_generator, name='stop_generator'),
     path('/solutions', views.polysphere_solutions, name='polysphere_solutions'),
+    path('/generator', views.generator, name='polysphere_generator'),
 ]

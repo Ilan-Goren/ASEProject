@@ -14,11 +14,6 @@
     <button name="button" value="partialConfig" class="btn btn-primary">Go see them</button>
 </form>
 
-
-<div id="loadingOverlay">
-    <h1>Loading, please wait...</h1>
-</div>
-
 {% else %}
 <h2>Polysphere Puzzle</h2>
 {% endif %}
@@ -77,7 +72,7 @@
 <!-- Form to handle both Checking solution or Resesting the board -->
 <form action="{% url 'polysphere_puzzle' %}" method="post" class="mb-3">
     {% csrf_token %}
-    <button class='btn btn-danger' name="button" value='clear_board'>Reset</button>
+    <button class='btn btn-danger' name="button" value='reset_config'>Reset Configuration</button>
 </form>
 
 

@@ -1,0 +1,41 @@
+{% extends 'polysphere/layout.html' %}
+{% block app_name %} Polysphere {% endblock %}
+{% block title %} Generator {% endblock %}
+
+{% block main %}
+
+<style>
+    #stop_button, .s_f_s { display: none; }
+</style>
+
+
+{% if solutions_len %}
+<form action="{% url 'polysphere_solutions' %}" method="post" class="mb-3" onsubmit="showLoading()">
+    {% csrf_token %}
+    <h3 class="mb-3"> There are {{ solutions_len }} generated solutions </h3>
+    <button name="button" value="generatorSolutions" class="btn btn-primary">Go see them</button>
+    <button name="button" value="reset" class="btn btn-danger">Reset</button>
+</form>
+{% else %}
+
+<div class="w_t_s">
+    <h1> Solver </h1>
+    <h4> Press start to generate all possible solutions for the 5x11 board </h4>
+
+    <form id="startForm">
+        <button id="start_button" type="submit" class="btn btn-primary mb-3">Start</button>
+    </form>
+</div>
+
+<div class="s_f_s">
+    <h3 id="sols_found" class="mb-3">Solutions found</h3>
+    <h3 id="solutions_found">0</h3>
+</div>
+
+<div>
+    <button id="stop_button" class="btn btn-danger mb-3">Stop</button>
+</div>
+
+{% endif %}
+
+{% endblock %}
