@@ -51,7 +51,7 @@ class MatrixSolver:
 
 
     def print_packing(self, rows, w, h):
-        """Return a list representation of a packing solution with enumerated piece ID's and print it for debugging."""
+        """Return a list representation of a packing solution with enumerated piece ID's."""
         # Initialise a 2D array of 0's the size of the board
         output = [[0] * w for _ in range(h)]
 
@@ -69,10 +69,6 @@ class MatrixSolver:
                 if row[j] and j != poly_id + w * h:
                     # Reverse (x, y) -> x + y * w
                     output[j // w][j % w] = poly_id+1
-
-        # print out output for debugging
-        for row in output:
-            print(" ".join([str(c) if c != 0 else ' ' for c in row]))
 
         return output
 
