@@ -33,12 +33,15 @@ def generator(request):
     })
 
 def puzzle(request):
+    global solutions, selected_boards
+
     if request.method == 'POST':
         button_pressed = request.POST.get("button") # Get button
         if button_pressed == 'reset_config':
             # if button pressed is 'reset_config' then call function reset board.
             polysphere.reset_board()
-            # Redirect again to the same page.
+            if polysphere.allSolutions:
+                polysphere.allSolutions = []
         return redirect('polysphere_puzzle')
     
     return render(request, 'polysphere/puzzle.html', {
@@ -77,17 +80,9 @@ def polysphere_solutions(request):
     if request.method == 'POST':
         button_pressed = request.POST.get("button") # Get button
         if button_pressed == 'reset':
-            # Check if boards generated were from partial config or all solutions generator.
-            if polysphere.allSolutions:
-                # If from partial config reset the list and return to polysphere puzzle.
-                polysphere.allSolutions = []
-                selected_boards = []
-                solutions = manager.list()
-                return redirect('polysphere_puzzle')
-            else:
-                # If from generator reset the list and return to polysphere home.
-                solutions = manager.list()
-                return redirect('polysphere_generator')
+            # If generator reset, reset the list and return to polysphere generator.
+            solutions = manager.list()
+            return redirect('polysphere_generator')
 
         elif button_pressed == 'filter_boards':
             start = int(request.POST.get('start', '1')) # Get start number from page.
@@ -95,8 +90,6 @@ def polysphere_solutions(request):
             filtered_boards = selected_boards[start:end]      # Store selected boards for display
 
         elif button_pressed == 'partialConfig':
-            # solutions = polysphere.allSolutions
-            # selected_boards = solutions
             selected_boards = polysphere.allSolutions
 
         elif button_pressed == 'generatorSolutions':
