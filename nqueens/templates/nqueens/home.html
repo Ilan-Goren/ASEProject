@@ -7,9 +7,26 @@
 {% block main %}
 
 <h1>N-Queens</h1>
+
+<div class="instructions text-center">
+    <p><strong>Instructions:</strong></p>
+    <p><strong>Enter Number of Queens:</strong> Specify the number of queens in the input field.</p>
+    <p><strong>Visualize Solution:</strong> Click "Go to Solution" to view a pre-solved arrangement of the queens.</p>
+    <p><strong>Try It Yourself:</strong> Click "Solve it Yourself" to open an interactive board where you can attempt to solve the puzzle.</p>
+</div>
+
+<div class="controls text-center">
+    <p><strong>Board Controls:</strong></p>
+    <p><strong>Place a Queen:</strong> Click on a cell to add a queen to the board.</p>
+    <p><strong>Remove a Queen:</strong> Click on a placed queen to remove it.</p>
+    <p><strong>Check Solution:</strong> Click "Check Your Solution" to see if your arrangement is correct.</p>
+    <p><strong>Get Help:</strong> Click "Get a Possible Solution" if you need assistance solving the puzzle.</p>
+</div>
+
+<p class="text-center">Enjoy exploring different configurations to solve the N-Queens challenge!</p>
+
 <form action="{% url 'puzzle' %}" method="post" class="mb-3">
     {% csrf_token %}
-
     <div class="mb-3">
         {{ form.n }}
     </div>
