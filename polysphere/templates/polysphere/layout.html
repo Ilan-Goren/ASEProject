@@ -4,10 +4,12 @@
 
 {% block links %}
 {% load static %}
+<!-- Importing jQuery library for DOM manipulation and event handling -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Including the puzzle JavaScript file with deferred loading to improve page load performance -->
 <script src="{% static '/polysphere/js/puzzle.js' %}" defer></script>
 {% endblock %}
 
 <!-- {% block back_button %}
 <a class="btn btn-primary mb-3" href="{% url 'polysphere_home' %}">Go Back</a>
-{% endblock%} -->
+{% endblock %} -->

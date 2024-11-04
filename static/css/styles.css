@@ -1,96 +1,132 @@
 /******************************************************************************************
+                                    GLOBAL VARIABLES
+******************************************************************************************/
+
+:root {
+    /* General Colors */
+    --color-border: #747474; /* Standard border color */
+    --color-light-gray: #f0f0f0; /* Light gray background */
+    --color-dark-gray: #333; /* Dark gray for text and borders */
+    --color-black: #000; /* Black color */
+    --color-overlay: rgba(0, 0, 0, 0.5); /* Overlay background color */
+    --color-highlight-bg: rgba(255, 201, 120, 0.5); /* Highlighted cell background */
+    --color-highlight-border: rgb(255, 123, 0); /* Highlighted cell border */
+    --color-header-bg: #F5E8C7; /* Header background color */
+    --color-link: #333; /* Link color */
+    --color-link-hover: #555; /* Link hover color */
+    --color-shadow: rgba(0, 0, 0, 0.1); /* Box shadow color */
+
+    /* Puzzle Piece Colors */
+    --color-piece-A: red;
+    --color-piece-B: orange;
+    --color-piece-C: yellow;
+    --color-piece-D: green;
+    --color-piece-E: blue;
+    --color-piece-F: indigo;
+    --color-piece-G: violet;
+    --color-piece-H: brown;
+    --color-piece-I: grey;
+    --color-piece-J: cyan;
+    --color-piece-K: gold;
+    --color-piece-L: cadetblue;
+
+    /* Sizes */
+    --size-card-width: 200px; /* Puzzle card width */
+    --size-card-height: 200px; /* Puzzle card height */
+    --size-cell: 40px; /* Puzzle board cell size */
+    --size-board-max-width: 600px; /* Max board width */
+    --size-overlay-z-index: 1000; /* Overlay z-index */
+    --size-circle: 300px; /* Circle element diameter */
+    --size-logo: 60px; /* Logo max size */
+    --size-chessboard-cell: 50px; /* Chessboard cell size */
+}
+
+/******************************************************************************************
                                     HOME STYLING
 ******************************************************************************************/
 
 .cards {
-    display: flex; /* Use flexbox for inline display */
-    justify-content: center; /* Center align the cards horizontally */
-    gap: 20px; /* Space between the cards */
+    display: flex; /* Align cards in a row */
+    justify-content: center; /* Center align cards */
+    gap: 20px; /* Space between cards */
 }
+
 .puzzle-card {
-    border: 1px solid #747474;
-    border-radius: 8px;
+    border: 1px solid var(--color-border); /* Card border */
+    border-radius: 8px; /* Rounded corners */
     margin: auto;
     padding: 55px;
+    width: var(--size-card-width);
+    height: var(--size-card-height);
     display: inline-block;
-    width: 200px;
-    height: 200px;
-    background-size: cover;
-    transition: transform 0.5s ease-in-out;
+    background-size: cover; /* Cover card with background */
+    transition: transform 0.5s ease-in-out; /* Smooth scaling effect */
 }
 
 .puzzle-card-q {
-    background-image: url('../nqueens.jpg');
+    background-image: url('../nqueens.jpg'); /* N-Queens background */
 }
 
 .puzzle-card-p {
-    background-image: url('../puzzle.jpg');
+    background-image: url('../puzzle.jpg'); /* Puzzle background */
 }
 
-.puzzle-card tr{
-    /* backdrop-filter: blur(20px); */
-    background-color: rgba(255, 255, 255, 0.85);
-    font-weight:lighter;
-    text-shadow: black;
-}
-
-.puzzle-card:hover tr{
-    /* backdrop-filter: blur(20px); */
-    background-color: transparent;
+.puzzle-card:hover {
+    transform: scale(1.05); /* Scale up on hover */
+    box-shadow: 0 4px 8px var(--color-shadow); /* Shadow on hover */
 }
 
 .puzzle-card th {
     height: 70px;
-    border-radius: 50%;
+    border-radius: 50%; /* Circular header */
 }
 
-.puzzle-card:hover {
-    height: 200px;
-    width: auto;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.puzzle-card tr {
+    background-color: rgba(255, 255, 255, 0.85); /* Light background */
+    font-weight: lighter;
+    text-shadow: black;
 }
 
-.puzzle-description-row{
-    display: none;
+.puzzle-card:hover tr {
+    background-color: transparent; /* Transparent on hover */
 }
 
-.puzzle-button{
-    display: none;
+.puzzle-description-row,
+.puzzle-button {
+    display: none; /* Hide by default */
 }
 
 .puzzle-card:hover .puzzle-button {
-    display: block;
+    display: block; /* Show button on hover */
 }
+
 .puzzle-card:hover .puzzle-title {
-    display: none;
+    display: none; /* Hide title on hover */
 }
 
-
-.header{
-    background-color:#F5E8C7;
-    margin-bottom:2rem;
-    text-align:center;
+.header {
+    background-color: var(--color-header-bg); /* Header background */
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
-.logo img{
-    width:auto;
-    max-width:60px;
-    max-height:60px;
-    border-radius: 50%;
+.logo img {
+    max-width: var(--size-logo);
+    max-height: var(--size-logo);
+    border-radius: 50%; /* Circular logo */
 }
 
-h1, h2, h3, h4, h5{
-    font-weight:lighter;
+h1, h2, h3, h4, h5 {
+    font-weight: lighter; /* Light font weight for headings */
 }
 
 .navbar-nav a {
-    color: #333;
+    color: var(--color-link); /* Link color */
 }
 
 .navbar-nav a:hover {
-    background-color: #f0f0f0;
-    color: #555;
+    background-color: var(--color-light-gray); /* Background on hover */
+    color: var(--color-link-hover); /* Hover text color */
 }
 
 /******************************************************************************************
@@ -98,21 +134,21 @@ h1, h2, h3, h4, h5{
 ******************************************************************************************/
 
 .chessboard {
-    border-collapse: collapse; 
-    margin: 0 auto; 
+    border-collapse: collapse; /* Remove cell spacing */
+    margin: 0 auto; /* Center align */
 }
 
 .chessboard td {
-    width: 50px;
-    height: 50px;
+    width: var(--size-chessboard-cell);
+    height: var(--size-chessboard-cell);
     text-align: center;
     vertical-align: middle;
-    border: 1px solid black;
-    font-size: 36px;
+    border: 1px solid var(--color-black); /* Cell border */
+    font-size: 36px; /* Queen font size */
 }
 
 .queen {
-    color: black;
+    color: var(--color-black); /* Queen color */
 }
 
 /******************************************************************************************
@@ -123,31 +159,31 @@ h1, h2, h3, h4, h5{
     border-collapse: collapse;
     margin: 20px auto;
     width: 100%;
-    max-width: 600px;
+    max-width: var(--size-board-max-width); /* Max width for board */
 }
 
 .cell {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #000;
+    width: var(--size-cell);
+    height: var(--size-cell);
+    border: 1px solid var(--color-black); /* Cell border */
     text-align: center;
     vertical-align: middle;
-    background-color: #f0f0f0;
+    background-color: var(--color-light-gray); /* Empty cell background */
 }
+
 .cell.filled {
-    /* EMPTY */
+    /* Style for filled cells */
 }
 
 .circle {
     display: block;
-    background: black;
-    border-radius: 100%;
-    height: 300px;
-    width: 300px;
+    width: var(--size-circle);
+    height: var(--size-circle);
+    border-radius: 50%; /* Circular shape */
+    background: radial-gradient(circle at 100px 100px, #5cabff, var(--color-black)); /* Blue gradient */
     margin: 0;
-    background: radial-gradient(circle at 100px 100px, #5cabff, #000);
-  }
-  
+}
+
 .pieces {
     margin: 20px auto;
     text-align: center;
@@ -156,97 +192,71 @@ h1, h2, h3, h4, h5{
 .pieces-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: center; /* Center align pieces */
 }
 
 .piece {
     margin: 5px;
     cursor: pointer;
-    display: inline-flex; 
+    padding: 5px;
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px; 
 }
 
 .piece:hover {
     background-color: transparent;
-    cursor: pointer;
 }
 
 .piece-visual td {
     width: 15px;
     height: 15px;
-    border: none; 
+    border: none;
     background-color: transparent;
 }
 
 .piece.dragging {
-    opacity: .5;
+    opacity: 0.5; /* Reduced opacity when dragging */
 }
 
 .cell.highlight {
-    background-color: rgba(255, 201, 120, 0.5);
-    border: 2px dashed rgb(255, 123, 0);
+    background-color: var(--color-highlight-bg); /* Highlight background */
+    border: 2px dashed var(--color-highlight-border); /* Highlight border */
 }
 
-/* Common styles for both .piece-visual .A and .A */
-.piece-visual .A, .A {
-    background-color: red;
-}
-.piece-visual .B, .B {
-    background-color: orange;
-}
-.piece-visual .C, .C {
-    background-color: yellow;
-}
-.piece-visual .D, .D {
-    background-color: green;
-}
-.piece-visual .E, .E {
-    background-color: blue;
-}
-.piece-visual .F, .F {
-    background-color: indigo;
-}
-.piece-visual .G, .G {
-    background-color: violet;
-}
-.piece-visual .H, .H {
-    background-color: brown;
-}
-.piece-visual .I, .I {
-    background-color: grey;
-}
-.piece-visual .J, .J {
-    background-color: cyan;
-}
-.piece-visual .K, .K {
-    background-color: gold;
-}
-.piece-visual .L, .L {
-    background-color: cadetblue;
-}
+/* Puzzle Piece Colors */
+.piece-visual .A, .A { background-color: var(--color-piece-A); }
+.piece-visual .B, .B { background-color: var(--color-piece-B); }
+.piece-visual .C, .C { background-color: var(--color-piece-C); }
+.piece-visual .D, .D { background-color: var(--color-piece-D); }
+.piece-visual .E, .E { background-color: var(--color-piece-E); }
+.piece-visual .F, .F { background-color: var(--color-piece-F); }
+.piece-visual .G, .G { background-color: var(--color-piece-G); }
+.piece-visual .H, .H { background-color: var(--color-piece-H); }
+.piece-visual .I, .I { background-color: var(--color-piece-I); }
+.piece-visual .J, .J { background-color: var(--color-piece-J); }
+.piece-visual .K, .K { background-color: var(--color-piece-K); }
+.piece-visual .L, .L { background-color: var(--color-piece-L); }
 
-
+/* Solution boards layout */
 .boards {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    justify-content: center; 
+    justify-content: center;
 }
 
 .board_s {
     display: inline-block;
-    border: 1px solid #333;
-    border-collapse: collapse;
     width: 150px;
-    height: auto;
+    border: 1px solid var(--color-dark-gray);
+    border-collapse: collapse;
 }
 
 .board_s td {
     width: 15px;
     height: 15px;
-    border: 1px solid #333;
+    border: 1px solid var(--color-dark-gray);
 }
 
 .board_s caption {
@@ -254,21 +264,23 @@ h1, h2, h3, h4, h5{
     margin-bottom: 8px;
 }
 
+/* Filter boards selector */
 .select_boards {
-    width: 30%; 
+    width: 30%;
     margin: 0 auto;
 }
 
+/* Loading overlay styling */
 #loadingOverlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--color-overlay); /* Overlay background */
     color: white;
-    display: none;
+    display: none; /* Hidden by default */
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: var(--size-overlay-z-index); /* Position above other elements */
 }

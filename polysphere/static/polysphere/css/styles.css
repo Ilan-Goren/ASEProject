@@ -1,24 +1,29 @@
+/* Styling for the puzzle board container */
 .board {
-    border-collapse: collapse;
-    margin: 20px 0;
+    border-collapse: collapse; /* Remove spacing between table cells */
+    margin: 20px 0; /* Add vertical margin around the board */
 }
 
+/* Individual cell styling within the board */
 .board .cell {
-    width: 30px;
-    height: 30px;
-    border: 1px solid black;
-    text-align: center;
+    width: 30px; /* Set fixed width for cells */
+    height: 30px; /* Set fixed height for cells */
+    border: 1px solid black; /* Add a black border to each cell */
+    text-align: center; /* Center content within the cell */
 }
 
+/* Styling for filled cells on the board */
 .cell.filled {
-    background-color: lightblue;
+    background-color: lightblue; /* Light blue background for filled cells */
 }
 
+/* Container for the puzzle pieces below the board */
 .pieces {
-    margin-top: 20px;
+    margin-top: 20px; /* Add top margin to separate pieces from other content */
 }
 
+/* Styling for individual puzzle pieces */
 .piece {
-    margin: 10px;
-    cursor: pointer;
+    margin: 10px; /* Space out individual pieces */
+    cursor: pointer; /* Change cursor to pointer for interactivity */
 }

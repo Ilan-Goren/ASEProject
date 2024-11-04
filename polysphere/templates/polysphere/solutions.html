@@ -4,45 +4,56 @@
 
 {% block main %}
 
+<!-- Display the total number of solutions found -->
 <div>
     <h3 class="mb-3">Solutions found</h3>
     {% if solutions_len %}
+        <!-- Display the number of solutions if available -->
         <h3>{{ solutions_len }}</h3>
     {% else %}
+        <!-- Default to zero if no solutions are available -->
         <h3>0</h3>
     {% endif %}
 </div>
 
+<!-- Form to filter solutions by selecting a range -->
 <div class="select_boards mt-4 mb-3">
     <form method="post" action="{% url 'polysphere_solutions' %}" class="form-inline" onsubmit="showLoading()">
         {% csrf_token %}
         <div class="form-group d-flex">
             {% if start and end %}
+            <!-- Input fields for specifying the start and end range of solutions to display -->
             <input type="number" name="start" class="form-control mr-2" id="start" placeholder="From" min="1" value="{{start}}" required>
             <input type="number" name="end" class="form-control" id="end" placeholder="To" min="1" max="{{solutions_len}}" value="{{end}}" required>
             {% else %}
+            <!-- Default input fields when no start and end values are provided -->
             <input type="number" name="start" class="form-control mr-2" id="start" placeholder="From" min="1" required>
             <input type="number" name="end" class="form-control" id="end" placeholder="To" min="1" max="{{solutions_len}}" required>
             {% endif %}
         </div>
+        <!-- Button to apply the range filter on solutions -->
         <button type="submit" name="button" value="filter_boards" class="btn btn-secondary mt-3">Filter Boards</button>
     </form>
 </div>
 
+<!-- Back button to return to the previous page -->
 <div>
     <button id="back_button" class="btn btn-primary mb-3" onclick="goBack()">Go Back</button>
 </div>
 
+<!-- Display filtered solutions if they exist and start range is specified -->
 {% if solutions and start %}
 {% load custom_filters %}
 <div class="boards">
     {% for index, board in solutions|enumerate_filter:start %}
+    <!-- Table representing each solution board -->
     <table class="board_s">
         <caption>Solution {{ index }}</caption>
         <tbody>
             {% for row_data in board %}
             <tr>
                 {% for cell in row_data %}
+                <!-- Each cell is conditionally styled as filled if it contains part of a solution -->
                 <td class="cell {% if cell %}filled {{ cell }}{% endif %}"></td>
                 {% endfor %}
             </tr>

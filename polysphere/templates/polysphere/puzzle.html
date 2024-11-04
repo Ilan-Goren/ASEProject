@@ -4,25 +4,27 @@
 
 {% block main %}
 
-<!-- Load custom filers to allow use of enumerate_filter -->
 {% load custom_filters %}
 
+<!-- Display form to view solutions if there are any precomputed solutions for the board -->
 {% if allSolutions and sol_length %}
 <form action="{% url 'polysphere_solutions' %}" method="post" class="mb-3" onsubmit="showLoading()">
     {% csrf_token %}
-    <h5> There are {{sol_length}} solutions for your board </h5>
+    <h5> There are {{ sol_length }} solutions for your board </h5>
+    <!-- Button to navigate to the solutions page -->
     <button name="button" value="partialConfig" class="btn btn-primary">Go see them</button>
 </form>
-
 {% else %}
+<!-- Header displayed when no solutions are found -->
 <h2>Polysphere Puzzle</h2>
 {% endif %}
 
-<!-- The Board Table -->
-  <table id="board" class="board">
+<!-- Puzzle Board Table where pieces can be placed -->
+<table id="board" class="board">
     <tbody>
         {% for row, row_data in board|enumerate_filter %}
         <tr>
+            <!-- Iterate through each cell in the row and apply cell-specific classes if it’s filled -->
             {% for col, cell in row_data|enumerate_filter %}
             <td class="cell {% if cell %}filled {{ cell }}{% endif %}" data-row="{{ row }}" data-col="{{ col }}">
             </td>
@@ -32,19 +34,22 @@
     </tbody>
 </table>  
 
-<!-- The Pieces Deck -->
+<!-- Pieces Deck: Display available pieces that can be dragged onto the board -->
 <div id="pieces" class="pieces">
     {% if pieces %}
     <h3>Available Pieces</h3>
     <div class="pieces-container">
         {% for piece_key, block in pieces.items %}
+        <!-- Each piece is represented as a draggable element with its data attributes for identification -->
         <div class="piece" data-piece-key="{{ piece_key }}" data-piece-array="{{ block }}">
             <div class="piece-visual">
+                <!-- Visual representation of the piece in a table format -->
                 <table>
                     <tbody>
                         {% for row in block %}
                         <tr>
                             {% for cell in row %}
+                            <!-- Apply piece-specific class if the cell is part of the piece (non-empty) -->
                             <td class="{% if cell %} {{ piece_key }}{% endif %}" draggable="true"></td>
                             {% endfor %}
                         </tr>
@@ -61,7 +66,7 @@
 </div>
 
 <div class="solver_buttons_container">
-    <!-- Form to handle both completing the board based on partial config or showing all solutions -->
+    <!-- Form to submit requests for either completing the board or showing all solutions -->
     <form action="{% url 'polysphere_solver' %}" method="post" class="mb-3" onsubmit="showLoading()">
         {% csrf_token %}
         <button class="btn btn-primary" name="button" value='complete_board'>Complete my board</button>
@@ -69,12 +74,10 @@
     </form>
 </div>
 
-<!-- Form to handle both Checking solution or Resesting the board -->
+<!-- Form to either check the solution or reset the board configuration -->
 <form action="{% url 'polysphere_puzzle' %}" method="post" class="mb-3">
     {% csrf_token %}
     <button class='btn btn-danger' name="button" value='reset_config'>Reset Configuration</button>
 </form>
-
-
 
 {% endblock %}
