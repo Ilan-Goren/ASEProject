@@ -2,6 +2,17 @@ from .solver_functions import matrix_polyominoes, matrix_solver
 from .solver_functions import matrix_transformations
 
 class Polysphere:
+    """
+    A class to manage the Polysphere puzzle board, pieces, and solution generation.
+
+    Attributes:
+        pieces (dict): A dictionary containing the different puzzle pieces.
+        pieces_left (dict): A copy of pieces indicating which pieces are yet to be placed.
+        board_size (tuple): The dimensions of the puzzle board.
+        board (list): The puzzle board grid.
+        piece_positions (dict): A dictionary tracking the positions of placed pieces.
+        all_solutions_partial_config (list): Stores solutions for partial configurations.
+    """
     def __init__(self):
         self.pieces = {
             'A': [[1, 1, 1],
@@ -48,13 +59,22 @@ class Polysphere:
         self.board_size = (5, 11)
         self.board = [[0 for _ in range(self.board_size[1])] for _ in range(self.board_size[0])]
         self.piece_positions = {}
-        self.allSolutions = []
+        self.all_solutions_partial_config = []
 
     def place_piece(self, piece_key, positions):
-        """Place the piece on the board at the specified list of positions."""
+        """
+        Places a piece on the board at specified positions if valid.
+
+        Args:
+            piece_key (str): The key of the piece.
+            positions (list): List of (row, col) tuples where the piece should be placed.
+
+        Returns:
+            bool: True if the piece was successfully placed, False otherwise.
+        """
         piece = self.pieces[piece_key]
 
-        if not self.is_valid_placement(piece, positions):
+        if not self.is_valid_placement(positions):
             print(f"Invalid placement for {piece_key} at {positions}")
             return False
 
@@ -73,14 +93,20 @@ class Polysphere:
             # Add the position to piece_positions for tracking
             self.piece_positions[piece_key].append(pos)
 
-        print(f'Board after placing key {self.board}')
-
         self.pieces_left.pop(piece_key)
         print(f"Placed {piece_key} at {self.piece_positions[piece_key]}")
         return True
 
     def remove_piece(self, piece_key):
-        """Remove the piece from the board."""
+        """
+        Remove a piece from the board.
+
+        Args:
+            piece_key (str): The key of the piece.
+
+        Returns:
+            bool: True if the piece was successfully removed, False otherwise.
+        """
         if piece_key not in list(self.piece_positions.keys()):
             print(f"Piece {piece_key} not in piece posistions")
             return  False # No such piece on the board
@@ -99,22 +125,42 @@ class Polysphere:
 
         self.pieces_left[piece_key] = self.pieces[piece_key]
         return True
+    
     def is_board_filled(self):
-        """Check if no pieces are left and returns True else False"""
+        """
+        Checks if all pieces have been placed on the board.
+
+        Returns:
+            bool: True if the board is filled, False otherwise.
+        """
         if not self.pieces_left:
             return True
         return False
     
     def is_board_empty(self):
-        """Check if no pieces are placed on board"""
+        """
+        Checks if no pieces are placed on board.
+
+        Returns:
+            bool: True if the board is empty, False otherwise.
+        """
         for row in self.board:
             for col in row:
                 if col:
                     return False
         return True
     
-    def is_valid_placement(self, piece, positions):
-        """Check if the piece can be placed on the board at the given positions."""
+    def is_valid_placement(self, positions):
+        """
+        Checks if piece position to be plaecd is not out of boards and
+        no other pieces are placed in same position.
+
+        Args:
+            positions (list): List of (row, col) tuples where the piece is to be placed.
+
+        Returns:
+            bool: True if valid placemenet, False otherwise.
+        """
         for pos in positions:
             row, col = pos
             # Check if the current position is out of bounds
@@ -130,7 +176,15 @@ class Polysphere:
 
     
     def rotate_piece(self, piece_key):
-        """Rotate the specified piece 90 degrees."""
+        """
+        Rotates the piece 90 degrees and store it in the board.
+
+        Args:
+            piece_key (str): The key of the piece.
+
+        Returns:
+            bool: True if rotated successfully, False otherwise.
+        """
         if piece_key not in self.pieces_left.keys() or piece_key in self.piece_positions.keys():
             print(f"Rotation {piece_key} Error")
             return False
@@ -145,7 +199,15 @@ class Polysphere:
         return True
     
     def flip_piece(self, piece_key):
-        """Rotate the specified piece horizontally."""
+        """
+        Flip the piece horizontally and store it in the board.
+
+        Args:
+            piece_key (str): The key of the piece.
+
+        Returns:
+            bool: True if flipped successfully, False otherwise.
+        """
         if piece_key not in self.pieces_left.keys() or piece_key in self.piece_positions.keys():
             print(f"Flip {piece_key} Error")
             return False
@@ -160,16 +222,23 @@ class Polysphere:
         return True
     
     def reset_board(self):
-        ''' Reset the all class variables'''
+        """
+        Resets all the class attributes.
+        """
         self.board = [[0 for _ in range(self.board_size[1])] for _ in range(self.board_size[0])]
         self.pieces_left = self.pieces.copy()
         self.piece_positions = {}
-        self.allSolutions = []
+        self.all_solutions_partial_config = []
         return
     
     def solvePartialConfig(self):
-        ''' Solve function for partial configurations '''
-        alreadyPlaced = internalConversionFromLetterToID(self.board)
+        """
+        Gets a solution for the current board and stores it in self.board attribute.
+
+        Returns:
+            bool: True if solved successfully, False is no solutions found.
+        """
+        alreadyPlaced = boardConversionFromLetterToID(self.board)
 
         alreadyPlacedIDs = {id - 1 for row in alreadyPlaced for id in row if id}
         polys = []
@@ -183,7 +252,7 @@ class Polysphere:
         if not solution:
             return False
         solution = solver.revert_ids(id_conversions, solution)
-        solution = internalConversionFromIDToLetter(solution)
+        solution = boardConversionFromIDToLetter(solution)
         print(f"Solved after conversion to Letters: {solution}")
         self.board = solution
 
@@ -193,8 +262,15 @@ class Polysphere:
         return True
     
     def solveAllPartialConfig(self):
-        self.allSolutions = []
-        alreadyPlaced = internalConversionFromLetterToID(self.board)
+        """
+        Gets all solutions for the current board and stores it in 
+        self.all_solutions_partial_config attribute.
+
+        Returns:
+            bool: True if solved successfully, False is no solutions found.
+        """
+        self.all_solutions_partial_config = []
+        alreadyPlaced = boardConversionFromLetterToID(self.board)
         alreadyPlacedIDs = {id - 1 for row in alreadyPlaced for id in row if id}
         polys = []
         for i in range(12):
@@ -211,32 +287,18 @@ class Polysphere:
 
             sol_reverted = s.revert_ids(id_conversions, sol)
             if sol_reverted != None:
-                sol_reverted = internalConversionFromIDToLetter(sol_reverted)
-                self.allSolutions.append(sol_reverted)
+                sol_reverted = boardConversionFromIDToLetter(sol_reverted)
+                self.all_solutions_partial_config.append(sol_reverted)
 
-        if not self.allSolutions:
+        if not self.all_solutions_partial_config:
             return False
-        return True
-    
-    def solveEmptyBoard(self):
-        polys = []
-        for p in matrix_polyominoes.POLYOMINOES:
-            poly = matrix_polyominoes.Polyomino(p["tiles"],p["poly_id"])
-            polys.append(poly)
-        s = matrix_solver.MatrixSolver()
-        solution = s.solve_packing(polys,11,5)
-        solution = internalConversionFromIDToLetter(solution)
-        self.board = solution
-        piece_pos = getPiecesPositionsFromBoard(self.board)
-        self.piece_positions = piece_pos.copy()
-        self.pieces_left = {}
         return True
     
 ##########################################################################################
 #                                  HELPER FUNCTIONS                                      #
 ##########################################################################################
     
-def internalConversionFromLetterToID(board):
+def boardConversionFromLetterToID(board):
     ''' Function changes placed pieces from letters to ID '''
     rep = { 'A' : 1, 'B': 2, 'C' : 3, 'D' : 4, 'E' : 5, 'F' : 6, 
             'G': 7, 'H': 8, 'I': 9, 'J' : 10, 'K' : 11, 'L' : 12}
@@ -248,7 +310,7 @@ def internalConversionFromLetterToID(board):
                 new_board[row_index][cell_index] = rep[cell]
     return new_board
 
-def internalConversionFromIDToLetter(board):
+def boardConversionFromIDToLetter(board):
     ''' Function changes placed pieces from ID to letters '''
     rep = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 
            7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K', 12: 'L'}
@@ -275,7 +337,7 @@ def getPiecesPositionsFromBoard(board):
 
 def get_all_solutions(solutions):
     ''' Function takes a list that will store the solutions in. See documentions on matrix_solver'''
-    polys = []  #Empty list to store polys for board completion
+    polys = []
     for p in matrix_polyominoes.POLYOMINOES:
         # Iterating over all polys to get them all in a list.
         poly = matrix_polyominoes.Polyomino(p["tiles"],p["poly_id"])
@@ -293,7 +355,7 @@ def get_all_solutions(solutions):
 
             if sol_reverted != None:
                 solution_count += 1
-                sol_reverted = internalConversionFromIDToLetter(sol_reverted)
+                sol_reverted = boardConversionFromIDToLetter(sol_reverted)
                 solutions.append(sol_reverted)
             
 
