@@ -1,6 +1,7 @@
 from django.test import TestCase
 from ..solver import solve_n_queens
 from django.test import Client
+from django.urls import reverse
 
 # List: Some of values for N for the test
 N = [4, 5, 6, 7]
@@ -60,5 +61,5 @@ class NQueensTestCase(TestCase):
     def test_home_page(self):
         # Client for test purposes.
         c = Client()
-        response = c.get('/')
+        response = c.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
