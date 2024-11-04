@@ -124,4 +124,4 @@ To contribute:
 ## Contact
 For any questions or suggestions, please reach out via GitHub.
 
-[Polysphere Solver Documentation](https://github.com/user-attachments/files/17577804/polysphere.solver.explained.docx)
+[Polysphere Solver Documentation](https://github.com/user-attachments/files/17577804/polyshpere.solver.explained.docx)
