@@ -7,7 +7,7 @@
 {% load custom_filters %}
 
 <!-- Display form to view solutions if there are any precomputed solutions for the board -->
-{% if allSolutions and sol_length %}
+{% if all_solutions_partial_config and sol_length %}
 <form action="{% url 'polysphere_solutions' %}" method="post" class="mb-3" onsubmit="showLoading()">
     {% csrf_token %}
     <h5> There are {{ sol_length }} solutions for your board </h5>
