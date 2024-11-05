@@ -229,7 +229,6 @@ function updateSolutions() {
             .then(data => {
                 document.getElementById('solutions_found').innerText = data.length;
             })
-            .catch(error => console.log("Error fetching solution count:", error));
     }, 50); // Update every 50 ms
 }
 
@@ -245,14 +244,15 @@ function stopSolver() {
             if (response.status === 200) {
                 window.location.reload(); // Reload the page if response is 200
             } else if (response.status === 400) {
-                alert('Error: Bad Request (400)'); // Alert the user if the response status is 400
+                console.log('Error: js248'); // Alert the user if the response status is 400
             }
         })
 }
 
-
+// function for sending post request to piece_manipulate to handle a specific action
 function sendPostRequest(action, data) {
     const allActions = {
+        //dictionary that contains all actions
         rotate: 'rotate',
         flip: 'flip',
         remove: 'remove',
@@ -270,10 +270,10 @@ function sendPostRequest(action, data) {
         })
     })
     .then(response => {
-        if (response.ok) {
-            window.location.reload();
-        } else {
-            console.error('Error: code 275pjs');
+        if (response.status === 200) {
+            window.location.reload(); // Reload the page if response is 200
+        } else if (response.status === 400) {
+            console.log('Error: js277');
         }
-    });
+    })
 }

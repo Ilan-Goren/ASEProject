@@ -220,7 +220,7 @@ def start_generator(request):
     """
     global process, solutions # Declare process and solutions as global
     if request.method == 'POST':
-        if process and process.is_alive(): 
+        if process: 
             # Check if Process exists and is running first before starting
             return JsonResponse({"status": "already running"})
 
@@ -329,6 +329,5 @@ def piece_manipulate(request):
         else:
             # If non of the known actions
             messages.add_message(request, messages.ERROR, "Incorrect Action!", extra_tags='danger')
-            return redirect('polysphere_puzzle')
-        
+        return JsonResponse({'status': 'success'}, status=200)
     return redirect('polysphere_puzzle')
