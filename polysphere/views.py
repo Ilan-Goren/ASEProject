@@ -105,11 +105,11 @@ def polysphere_solver(request):
             if polysphere.is_board_empty():
                  messages.add_message(request, messages.ERROR, "You have to place at least one piece!", extra_tags='danger')
             else:
-                response = polysphere.solveAllPartialConfig()
+                response = polysphere.solve_all_partial_config()
                 if not response:
                     messages.add_message(request, messages.ERROR, "Can't find a solution with this these pieces:(", extra_tags='danger')
         elif button_pressed == 'complete_board':
-            response = polysphere.solvePartialConfig()
+            response = polysphere.solve_partial_config()
             if not response:
                 messages.add_message(request, messages.ERROR, "Can't find a solution with this these pieces:(", extra_tags='danger')
     return redirect('polysphere_puzzle')

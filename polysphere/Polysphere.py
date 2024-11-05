@@ -231,37 +231,37 @@ class Polysphere:
         self.all_solutions_partial_config = []
         return
     
-    def solvePartialConfig(self):
+    def solve_partial_config(self):
         """
         Gets a solution for the current board and stores it in self.board attribute.
 
         Returns:
             bool: True if solved successfully, False is no solutions found.
         """
-        alreadyPlaced = boardConversionFromLetterToID(self.board)
+        already_placed = board_conversion_from_letter_to_id(self.board)
 
-        alreadyPlacedIDs = {id - 1 for row in alreadyPlaced for id in row if id}
+        already_placed_ids = {id - 1 for row in already_placed for id in row if id}
         polys = []
         for i in range(12):
-            if i in alreadyPlacedIDs:
+            if i in already_placed_ids:
                 continue
             polys.append(matrix_polyominoes.Polyomino(matrix_polyominoes.POLYOMINOES[i]["tiles"], i + 1))
         id_conversions = []
         solver = matrix_solver.MatrixSolver()
-        solution = solver.solve_packing(polys,11, 5, alreadyPlaced, id_conversions)
+        solution = solver.solve_packing(polys,11, 5, already_placed, id_conversions)
         if not solution:
             return False
         solution = solver.revert_ids(id_conversions, solution)
-        solution = boardConversionFromIDToLetter(solution)
+        solution = board_conversion_from_id_to_letter(solution)
         print(f"Solved after conversion to Letters: {solution}")
         self.board = solution
 
-        piece_pos = getPiecesPositionsFromBoard(self.board)
+        piece_pos = get_pieces_positions_from_board(self.board)
         self.piece_positions = piece_pos.copy()
         self.pieces_left = {}
         return True
     
-    def solveAllPartialConfig(self):
+    def solve_all_partial_config(self):
         """
         Gets all solutions for the current board and stores it in 
         self.all_solutions_partial_config attribute.
@@ -270,11 +270,11 @@ class Polysphere:
             bool: True if solved successfully, False is no solutions found.
         """
         self.all_solutions_partial_config = []
-        alreadyPlaced = boardConversionFromLetterToID(self.board)
-        alreadyPlacedIDs = {id - 1 for row in alreadyPlaced for id in row if id}
+        alreadyPlaced = board_conversion_from_letter_to_id(self.board)
+        already_placed_ids = {id - 1 for row in alreadyPlaced for id in row if id}
         polys = []
         for i in range(12):
-            if i in alreadyPlacedIDs:
+            if i in already_placed_ids:
                 continue
             polys.append(matrix_polyominoes.Polyomino(matrix_polyominoes.POLYOMINOES[i]["tiles"], i + 1))
 
@@ -287,7 +287,7 @@ class Polysphere:
 
             sol_reverted = s.revert_ids(id_conversions, sol)
             if sol_reverted != None:
-                sol_reverted = boardConversionFromIDToLetter(sol_reverted)
+                sol_reverted = board_conversion_from_id_to_letter(sol_reverted)
                 self.all_solutions_partial_config.append(sol_reverted)
 
         if not self.all_solutions_partial_config:
@@ -298,7 +298,7 @@ class Polysphere:
 #                                  HELPER FUNCTIONS                                      #
 ##########################################################################################
     
-def boardConversionFromLetterToID(board):
+def board_conversion_from_letter_to_id(board):
     ''' Function changes placed pieces from letters to ID '''
     rep = { 'A' : 1, 'B': 2, 'C' : 3, 'D' : 4, 'E' : 5, 'F' : 6, 
             'G': 7, 'H': 8, 'I': 9, 'J' : 10, 'K' : 11, 'L' : 12}
@@ -310,7 +310,7 @@ def boardConversionFromLetterToID(board):
                 new_board[row_index][cell_index] = rep[cell]
     return new_board
 
-def boardConversionFromIDToLetter(board):
+def board_conversion_from_id_to_letter(board):
     ''' Function changes placed pieces from ID to letters '''
     rep = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 
            7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K', 12: 'L'}
@@ -323,7 +323,7 @@ def boardConversionFromIDToLetter(board):
     return new_board
 
 
-def getPiecesPositionsFromBoard(board):
+def get_pieces_positions_from_board(board):
     piecesPos = {}
     for row_index, row_data in enumerate(board):
         for col_index, col_data in enumerate(row_data):
@@ -355,7 +355,7 @@ def get_all_solutions(solutions):
 
             if sol_reverted != None:
                 solution_count += 1
-                sol_reverted = boardConversionFromIDToLetter(sol_reverted)
+                sol_reverted = board_conversion_from_id_to_letter(sol_reverted)
                 solutions.append(sol_reverted)
             
 
