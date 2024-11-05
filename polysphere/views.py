@@ -130,7 +130,7 @@ def polysphere_solutions(request):
             - start: The start index for filtered display.
             - end: The end index for filtered display, adjusted to be inclusive.
 
-        HttpResponseRedirect: Redirects to the appropriate page if not POST method.
+        HttpResponseRedirect: Redirects to the home page if not POST method.
 
     Button Actions:
         - 'reset': Resets the global solutions list and redirects to the generator page.
@@ -203,7 +203,7 @@ def start_generator(request):
 
     Returns:
         JsonResponse: 
-            - JSON response with {"status": "started"} if the process starts successfully.
+            - JSON response with {"status": "started"} and 200 status if the process starts successfully.
             - JSON response with {"status": "already running"} if the process is already running.
             - JSON response with {"error": "Invalid request"} and a 400 status for invalid requests.
     """
@@ -234,8 +234,8 @@ def stop_generator(request):
     Returns:
         JsonResponse:
             - Redirects to "polysphere_solutions" if the process terminates successfully.
-            - JSON response with {"error": "Solver not running"} and a 400 status if the process isn't running.
-            - JSON response with {"error": "Invalid request"} and a 400 status for invalid requests.
+            - JSON response with a 400 status if the process isn't running.
+            - JSON response with a 400 status for invalid requests.
     """
     global process
     if request.method == 'POST':
