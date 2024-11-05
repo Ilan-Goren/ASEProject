@@ -41,54 +41,18 @@ pieces.forEach(piece => {
         clearHighlight();
     });
 
-    // Left-click event listener
-    piece.addEventListener('click', () => {
+    // listens if piece is left clicked to rotate
+    piece.addEventListener('click', (event) => {
+        const action = 'rotate'; 
         const pieceKey = piece.dataset.pieceKey;
-        const data = {
-            pieceKey: pieceKey
-        };
-
-        // Send POST request to rotate the piece
-        fetch('rotate_piece', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                console.error('Error rotating piece:', response.statusText);
-            }
-        });
+        sendPostRequest(action, { pieceKey });
     });
-
-    // Right-click event listener
+    // listens if piece is right clicked to flip
     piece.addEventListener('contextmenu', (event) => {
-        event.preventDefault(); // Prevent the default context menu from appearing
-
+        event.preventDefault()
+        const action = 'flip';
         const pieceKey = piece.dataset.pieceKey;
-        const data = {
-            pieceKey: pieceKey
-        };
-
-        // Send POST request to flip the piece
-        fetch('flip_piece', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                console.error('Error flipping piece:', response.statusText);
-            }
-        });
+        sendPostRequest(action, { pieceKey });
     });
 });
 
@@ -101,27 +65,7 @@ cells.forEach(cell => {
         if (cell.classList.contains('filled')) {
             const cellRow = parseInt(cell.dataset.row, 10);
             const cellCol = parseInt(cell.dataset.col, 10);
-
-            // Prepare data for the POST request
-            const data = {
-                position: { row: cellRow, col: cellCol }
-            };
-
-            // Send POST request to the server
-            fetch('remove_piece', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                } else {
-                    console.error('Error placing piece:', response.statusText);
-                }
-            })
+            sendPostRequest('remove', { position: { row: cellRow, col: cellCol } });
         }
     });
 
@@ -258,23 +202,8 @@ function placePiece(startRow, startCol, pieceArray) {
         occupiedCells: occupiedCells                // Include occupied cells
     };
 
-    // Send POST request to the server
-    fetch('place_piece', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (response.ok) {
-            window.location.reload();
-        } else {
-            console.error('POST request for placing piece not successful');
-        }
-    })
-    
-    clearHighlight();                              // Clear highlights after placing
+    sendPostRequest('place', data);
+    clearHighlight();
 }
 
 // Start solver function
@@ -319,4 +248,32 @@ function stopSolver() {
                 alert('Error: Bad Request (400)'); // Alert the user if the response status is 400
             }
         })
+}
+
+
+function sendPostRequest(action, data) {
+    const allActions = {
+        rotate: 'rotate',
+        flip: 'flip',
+        remove: 'remove',
+        place: 'place'
+    };
+    
+    fetch('piece_manipulate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            action: allActions[action],
+            ...data
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            console.error('Error: code 275pjs');
+        }
+    });
 }

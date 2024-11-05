@@ -26,25 +26,26 @@ selected_boards = []
 
 def home(request):
     """
-    Renders the homepage for the Polysphere application.
-    
-    Args:
-        request (HttpRequest): The HTTP request for the home page.
-    
-    Returns:
-        HttpResponse: Renders 'polysphere/home.html' template.
+    Displays the homepage for the Polysphere application.
+
+    :param request: The HTTP request for the homepage.
+    :type request: HttpRequest
+
+    :returns: 
+        HttpResponse: Renders the 'polysphere/home.html' template.
     """
     return render(request, 'polysphere/home.html')
 
 def generator(request):
     """
-    Renders the generator page for the Polysphere application.
-    
-    Args:
-        request (HttpRequest): The HTTP request for the generator page.
-    
-    Returns:
-        HttpResponse: Renders 'polysphere/generator.html' with solutions length.
+    Displays the generator page for the Polysphere application.
+
+    :param request: The HTTP request for the generator page.
+    :type request: HttpRequest
+
+    :returns: 
+        HttpResponse: Renders 'polysphere/generator.html' with the following context:
+            - **solutions length**: The total number of generated solutions.
     """
     return render(request, 'polysphere/generator.html', {
         'solutions_len': len(solutions)
@@ -52,18 +53,18 @@ def generator(request):
 
 def puzzle(request):
     """
-    Renders the puzzle page for the Polysphere application.
-    
-    Args:
-        request (HttpRequest): The HTTP request for the puzzle page.
-    
-    Returns:
-        HttpResponse: Renders 'polysphere/puzzle.html' with the following:
-        - pieces left in board
-        - the board 
-        - pieces positions 
-        - all solutions 
-        - length of all solutions.
+    Displays the puzzle page for the Polysphere application.
+
+    :param request: The HTTP request for the puzzle page.
+    :type request: HttpRequest
+
+    :returns: 
+        HttpResponse: Renders 'polysphere/puzzle.html' with the following context:
+            - **pieces left in board**: Pieces that remain to be placed on the board.
+            - **the board**: The current state of the puzzle board.
+            - **pieces positions**: The positions of each placed piece.
+            - **all solutions**: The complete list of solutions.
+            - **length of all solutions**: The total count of possible solutions.
     """
     global solutions, selected_boards
 
@@ -87,17 +88,20 @@ def puzzle(request):
 
 def polysphere_solver(request):
     """
-    Handles POST requests for solving partial or complete configurations on the Polysphere puzzle board.
+    Processes POST requests to solve partial or full configurations on the Polysphere puzzle board.
 
-    Args:
-        request (HttpRequest): The HTTP request containing the button selection and any configuration data.
+    This function handles user actions on the puzzle board, such as attempting to solve configurations based on 
+    the current piece layout.
 
-    Returns:
-        HttpResponseRedirect: Redirects to 'polysphere_puzzle' page with messages for user feedback.
-        
-    Messages:
-        - ERROR: "You have to place at least one piece!" if the board is empty when attempting to find all solutions.
-        - ERROR: "Can't find a solution with these pieces :(" if no solution exists for the given configuration.
+    :param request: The HTTP request containing the button selection and any configuration data.
+    :type request: HttpRequest
+
+    :returns: 
+        HttpResponseRedirect: Redirects the user to the 'polysphere_puzzle' page, providing feedback messages as needed.
+
+    :messages:
+        - **ERROR**: "You have to place at least one piece!"  shown if the board is empty when attempting to find solutions.
+        - **ERROR**: "Can't find a solution with these pieces :(" shown if no solutions exist for the current configuration.
     """
     if request.method == 'POST':
         button_pressed = request.POST.get('button')
@@ -117,26 +121,28 @@ def polysphere_solver(request):
 
 def polysphere_solutions(request):
     """
-    Handles POST requests to manage solutions and configurations for the Polysphere puzzle and generator, 
-    providing options to reset, filter, or display specific solution sets.
+    Handles solution management and configuration updates for the Polysphere puzzle.
 
-    Args:
-        request (HttpRequest): The HTTP request containing the selected button action and any filtering parameters.
+    This function takes care of different actions you can perform on puzzle solutions, like resetting, filtering, 
+    or viewing specific sets of solutions based on user input.
 
-    Returns:
-        HttpResponse: Renders 'polysphere/solutions.html' template with the following context data if filtering or displaying solutions:
-            - solutions: Either the filtered solutions or the currently selected solutions.
-            - solutions_len: The total number of solutions in 'selected_boards'.
-            - start: The start index for filtered display.
-            - end: The end index for filtered display, adjusted to be inclusive.
+    :param request: The HTTP request that includes the action type and any filtering options.
+    :type request: HttpRequest
 
-        HttpResponseRedirect: Redirects to the home page if not POST method.
+    :returns: 
+        HttpResponse:
+            - Renders the 'polysphere/solutions.html' page with relevant data if filtering or displaying solutions:
+                - **solutions**: The list of solutions based on current filters or selected options.
+                - **solutions_len**: Total number of solutions in 'selected_boards'.
+                - **start**: The starting index for displaying filtered solutions.
+                - **end**: The ending index for displaying filtered solutions (inclusive).
+            - HttpResponseRedirect: Redirects to the home page if the request isn’t a POST.
 
     Button Actions:
-        - 'reset': Resets the global solutions list and redirects to the generator page.
-        - 'filter_boards': Filters selected boards list based on start and end indices provided by the user.
-        - 'partialConfig': Sets 'selected boards' to all solutions from 'polysphere.all_solutions_partial_config'.
-        - 'generatorSolutions': Sets 'selected boards' to the global 'solutions' list.
+        - **reset**: Clears the global solutions list and takes you back to the generator page.
+        - **filter_boards**: Filters the selected boards based on the start and end indices given.
+        - **partialConfig**: Loads 'selected_boards' with all solutions from 'polysphere.all_solutions_partial_config'.
+        - **generatorSolutions**: Loads 'selected_boards' with the current global list of solutions.
     """
     global solutions        # Get global variable solutions
     global selected_boards  # initialize empty list for filtering
@@ -178,13 +184,16 @@ def polysphere_solutions(request):
 @csrf_exempt
 def get_solution_count(request):
     """
-    Returns the current count of generated solutions as a JSON response.
+    Returns the current count of generated solutions.
 
-    Args:
-        request (HttpRequest): The HTTP request object.
+    This function processes the HTTP request and responds with the number of solutions that have been generated.
 
-    Returns:
-        JsonResponse: A JSON response containing the key "length" with the count of solutions.
+    :param request: The HTTP request object.
+    :type request: HttpRequest
+
+    :returns: 
+        JsonResponse: 
+            A JSON response containing the key "length" with the total count of generated solutions.
     """
     return JsonResponse({"length": len(solutions)})
 
@@ -192,20 +201,22 @@ def get_solution_count(request):
 @csrf_exempt
 def start_generator(request):
     """
-    Starts the solution generation process if it's not already running.
+    Handles the HTTP request to initiate the solution generation process.
 
-    Args:
-        request (HttpRequest): The HTTP request object.
+    This function checks if the solution generation process is active and, if not, starts a new process. 
+    It manages incoming requests and ensures only one process is active at a time.
 
-    Globals:
-        process (multiprocessing.Process): The process handling solution generation.
-        solutions (list): A list to store generated solutions.
+    :param request: The HTTP request object.
+    :type request: HttpRequest
 
-    Returns:
-        JsonResponse: 
-            - JSON response with {"status": "started"} and 200 status if the process starts successfully.
-            - JSON response with {"status": "already running"} if the process is already running.
-            - JSON response with {"error": "Invalid request"} and a 400 status for invalid requests.
+    :global process: The multiprocessing.Process instance that handles solution generation.
+    :global solutions: A list for storing generated solutions.
+
+    :returns: 
+        JsonResponse:
+            - A JSON response with {"status": "started"} and a 200 status code if the process starts successfully.
+            - A JSON response with {"status": "already running"} if the process is already active.
+            - A JSON response with {"error": "Invalid request"} and a 400 status code for invalid requests.
     """
     global process, solutions # Declare process and solutions as global
     if request.method == 'POST':
@@ -223,19 +234,22 @@ def start_generator(request):
 @csrf_exempt
 def stop_generator(request):
     """
-    Stops the solution generation process if it's currently running.
+    Stops the solution generation process if it is currently running.
 
-    Args:
-        request (HttpRequest): The HTTP request object, expected to be a POST request.
+    This function handles a POST request to terminate the ongoing solution generation process. 
+    It checks the state of the process and responds accordingly.
 
-    Globals:
-        process: The process handling solution generation.
+    :param request: The HTTP request object, expected to be a POST request.
+    :type request: HttpRequest
 
-    Returns:
+    :globals: 
+        process: The process responsible for handling solution generation.
+
+    :returns: 
         JsonResponse:
             - Redirects to "polysphere_solutions" if the process terminates successfully.
-            - JSON response with a 400 status if the process isn't running.
-            - JSON response with a 400 status for invalid requests.
+            - Returns a JSON response with a 400 status if the process isn't running.
+            - Returns a JSON response with a 400 status for invalid requests.
     """
     global process
     if request.method == 'POST':
@@ -249,124 +263,72 @@ def stop_generator(request):
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 ##########################################################################################
-#                     PIECES MANIPULATION FUNCTIONS (CALLED FROM JS)                     #
+#                     PIECES MANIPULATION FUNCTION (FETCHED FROM JS)                     #
 ##########################################################################################
 
-# Allows requests without CSRF token.
-@csrf_exempt
-def place_piece(request):
-    """
-    Handles POST requests to place a puzzle piece on the board.
-
-    Args:
-        request (HttpRequest): The HTTP request containing JSON data with the following keys:
-            - "pieceKey": The key for the piece to be placed.
-            - "occupiedCells": A list of dictionaries with "row" and "col" indicating cells.
-
-    Returns:
-        HttpResponseRedirect: Redirects to 'polysphere_puzzle' with an error message if placing the piece fails.
-
-    Side Effects:
-        - Displays an error message to the request if the piece placement is unsuccessful.
-    """
-    if request.method == 'POST':
-        data = json.loads(request.body)  # Parse JSON payload.
-
-        # Extract the piece key and cell positions to place the piece.
-        pieceKey = data["pieceKey"]
-        posDict = data["occupiedCells"]
-        positionPlace = [(cell['row'], cell['col']) for cell in posDict]
-
-        print(f'Key = {pieceKey}')                   # for debugging purposes
-        print(f'positionPlace = {positionPlace}')    # for debugging purposes
-
-        # Attempt to place the piece and add an error message if unsuccessful.
-        response = polysphere.place_piece(pieceKey, positionPlace)
-        if not response:
-            messages.add_message(request, messages.ERROR, "ERROR", extra_tags='danger')
-    return redirect('polysphere_puzzle')
-
-# Allows requests without CSRF token.
 @csrf_exempt 
-def remove_piece(request):
+def piece_manipulate(request):
     """
-    Handles POST requests to remove a puzzle piece from the board.
+    Process actions to manipulate puzzle pieces based on the user's request.
 
-    Args:
-        request (HttpRequest): The HTTP request containing JSON data with the following key:
-            - "position" (dict): The position of the piece on the board as {"row": int, "col": int}.
+    This function handles POST requests to modify pieces in the puzzle game. 
+    Depending on the action specified in the request body, it can perform one of the following:
+    - Rotate a piece
+    - Flip a piece
+    - Remove a piece
+    - Place a piece
 
-    Returns:
-        HttpResponseRedirect: Redirects to 'polysphere_puzzle' with an error message if removing the piece fails.
+    If any action encounters an error, an appropriate error message will be added to the request.
 
-    Side Effects:
-        - Displays an error message to the request if the piece removal is unsuccessful.
-    """
-    if request.method == 'POST':
-        data = json.loads(request.body)  # Parse JSON payload.
+    :param request: The incoming HTTP request containing the action and associated data.
+    :type request: HttpRequest
 
-        # Identify the piece position to remove.
-        position = tuple(data["position"].values())
-        for key, pos in polysphere.piece_positions.items():
-            if position in pos:
-                pieceKey = key
-
-        # Attempt to remove the piece and show an error message if unsuccessful.
-        response = polysphere.remove_piece(pieceKey)
-        if not response:
-            messages.add_message(request, messages.ERROR, "ERROR", extra_tags='danger')
-    return redirect('polysphere_puzzle')
-
-
-# Allows requests without CSRF token.
-@csrf_exempt 
-def rotate_piece(request):
-    """
-    Handles POST requests to rotate a puzzle piece on the board.
-
-    Args:
-        request (HttpRequest): The HTTP request containing JSON data with the following key:
-            - "pieceKey": The key of the piece to rotate.
-
-    Returns:
-        HttpResponseRedirect: Redirects to 'polysphere_puzzle' with an error message if rotating the piece fails.
-
-    Side Effects:
-        - Displays an error message to the request if the piece rotation is unsuccessful.
+    :returns: 
+        HttpResponse: Redirects to the 'polysphere_puzzle' page after processing the request. 
+        If the action is not recognized or if a manipulation fails, an error message will be displayed.
     """
     if request.method == 'POST':
-        data = json.loads(request.body)  # Parse JSON payload.
+        data = json.loads(request.body)
+        action = data.get('action')
 
-        # Rotate the specified piece and add error message if unsuccessful.
-        pieceKey = data["pieceKey"]
-        response = polysphere.rotate_piece(pieceKey)
-        if not response:
-            messages.add_message(request, messages.ERROR, "ERROR", extra_tags='danger')
-    return redirect('polysphere_puzzle')
+        # Perform different actions based on the action type
+        if action == 'rotate':
+            pieceKey = data["pieceKey"]
+            # Rotate the specified piece and add error message if unsuccessful.
+            response = polysphere.rotate_piece(pieceKey)
+            if not response:
+                messages.add_message(request, messages.ERROR, "Error Rotating piece", extra_tags='danger')
 
+        elif action == 'flip':
+            pieceKey = data["pieceKey"]
+            response = polysphere.flip_piece(pieceKey)
+            if not response:
+                messages.add_message(request, messages.ERROR, "Error Flipping piece", extra_tags='danger')
 
-# Allows requests without CSRF token.
-@csrf_exempt 
-def flip_piece(request):
-    """
-    Handles POST requests to flip a puzzle piece on the board.
+        elif action == 'remove':
+            # Identify the piece position to remove.
+            position = tuple(data["position"].values())
+            for key, pos in polysphere.piece_positions.items():
+                if position in pos:
+                    pieceKey = key
 
-    Args:
-        request (HttpRequest): The HTTP request containing JSON data with the following key:
-            - "pieceKey": The key of the piece to flip.
+            # Attempt to remove the piece and show an error message if unsuccessful.
+            response = polysphere.remove_piece(pieceKey)
+            if not response:
+                messages.add_message(request, messages.ERROR, "Error Removing piece", extra_tags='danger')
 
-    Returns:
-        HttpResponseRedirect: Redirects to 'polysphere_puzzle' with an error message if flipping the piece fails.
+        elif action == 'place':
+            pieceKey = data["pieceKey"]
+            posDict = data["occupiedCells"]
+            positionPlace = [(cell['row'], cell['col']) for cell in posDict]
 
-    Side Effects:
-        - Displays an error message to the request if the piece flip is unsuccessful.
-    """
-    if request.method == 'POST':
-        data = json.loads(request.body)  # Parse JSON payload.
-
-        # Flip the specified piece and show an error message if unsuccessful.
-        pieceKey = data["pieceKey"]
-        response = polysphere.flip_piece(pieceKey)
-        if not response:
-            messages.add_message(request, messages.ERROR, "ERROR", extra_tags='danger')
+            # Attempt to place the piece and add an error message if unsuccessful.
+            response = polysphere.place_piece(pieceKey, positionPlace)
+            if not response:
+                messages.add_message(request, messages.ERROR, "Error Placing piece", extra_tags='danger')
+        else:
+            # If non of the known actions
+            messages.add_message(request, messages.ERROR, "Incorrect Action!", extra_tags='danger')
+            return redirect('polysphere_puzzle')
+        
     return redirect('polysphere_puzzle')

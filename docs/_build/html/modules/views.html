@@ -36,34 +36,21 @@
   <section id="module-polysphere.views">
 <span id="polysphere-views"></span><h1>Polysphere Views<a class="headerlink" href="#module-polysphere.views" title="Link to this heading">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="polysphere.views.flip_piece">
-<span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">flip_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.flip_piece" title="Link to this definition">¶</a></dt>
-<dd><p>Handles POST requests to flip a puzzle piece on the board.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>request (HttpRequest): The HTTP request containing JSON data with the following key:</dt><dd><ul class="simple">
-<li><p>“pieceKey”: The key of the piece to flip.</p></li>
-</ul>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><p>HttpResponseRedirect: Redirects to ‘polysphere_puzzle’ with an error message if flipping the piece fails.</p>
-</dd>
-<dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Displays an error message to the request if the piece flip is unsuccessful.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="polysphere.views.generator">
 <span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.generator" title="Link to this definition">¶</a></dt>
-<dd><p>Renders the generator page for the Polysphere application.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request for the generator page.</p>
+<dd><p>Displays the generator page for the Polysphere application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request for the generator page.</p>
 </dd>
-<dt>Returns:</dt><dd><p>HttpResponse: Renders ‘polysphere/generator.html’ with solutions length.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>HttpResponse: Renders ‘polysphere/generator.html’ with the following context:</dt><dd><ul class="simple">
+<li><p><strong>solutions length</strong>: The total number of generated solutions.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -71,11 +58,18 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="polysphere.views.get_solution_count">
 <span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">get_solution_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.get_solution_count" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the current count of generated solutions as a JSON response.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object.</p>
+<dd><p>Returns the current count of generated solutions.</p>
+<p>This function processes the HTTP request and responds with the number of solutions that have been generated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request object.</p>
 </dd>
-<dt>Returns:</dt><dd><p>JsonResponse: A JSON response containing the key “length” with the count of solutions.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>JsonResponse: </dt><dd><p>A JSON response containing the key “length” with the total count of generated solutions.</p>
+</dd>
+</dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -83,33 +77,35 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="polysphere.views.home">
 <span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">home</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.home" title="Link to this definition">¶</a></dt>
-<dd><p>Renders the homepage for the Polysphere application.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request for the home page.</p>
+<dd><p>Displays the homepage for the Polysphere application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request for the homepage.</p>
 </dd>
-<dt>Returns:</dt><dd><p>HttpResponse: Renders ‘polysphere/home.html’ template.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HttpResponse: Renders the ‘polysphere/home.html’ template.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="polysphere.views.place_piece">
-<span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">place_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.place_piece" title="Link to this definition">¶</a></dt>
-<dd><p>Handles POST requests to place a puzzle piece on the board.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>request (HttpRequest): The HTTP request containing JSON data with the following keys:</dt><dd><ul class="simple">
-<li><p>“pieceKey”: The key for the piece to be placed.</p></li>
-<li><p>“occupiedCells”: A list of dictionaries with “row” and “col” indicating cells.</p></li>
-</ul>
+<dt class="sig sig-object py" id="polysphere.views.piece_manipulate">
+<span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">piece_manipulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.piece_manipulate" title="Link to this definition">¶</a></dt>
+<dd><p>Process actions to manipulate puzzle pieces based on the user’s request.</p>
+<p>This function handles POST requests to modify pieces in the puzzle game. 
+Depending on the action specified in the request body, it can perform one of the following:
+- Rotate a piece
+- Flip a piece
+- Remove a piece
+- Place a piece</p>
+<p>If any action encounters an error, an appropriate error message will be added to the request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The incoming HTTP request containing the action and associated data.</p>
 </dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><p>HttpResponseRedirect: Redirects to ‘polysphere_puzzle’ with an error message if placing the piece fails.</p>
-</dd>
-<dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Displays an error message to the request if the piece placement is unsuccessful.</p></li>
-</ul>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HttpResponse: Redirects to the ‘polysphere_puzzle’ page after processing the request. 
+If the action is not recognized or if a manipulation fails, an error message will be displayed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -117,27 +113,39 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="polysphere.views.polysphere_solutions">
 <span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">polysphere_solutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.polysphere_solutions" title="Link to this definition">¶</a></dt>
-<dd><p>Handles POST requests to manage solutions and configurations for the Polysphere puzzle and generator, 
-providing options to reset, filter, or display specific solution sets.</p>
-<dl>
-<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request containing the selected button action and any filtering parameters.</p>
+<dd><p>Handles solution management and configuration updates for the Polysphere puzzle.</p>
+<p>This function takes care of different actions you can perform on puzzle solutions, like resetting, filtering, 
+or viewing specific sets of solutions based on user input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request that includes the action type and any filtering options.</p>
 </dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>HttpResponse: Renders ‘polysphere/solutions.html’ template with the following context data if filtering or displaying solutions:</dt><dd><ul class="simple">
-<li><p>solutions: Either the filtered solutions or the currently selected solutions.</p></li>
-<li><p>solutions_len: The total number of solutions in ‘selected_boards’.</p></li>
-<li><p>start: The start index for filtered display.</p></li>
-<li><p>end: The end index for filtered display, adjusted to be inclusive.</p></li>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>HttpResponse:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Renders the ‘polysphere/solutions.html’ page with relevant data if filtering or displaying solutions:</dt><dd><ul>
+<li><p><strong>solutions</strong>: The list of solutions based on current filters or selected options.</p></li>
+<li><p><strong>solutions_len</strong>: Total number of solutions in ‘selected_boards’.</p></li>
+<li><p><strong>start</strong>: The starting index for displaying filtered solutions.</p></li>
+<li><p><strong>end</strong>: The ending index for displaying filtered solutions (inclusive).</p></li>
 </ul>
 </dd>
 </dl>
-<p>HttpResponseRedirect: Redirects to the appropriate page if not POST method.</p>
+</li>
+<li><p>HttpResponseRedirect: Redirects to the home page if the request isn’t a POST.</p></li>
+</ul>
 </dd>
+</dl>
+</p>
+</dd>
+</dl>
+<dl class="simple">
 <dt>Button Actions:</dt><dd><ul class="simple">
-<li><p>‘reset’: Resets the global solutions list and redirects to the generator page.</p></li>
-<li><p>‘filter_boards’: Filters selected boards list based on start and end indices provided by the user.</p></li>
-<li><p>‘partialConfig’: Sets ‘selected boards’ to all solutions from ‘polysphere.all_solutions_partial_config’.</p></li>
-<li><p>‘generatorSolutions’: Sets ‘selected boards’ to the global ‘solutions’ list.</p></li>
+<li><p><strong>reset</strong>: Clears the global solutions list and takes you back to the generator page.</p></li>
+<li><p><strong>filter_boards</strong>: Filters the selected boards based on the start and end indices given.</p></li>
+<li><p><strong>partialConfig</strong>: Loads ‘selected_boards’ with all solutions from ‘polysphere.all_solutions_partial_config’.</p></li>
+<li><p><strong>generatorSolutions</strong>: Loads ‘selected_boards’ with the current global list of solutions.</p></li>
 </ul>
 </dd>
 </dl>
@@ -146,15 +154,20 @@ providing options to reset, filter, or display specific solution sets.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="polysphere.views.polysphere_solver">
 <span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">polysphere_solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.polysphere_solver" title="Link to this definition">¶</a></dt>
-<dd><p>Handles POST requests for solving partial or complete configurations on the Polysphere puzzle board.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request containing the button selection and any configuration data.</p>
+<dd><p>Processes POST requests to solve partial or full configurations on the Polysphere puzzle board.</p>
+<p>This function handles user actions on the puzzle board, such as attempting to solve configurations based on 
+the current piece layout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request containing the button selection and any configuration data.</p>
 </dd>
-<dt>Returns:</dt><dd><p>HttpResponseRedirect: Redirects to ‘polysphere_puzzle’ page with messages for user feedback.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HttpResponseRedirect: Redirects the user to the ‘polysphere_puzzle’ page, providing feedback messages as needed.</p>
 </dd>
-<dt>Messages:</dt><dd><ul class="simple">
-<li><p>ERROR: “You have to place at least one piece!” if the board is empty when attempting to find all solutions.</p></li>
-<li><p>ERROR: “Can’t find a solution with these pieces :(” if no solution exists for the given configuration.</p></li>
+<dt class="field-odd">Messages<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ERROR</strong>: “You have to place at least one piece!”  shown if the board is empty when attempting to find solutions.</p></li>
+<li><p><strong>ERROR</strong>: “Can’t find a solution with these pieces :(” shown if no solutions exist for the current configuration.</p></li>
 </ul>
 </dd>
 </dl>
@@ -163,58 +176,23 @@ providing options to reset, filter, or display specific solution sets.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="polysphere.views.puzzle">
 <span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">puzzle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.puzzle" title="Link to this definition">¶</a></dt>
-<dd><p>Renders the puzzle page for the Polysphere application.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request for the puzzle page.</p>
+<dd><p>Displays the puzzle page for the Polysphere application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request for the puzzle page.</p>
 </dd>
-<dt>Returns:</dt><dd><p>HttpResponse: Renders ‘polysphere/puzzle.html’ with the following:
-- pieces left in board
-- the board 
-- pieces positions 
-- all solutions 
-- length of all solutions.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="polysphere.views.remove_piece">
-<span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">remove_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.remove_piece" title="Link to this definition">¶</a></dt>
-<dd><p>Handles POST requests to remove a puzzle piece from the board.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>request (HttpRequest): The HTTP request containing JSON data with the following key:</dt><dd><ul class="simple">
-<li><p>“position” (dict): The position of the piece on the board as {“row”: int, “col”: int}.</p></li>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>HttpResponse: Renders ‘polysphere/puzzle.html’ with the following context:</dt><dd><ul class="simple">
+<li><p><strong>pieces left in board</strong>: Pieces that remain to be placed on the board.</p></li>
+<li><p><strong>the board</strong>: The current state of the puzzle board.</p></li>
+<li><p><strong>pieces positions</strong>: The positions of each placed piece.</p></li>
+<li><p><strong>all solutions</strong>: The complete list of solutions.</p></li>
+<li><p><strong>length of all solutions</strong>: The total count of possible solutions.</p></li>
 </ul>
 </dd>
 </dl>
-</dd>
-<dt>Returns:</dt><dd><p>HttpResponseRedirect: Redirects to ‘polysphere_puzzle’ with an error message if removing the piece fails.</p>
-</dd>
-<dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Displays an error message to the request if the piece removal is unsuccessful.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="polysphere.views.rotate_piece">
-<span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">rotate_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.rotate_piece" title="Link to this definition">¶</a></dt>
-<dd><p>Handles POST requests to rotate a puzzle piece on the board.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>request (HttpRequest): The HTTP request containing JSON data with the following key:</dt><dd><ul class="simple">
-<li><p>“pieceKey”: The key of the piece to rotate.</p></li>
-</ul>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><p>HttpResponseRedirect: Redirects to ‘polysphere_puzzle’ with an error message if rotating the piece fails.</p>
-</dd>
-<dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Displays an error message to the request if the piece rotation is unsuccessful.</p></li>
-</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -222,21 +200,29 @@ providing options to reset, filter, or display specific solution sets.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="polysphere.views.start_generator">
 <span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">start_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.start_generator" title="Link to this definition">¶</a></dt>
-<dd><p>Starts the solution generation process if it’s not already running.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object.</p>
+<dd><p>Handles the HTTP request to initiate the solution generation process.</p>
+<p>This function checks if the solution generation process is active and, if not, starts a new process. 
+It manages incoming requests and ensures only one process is active at a time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request object.</p>
 </dd>
-<dt>Globals:</dt><dd><p>process (multiprocessing.Process): The process handling solution generation.
-solutions (list): A list to store generated solutions.</p>
+<dt class="field-even">Global process<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multiprocessing.Process instance that handles solution generation.</p>
 </dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>JsonResponse: </dt><dd><ul class="simple">
-<li><p>JSON response with {“status”: “started”} if the process starts successfully.</p></li>
-<li><p>JSON response with {“status”: “already running”} if the process is already running.</p></li>
-<li><p>JSON response with {“error”: “Invalid request”} and a 400 status for invalid requests.</p></li>
+<dt class="field-odd">Global solutions<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list for storing generated solutions.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>JsonResponse:</dt><dd><ul class="simple">
+<li><p>A JSON response with {“status”: “started”} and a 200 status code if the process starts successfully.</p></li>
+<li><p>A JSON response with {“status”: “already running”} if the process is already active.</p></li>
+<li><p>A JSON response with {“error”: “Invalid request”} and a 400 status code for invalid requests.</p></li>
 </ul>
 </dd>
 </dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -244,20 +230,26 @@ solutions (list): A list to store generated solutions.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="polysphere.views.stop_generator">
 <span class="sig-prename descclassname"><span class="pre">polysphere.views.</span></span><span class="sig-name descname"><span class="pre">stop_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#polysphere.views.stop_generator" title="Link to this definition">¶</a></dt>
-<dd><p>Stops the solution generation process if it’s currently running.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object, expected to be a POST request.</p>
+<dd><p>Stops the solution generation process if it is currently running.</p>
+<p>This function handles a POST request to terminate the ongoing solution generation process. 
+It checks the state of the process and responds accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request object, expected to be a POST request.</p>
 </dd>
-<dt>Globals:</dt><dd><p>process: The process handling solution generation.</p>
+<dt class="field-even">Globals<span class="colon">:</span></dt>
+<dd class="field-even"><p>process: The process responsible for handling solution generation.</p>
 </dd>
-<dt>Returns:</dt><dd><dl class="simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
 <dt>JsonResponse:</dt><dd><ul class="simple">
 <li><p>Redirects to “polysphere_solutions” if the process terminates successfully.</p></li>
-<li><p>JSON response with {“error”: “Solver not running”} and a 400 status if the process isn’t running.</p></li>
-<li><p>JSON response with {“error”: “Invalid request”} and a 400 status for invalid requests.</p></li>
+<li><p>Returns a JSON response with a 400 status if the process isn’t running.</p></li>
+<li><p>Returns a JSON response with a 400 status for invalid requests.</p></li>
 </ul>
 </dd>
 </dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -293,16 +285,13 @@ solutions (list): A list to store generated solutions.</p>
 <p class="caption" role="heading"><span class="caption-text">Content:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Polysphere Views</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#polysphere.views.flip_piece"><code class="docutils literal notranslate"><span class="pre">flip_piece()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polysphere.views.generator"><code class="docutils literal notranslate"><span class="pre">generator()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polysphere.views.get_solution_count"><code class="docutils literal notranslate"><span class="pre">get_solution_count()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polysphere.views.home"><code class="docutils literal notranslate"><span class="pre">home()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#polysphere.views.place_piece"><code class="docutils literal notranslate"><span class="pre">place_piece()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#polysphere.views.piece_manipulate"><code class="docutils literal notranslate"><span class="pre">piece_manipulate()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polysphere.views.polysphere_solutions"><code class="docutils literal notranslate"><span class="pre">polysphere_solutions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polysphere.views.polysphere_solver"><code class="docutils literal notranslate"><span class="pre">polysphere_solver()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polysphere.views.puzzle"><code class="docutils literal notranslate"><span class="pre">puzzle()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#polysphere.views.remove_piece"><code class="docutils literal notranslate"><span class="pre">remove_piece()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#polysphere.views.rotate_piece"><code class="docutils literal notranslate"><span class="pre">rotate_piece()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polysphere.views.start_generator"><code class="docutils literal notranslate"><span class="pre">start_generator()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polysphere.views.stop_generator"><code class="docutils literal notranslate"><span class="pre">stop_generator()</span></code></a></li>
 </ul>
