@@ -1,0 +1,21 @@
+{% extends 'polysphere_pyramid/layout.html' %}
+
+{% load static %}  
+
+{% block title %}3D Pyramid Puzzle{% endblock %}
+
+{% block main %}
+<h2>3D Polysphere Pyramid Puzzle</h2>
+<div id="3d-container"></div>
+
+
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@<0.150.1/examples/jsm/"
+    }
+  }
+</script>
+
+<script type="module" src="{% static 'p
