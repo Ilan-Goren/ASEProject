@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block app_name %} Pyramid {% endblock %}
+
+{% block links %}
+{% load static %}
+<!-- Importing jQuery library for DOM manipulation and event handling -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Including the puzzle JavaScript file with deferred loading to improve page load performance -->
+<script src="{% static '/polysphere/js/pyramid3D.js' %}" defer></script>
+{% endblock %}

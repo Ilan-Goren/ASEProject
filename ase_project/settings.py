@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'polysphere',
     'nqueens',
-    'polysphere_pyramid',
+    'pyramid',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
