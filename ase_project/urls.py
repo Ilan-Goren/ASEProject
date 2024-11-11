@@ -23,7 +23,7 @@ from django.shortcuts import render
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', lambda request: render(request, 'home.html'), name='home'),
-    path('nqueens', include('nqueens.urls')),
-    path('polysphere', include('polysphere.urls')),
+    path('nqueens/', include('nqueens.urls')),
+    path('polysphere/', include('polysphere.urls')),
     path('pyramid/', include('pyramid.urls')),
 ]
