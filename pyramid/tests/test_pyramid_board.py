@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from ..solver_functions import pyramid_board
 
-class PolysphereTestCase(TestCase):
+class PyramidBoardTestCase(TestCase):
     def test_creating_board(self):
         board = pyramid_board.pyramid_board(5)
 
@@ -30,5 +30,5 @@ class PolysphereTestCase(TestCase):
 
         board.convert_from_3D_array(array_board)
         arr = board.convert_to_3D_array()
-        print(arr)
+        #print(arr)
 
