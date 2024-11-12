@@ -1,9 +1,14 @@
+from idlelib.pyparse import trans
+
 
 class pyramid_board:
     def __init__(self, layers):
         self.layers = layers
-        board_spaces = [(x + z, y + z, z) for z in range(layers) for x in range(0, 9 - (2 * z), 2) for y in range(0, 9 - (2 * z), 2)]
-        self.cells = {space: 1 for space in board_spaces}
+        board_spaces = [(x + z, y + z, z) for z in range(layers) for x in range(0, ((2*layers)-1) - (2 * z), 2) for y in range(0, ((2*layers)-1) - (2 * z), 2)]
+        self.cells = {space: 0 for space in board_spaces}
+
+    def count_cells(self):
+        return len(self.cells.keys())
 
     def convert_to_3D_array(self):
         #create an empty 3D array of the right shape
@@ -35,3 +40,28 @@ class pyramid_board:
     def convert_array_coords_to_board_coords(self, array_coords):
         x,y,z = array_coords
         return ((x * 2) + z), ((y * 2) + z), z
+
+    def is_region_free(self, region):
+        for cell in region:
+            # check if cell is a valid space on the board
+            if cell not in self.cells:
+                return False
+            # check if cell is empty
+            if self.cells[cell] != 0:
+                return False
+        return True
+
+    def get_matching_empty_regions(self, region):
+        matching_empty_regions = []
+        for z in range(self.layers):
+            layer_size = (self.layers - z) * 2  # Side length of the square grid at layer z
+            for x in range(layer_size):
+                for y in range(layer_size):
+                    translated_region = []
+                    for i,j,k in region:
+                        translated_region.append((x+i,y+j,z+k))
+                    if self.is_region_free(translated_region):
+                        matching_empty_regions.append(translated_region)
+        return matching_empty_regions
+
+
