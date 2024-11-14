@@ -25,10 +25,15 @@ pieces  = { 1: [(0, 0, 0), (0, 2, 0), (0, 4, 0), (2, 0, 0), (2, 4, 0)],
             12: [(0, 0, 0), (0, 2, 0), (2, 2, 0), (2, 4, 0), (4, 4, 0)]}
 
 
-class piece:
-    def __init__(self, id):
-        self.id = id
-        self.transformations = build_transformations(pieces.get(id))
+class Piece:
+    def __init__(self, piece_id, custom_shape=None):
+        self.id = piece_id
+        if custom_shape is None:
+            self.transformations = build_transformations(pieces.get(piece_id))
+        else:
+            self.transformations = build_transformations(custom_shape)
+
+
 
 def build_transformations(cells):
     transformations = []
@@ -70,18 +75,11 @@ def reflect(cell):
     return tuple(vec)
 
 def normalize_transformation(cells):
-    print("original")
-    print(cells)
     # Find minimum values in each dimension
     min_x = min(cell[0] for cell in cells)
     min_y = min(cell[1] for cell in cells)
     min_z = min(cell[2] for cell in cells)
 
-    # Print minimum values for debugging
-    print(f"Minimum x: {min_x}, Minimum y: {min_y}, Minimum z: {min_z}")
-
     # Shift each coordinate by the minimum values
     normalized_cells = [(cell[0] - min_x, cell[1] - min_y, cell[2] - min_z) for cell in cells]
-    print("normalised")
-    print(cells)
     return normalized_cells
