@@ -47,3 +47,31 @@ class SolverTestCase(TestCase):
 
         rows = s.solve(pieces, b)
         print(s.rows_to_array_sol(rows,b))
+
+    def test_rows_to_array_sol_5_layer(self):
+        s = solver.Solver()
+        b = pyramid_board.pyramid_board(5)
+
+        pieces = []
+        for p in piece.pieces:
+            pieces.append(piece.Piece(p))
+
+        rows = s.solve(pieces, b)
+        print(s.rows_to_array_sol(rows, b))
+
+
+    def test_packing_matrix_partial_config(self):
+        s = solver.Solver()
+        b = pyramid_board.pyramid_board(0)
+
+        array_board = [
+            [[1, 0],
+             [0, 2]],
+            [[0]]
+        ]
+
+        b.convert_from_3D_array(array_board)
+
+        pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)])]
+
+        matrix = s.initialise_packing_matrix_partial_config(b, pieces)

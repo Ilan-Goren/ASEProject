@@ -1,3 +1,6 @@
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
 #hard-coded pieces for 3D board
 '''
 1:          2:          3:          4:          5:          6:
@@ -12,7 +15,7 @@ X           XXX         XXX         XXXX        XX          XX
 
 '''
 pieces  = { 1: [(0, 0, 0), (0, 2, 0), (0, 4, 0), (2, 0, 0), (2, 4, 0)],
-            2: [(0, 0, 0), (0, 1, 0), (1, 1, 0), (1, 2, 0), (1, 3, 0)],
+            2: [(0, 0, 0), (0, 2, 0), (2, 2, 0), (2, 4, 0), (2, 6, 0)],
             3: [(0, 0, 0), (0, 2, 0), (2, 2, 0), (2, 4, 0), (4, 2, 0)],
             4: [(0, 0, 0), (0, 2, 0), (0, 4, 0), (2, 2, 0)],
             5: [(0, 0, 0), (0, 2, 0), (0, 4, 0), (0, 6, 0), (2, 2, 0)],
@@ -83,3 +86,35 @@ def normalize_transformation(cells):
     # Shift each coordinate by the minimum values
     normalized_cells = [(cell[0] - min_x, cell[1] - min_y, cell[2] - min_z) for cell in cells]
     return normalized_cells
+
+def visualise_piece(coords):
+    if not coords:
+        print("No coordinates to plot.")
+        return
+
+    # Extract x, y, and z values
+    x_vals = [point[0] for point in coords]
+    y_vals = [point[1] for point in coords]
+    z_vals = [point[2] for point in coords]
+
+    # Create a 3D plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot the points
+    ax.scatter(x_vals, y_vals, z_vals, c='b', marker='o')
+
+    # Set fixed limits for x and y axes
+    ax.set_xlim(0, 6)
+    ax.set_ylim(0, 6)
+
+    # Set labels for clarity
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+
+    # Set the title
+    ax.set_title("3D Coordinates Visualization")
+
+    # Show the plot
+    plt.show()

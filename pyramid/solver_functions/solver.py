@@ -1,5 +1,7 @@
 import time
 
+from numpy.f2py.auxfuncs import throw_error
+
 from . import algorithm_x_functions, piece, pyramid_board
 
 class Solver:
@@ -26,7 +28,6 @@ class Solver:
 
         # Construct a blank matrix with the required number of columns
         self.matrix = algorithm_x_functions.Matrix(board_size + len(pieces), 0)
-        algorithm_x_functions.pretty_print(self.matrix)
 
         # Enumerate pieces from 1 to n
         for i, p in enumerate(pieces):
@@ -45,6 +46,66 @@ class Solver:
                     algorithm_x_functions.add_row(self.matrix, row)
 
         return self.matrix
+
+    def initialise_packing_matrix_partial_config(self, board, remaining_pieces):
+        self.cell_to_index = {}
+        self.index_to_cell = {}
+        self.id_conversions = {}
+
+        self.generate_board_cell_indexes(board)
+
+        board_size = board.count_cells()
+
+        placed_pieces = {}
+        for cell in board.cells.keys():
+            piece_id = board.cells[cell]
+            if piece_id != 0:
+                if piece_id not in placed_pieces:
+                    placed_pieces[piece_id] = []
+                placed_pieces[piece_id].append(cell)
+
+        placed_pieces_count = len(placed_pieces)
+
+        # Construct a blank matrix with the required number of columns
+        self.matrix = algorithm_x_functions.Matrix(board_size + len(remaining_pieces) + placed_pieces_count, 0)
+
+        next_id = 1
+        # Enumerate pieces from 1 to n
+        for i, p in enumerate(remaining_pieces):
+            for placed_id in placed_pieces.keys():
+                if placed_id == p.id:
+                    throw_error("Placed pieces cannot have same ID as remaining pieces")
+            # Keep track of original id's compared to enumerated ones
+            self.id_conversions[i + 1] = p.id
+            p.id = i + 1
+            next_id = p.id + 1
+
+        placed_pieces_renum = {}
+        for p_id in placed_pieces.keys():
+            self.id_conversions[next_id] = p_id
+            placed_pieces_renum[next_id] = placed_pieces[p_id]
+            next_id += 1
+
+        for p in remaining_pieces:
+            for t in p.transformations:
+                for option in board.get_matching_empty_regions(t):
+                    row = []
+                    for cell in option:
+                        row.append(self.cell_to_index[cell])
+                    row.sort()
+                    row.append(p.id + board_size)
+                    algorithm_x_functions.add_row(self.matrix, row)
+
+        for id, cells in placed_pieces_renum.items():
+            row = []
+            for cell in cells:
+                row.append(self.cell_to_index[cell])
+            row.sort()
+            row.append(id + board_size)
+            algorithm_x_functions.add_row(self.matrix, row)
+
+        return self.matrix
+
 
     def solve(self, pieces, board=None):
         if board is None:
@@ -90,8 +151,7 @@ class Solver:
             for j in range(len(row)):
                 if row[j] and j+1 != (poly_id + board_cells_count):
                     x,y,z = self.index_to_cell[j+1]
-
-                    solution_array[z][int(y/2)][int(x/2)] = self.id_conversions[poly_id]
+                    solution_array[z][int((y-z)/2)][int((x-z)/2)] = self.id_conversions[poly_id]
 
         return solution_array
 
