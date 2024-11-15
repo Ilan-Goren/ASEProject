@@ -1,6 +1,3 @@
-from idlelib.pyparse import trans
-
-
 class pyramid_board:
     def __init__(self, layers):
         self.layers = layers

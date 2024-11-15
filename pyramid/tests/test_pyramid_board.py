@@ -53,7 +53,7 @@ class PyramidBoardTestCase(TestCase):
         print(board.is_region_free(region))
 
     def test_get_matching_empty_regions(self):
-        board = pyramid_board.pyramid_board(2)
+        board = pyramid_board.pyramid_board(3)
         region = [(0, 0, 0), (0, 2, 0), (2, 0, 0)]
         print(board.get_matching_empty_regions(region))
         region = [(0, 2, 0), (1, 1, 1), (2, 0, 0)]
