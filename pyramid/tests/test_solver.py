@@ -75,3 +75,38 @@ class SolverTestCase(TestCase):
         pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)])]
 
         matrix = s.initialise_packing_matrix_partial_config(b, pieces)
+
+    def test_solve_partial_config(self):
+        s = solver.Solver()
+        b = pyramid_board.pyramid_board(0)
+
+        array_board = [
+            [[1, 0],
+             [0, 2]],
+            [[0]]
+        ]
+
+        b.convert_from_3D_array(array_board)
+
+        pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)])]
+
+        rows = s.solve(pieces, b)
+        print(s.rows_to_array_sol(rows, b))
+
+    def test_generate_solutions(self):
+        s = solver.Solver()
+        b = pyramid_board.pyramid_board(0)
+
+        array_board = [
+            [[0, 0],
+             [0, 0]],
+            [[0]]
+        ]
+
+        b.convert_from_3D_array(array_board)
+        pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]),
+                  piece.Piece(1, [(0, 0, 0)]),
+                  piece.Piece(2, [(0, 0, 0)]),]
+
+        for rows in s.generate_solutions(pieces, b):
+            print(s.rows_to_array_sol(rows, b))

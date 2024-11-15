@@ -111,8 +111,16 @@ class Solver:
         if board is None:
             board = pyramid_board.pyramid_board(5)
 
-        ###will need check for partial config at some point
-        self.initialise_packing_matrix(board, pieces)
+        pieces_placed = False
+
+        for p_id in board.cells.values():
+            if(p_id != 0):
+                pieces_placed = True
+
+        if pieces_placed:
+            self.initialise_packing_matrix_partial_config(board, pieces)
+        else:
+            self.initialise_packing_matrix(board, pieces)
 
         # Track how long the solver takes
         start = time.time()
@@ -145,7 +153,6 @@ class Solver:
                     poly_id = j - board_cells_count + 1
                     break
 
-
             # Place piece on the solution array
             # Get where the piece has been placed on the board
             for j in range(len(row)):
@@ -154,6 +161,23 @@ class Solver:
                     solution_array[z][int((y-z)/2)][int((x-z)/2)] = self.id_conversions[poly_id]
 
         return solution_array
+
+    def generate_solutions(self, pieces, board=None):
+        if board is None:
+            board = pyramid_board.pyramid_board(5)
+
+        pieces_placed = False
+
+        for p_id in board.cells.values():
+            if(p_id != 0):
+                pieces_placed = True
+
+        if pieces_placed:
+            self.initialise_packing_matrix_partial_config(board, pieces)
+        else:
+            self.initialise_packing_matrix(board, pieces)
+
+        yield from algorithm_x_functions.generate_solutions(self.matrix)
 
 
 
