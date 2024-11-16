@@ -106,7 +106,39 @@ class SolverTestCase(TestCase):
         b.convert_from_3D_array(array_board)
         pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]),
                   piece.Piece(1, [(0, 0, 0)]),
-                  piece.Piece(2, [(0, 0, 0)]),]
+                  piece.Piece(2, [(0, 0, 0)])]
 
         for rows in s.generate_solutions(pieces, b):
             print(s.rows_to_array_sol(rows, b))
+
+    def test_generate_solutions_with_input(self):
+        s = solver.Solver()
+        b = pyramid_board.pyramid_board(0)
+
+        array_board = [
+            [[0, 0],
+             [0, 0]],
+            [[0]]
+        ]
+
+        b.convert_from_3D_array(array_board)
+        pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]),
+                  piece.Piece(1, [(0, 0, 0)]),
+                  piece.Piece(2, [(0, 0, 0)])]
+
+        for rows in s.generate_solutions(pieces, b):
+            print(s.rows_to_array_sol(rows, b))
+            input("Press Enter to continue...")
+
+    def test_generate_solutions_full(self):
+        s = solver.Solver()
+        b = pyramid_board.pyramid_board(5)
+
+        pieces = []
+        for p in piece.pieces:
+            pieces.append(piece.Piece(p))
+
+        i = 0;
+        for rows in s.generate_solutions(pieces, b):
+            i += 1
+            print(i)

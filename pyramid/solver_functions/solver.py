@@ -11,11 +11,9 @@ class Solver:
     matrix = None
 
     def generate_board_cell_indexes(self, board):
-        i = 1
-        for cell in board.cells:
+        for i, cell in enumerate(board.cells, start=1):
             self.cell_to_index[cell] = i
             self.index_to_cell[i] = cell
-            i += 1
 
     def initialise_packing_matrix(self, board, pieces):
         self.cell_to_index = {}
