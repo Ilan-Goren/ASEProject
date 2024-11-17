@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
 import { DragControls } from 'three/addons/controls/DragControls.js'; // Import DragControls
-import { global_pieces, rotateHandler, onClickHandler, keyboardHandler, selected, createPieces, detectPiecesOnPlane } from './functions.js';
+import { onClickHandler, keyboardHandler, selected, createPieces } from './functions.js';
 import { pieces, colorMapping } from './defs.js';
 
 // Scene setup
@@ -101,42 +101,30 @@ resetButton.addEventListener('click', ()=>{
   }
 })
 
-piecesGroup.children.forEach(piece => {
-  global_pieces[piece.userData.name] = piece.getWorldPosition(new THREE.Vector3());
-});
-
-
-const rotateButton = document.getElementById('rotate');
-rotateButton.addEventListener('click', () => {
-  if (selected) {
-    piecesGroup.remove(selected);
-    
-    selected.rotation.z += THREE.MathUtils.degToRad(90);
-    
-    console.log('Piece rotated and re-added to the group');
-  } else {
-    console.log('No piece selected for rotation');
+const rotate = document.getElementById('rotate');
+rotate.addEventListener('click', ()=>{
+  if (selected){
+    selected.rotateZ(THREE.MathUtils.degToRad(90));
   }
-});
-
+})
 
 let isPieceFlat = true;
 const changeOr = document.getElementById('change-orientation');
-changeOr.addEventListener('click', () => {
-  if (selected) {
-    if (isPieceFlat) {
-      selected.rotateX(THREE.MathUtils.degToRad(-90)); // Rotate around Y-axis by -45 degrees
+changeOr.addEventListener('click', ()=>{
+  if (selected){
+    if (isPieceFlat){
+      selected.rotation.set(0, 0, 0);
+      selected.rotateY(THREE.MathUtils.degToRad(-45));
       isPieceFlat = false;
-    } else {
-      // Set the rotation to 0, 0, 0 and apply a 90-degree rotation along the X-axis
-      selected.rotateX(THREE.MathUtils.degToRad(90)); // Rotate around X-axis by 90 degrees
+    }
+    else {
+      selected.rotation.set(0, 0, 0);
+      selected.rotateX(THREE.MathUtils.degToRad(90));
       isPieceFlat = true;
     }
   }
-});
+})
 
-
-console.log (piecesGroup)
 document.addEventListener('keydown', (event) => keyboardHandler(event, camera));
 
 renderer.domElement.addEventListener('click', (event) => onClickHandler(
@@ -150,19 +138,11 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-console.log(detectPiecesOnPlane(piecesGroup));
-
 // Render loop
 const renderLoop = () => {
   controls.update();
   renderer.render(scene, camera);
-
-  if (detectPiecesOnPlane(piecesGroup)){
-    console.log(detectPiecesOnPlane(piecesGroup))
-  }
-  
   requestAnimationFrame(renderLoop);
-
 };
 
 renderLoop();

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { pieces, colorMapping } from './defs.js';
 export var selected = null;
-export var global_pieces = {};
+
 
  /******************************************************************************************
                                   HANDLER FUNCTIONS
@@ -28,21 +28,15 @@ export var global_pieces = {};
   
       selected.material.emissive.setHex(0xeeeeee);
       selected.material.emissiveIntensity = 0.5;
-      console.log(selected.position)
     }
     else {
       // If no piece is clicked, set selected to null
       if (selected) {
         selected.material.emissive.set(0x000000); // Reset the previous piece highlight
         selected.material.emissiveIntensity = 0;
-        
       }
       selected = null;
       console.log('nothing selected');
-      const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0); // Horizontal plane at y = 0
-      const point = new THREE.Vector3();
-      raycaster.ray.intersectPlane(plane, point);
-      console.log('Click position on plane:', point);
     }
   }
 
@@ -92,10 +86,10 @@ export var global_pieces = {};
       selected.position.z = Math.round(selected.position.z / 2) * 2;
   
       // Check for overlap after movement
-      // if (checkOverlap(selected)) {
-      //   // Revert to the previous position if there's an overlap
-      //   selected.position.copy(prevPosition);
-      // }
+      if (checkOverlap(selected)) {
+        // Revert to the previous position if there's an overlap
+        selected.position.copy(prevPosition);
+      }
     }
   }
 
@@ -104,26 +98,26 @@ export var global_pieces = {};
                                      MAIN FUNCTIONS
 ******************************************************************************************/
 
-// function checkOverlap(piece, piecesGroup) {
-//   const boundingBox = new THREE.Box3().setFromObject(piece);
+function checkOverlap(piece, piecesGroup) {
+  const boundingBox = new THREE.Box3().setFromObject(piece);
 
-//   for (let i = 0; i < piecesGroup.children.length; i++) {
-//     const otherPiece = piecesGroup.children[i];
-//     if (otherPiece !== piece) {
-//       const otherBoundingBox = new THREE.Box3().setFromObject(otherPiece);
+  for (let i = 0; i < piecesGroup.children.length; i++) {
+    const otherPiece = piecesGroup.children[i];
+    if (otherPiece !== piece) {
+      const otherBoundingBox = new THREE.Box3().setFromObject(otherPiece);
 
-//       // Calculate the overlap dimensions
-//       const overlapX = Math.max(0, Math.min(boundingBox.max.x, otherBoundingBox.max.x) - Math.max(boundingBox.min.x, otherBoundingBox.min.x));
-//       const overlapY = Math.max(0, Math.min(boundingBox.max.y, otherBoundingBox.max.y) - Math.max(boundingBox.min.y, otherBoundingBox.min.y));
-//       const overlapZ = Math.max(0, Math.min(boundingBox.max.z, otherBoundingBox.max.z) - Math.max(boundingBox.min.z, otherBoundingBox.min.z));
+      // Calculate the overlap dimensions
+      const overlapX = Math.max(0, Math.min(boundingBox.max.x, otherBoundingBox.max.x) - Math.max(boundingBox.min.x, otherBoundingBox.min.x));
+      const overlapY = Math.max(0, Math.min(boundingBox.max.y, otherBoundingBox.max.y) - Math.max(boundingBox.min.y, otherBoundingBox.min.y));
+      const overlapZ = Math.max(0, Math.min(boundingBox.max.z, otherBoundingBox.max.z) - Math.max(boundingBox.min.z, otherBoundingBox.min.z));
 
-//       if (overlapX > 0 && overlapY > 0 && overlapZ > 0) {
-//         return true;
-//       }
-//     }
-//   }
-//   return false;
-// }
+      if (overlapX > 0 && overlapY > 0 && overlapZ > 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 
 // Function to parse the table data and return it as an array of layers
@@ -171,40 +165,21 @@ export function createPyramid(layers) {
   scene.add(pyramidGroup);
 }
 
-export function detectPiecesOnPlane(piecesGroup) {
+export function detectPiecesOnPlane (piecesGroup) {
   const piecesOnPlane = [];
-
-  // Define the plane boundaries
-  const planeMinX = -5;
-  const planeMaxX = 5;
-  const planeMinZ = -5;
-  const planeMaxZ = 5;
-
+  // Iterate over pieces in the scene
   piecesGroup.children.forEach(piece => {
-    // Calculate the bounding box of the piece
-    piece.updateMatrixWorld(true);
-    const boundingBox = new THREE.Box3().setFromObject(piece);
-
-    const worldPosition = new THREE.Vector3();
-    const position = piece.getWorldPosition(worldPosition);
-
-    // Check if the entire bounding box is within the plane boundaries
-    if (
-      boundingBox.min.x >= planeMinX &&
-      boundingBox.max.x <= planeMaxX &&
-      boundingBox.min.z >= planeMinZ &&
-      boundingBox.max.z <= planeMaxZ
-    ) {
+    if (-14 <= piece.position.z <= -8 || 56 <= piece.position.x <= 64) {
       piecesOnPlane.push({
         piece: piece,
-        position: position.clone(), // Use the already-calculated position
+        position: piece.position.clone()
       });
     }
   });
 
-  // Return false if no pieces are found on the plane, else return the array
-  return piecesOnPlane.length > 0 ? piecesOnPlane : false;
-}
+  console.log(piecesOnPlane);
+  return piecesOnPlane;
+};
 
 export function createPieces(piecesGroup) {
   let offset = 0;
@@ -235,18 +210,4 @@ export function createPieces(piecesGroup) {
 
   // Set initial position and rotation of piecesGroup
   piecesGroup.position.set(-60, 1, 10);
-}
-
-export function rotateHandler(){
-    if (selected) {
-      // Rotate the selected piece
-      selected.rotateZ(THREE.MathUtils.degToRad(90));
-      selected.updateMatrixWorld(true);  
-  
-      // Update the bounding box
-      const boundingBox = new THREE.Box3().setFromObject(selected);
-      selected.boundingBox = boundingBox;
-    } else {
-      console.log('No piece selected for rotation');
-    }
 }

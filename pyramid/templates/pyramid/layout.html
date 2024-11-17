@@ -4,8 +4,16 @@
 
 {% block links %}
 {% load static %}
+
+<script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+</script>
+  
 <!-- Importing jQuery library for DOM manipulation and event handling -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Including the puzzle JavaScript file with deferred loading to improve page load performance -->
-<!-- <script src="{% static '/polysphere/js/pyramid3D.js' %}" defer></script> -->
 {% endblock %}

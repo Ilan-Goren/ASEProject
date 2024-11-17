@@ -5,10 +5,17 @@
 {% block title %}3D Pyramid Puzzle{% endblock %}
 
 {% block main %}
+
 <h2>3D Polysphere Pyramid Puzzle</h2>
 
+<button id="tc"> Toggle Camera Control</button>
+<button id="svv"> Split View V</button>
+<button id="rotate"> Rotate </button>
+<button id="change-orientation"> Change orientation </button>
+<button id="reset-piece"> Reset Piece </button>
+
 <canvas class="threejs"></canvas>
-<script type="module" src="{% static 'pyramid/js/pyramid3D.js' %}"></script>
+<script type="module" src="{% static 'pyramid/js/puzzle.js' %}"></script>
 
   <div style="display: none;"> <!-- Hide this section for now -->
 <!-- Layer 5 1x1 -->
@@ -51,5 +58,8 @@
   <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
 </table>
 </div>
+
+
+
 {% endblock %}
 
