@@ -121,9 +121,9 @@ function checkOverlap(piece, piecesGroup) {
 
 
 // Function to parse the table data and return it as an array of layers
-export function parseTableData() {
+function parseTableData() {
   const layers = [];
-  const tables = document.querySelectorAll('.pyramid table');
+  const tables = document.querySelectorAll('.pyramids table');
   
   tables.forEach(table => {
     const rows = [];
@@ -144,7 +144,8 @@ export function parseTableData() {
 }
 
 // Function to create the pyramid
-export function createPyramid(layers) {
+export function createPyramid() {
+  layers = parseTableData();
   layers.forEach((layer, layerIndex) => {
     layer.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
@@ -188,7 +189,6 @@ export function createPieces(piecesGroup) {
     const color = colorMapping[key] || 0xffffff;
     const material = new THREE.MeshStandardMaterial({ color });
     
-    // Collect geometries for each sphere in this piece
     const geometries = value.map(pos => {
       const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
       sphereGeometry.translate(pos[0], pos[1], pos[2]); // Position each sphere

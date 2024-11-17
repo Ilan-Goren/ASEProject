@@ -1,0 +1,21 @@
+{% extends 'pyramid/layout.html' %}
+
+{% load static %}
+
+{% block title %}Solutions{% endblock %}
+
+{% block main %}
+<!-- Add this element to pass the texture URL to JavaScript -->
+<div id="texture-url" style="display: none;">{% static 'pyramid/js/snow_texture.webp' %}</div>
+
+<script id="pyramid-data" type="application/json">
+    {{ solutions|safe }}
+</script>
+
+<canvas class="threejs"></canvas>
+
+<script type="module" src="{% static 'pyramid/js/solutions.js' %}">
+    
+</script>
+
+{% endblock %}

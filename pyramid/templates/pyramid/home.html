@@ -5,10 +5,26 @@
 {% block title %}3D Pyramid Puzzle{% endblock %}
 
 {% block main %}
-<h2>3D Polysphere Pyramid Puzzle</h2>
+<h1 class="mb-3">3D Polysphere Pyramid Puzzle</h1>
 
+<!-- Section for game instructions, centered on the page -->
+<div class="instructions text-center">
+    <p><strong>Game Instructions:</strong></p>
+    <p><strong>Move Pieces:</strong> Drag a piece to a position in the 3D pyramid to move it.</p>
+</div>
+
+<div class="controls text-center">
+    <p><strong>Game Controls:</strong></p>
+    <p><strong>Reset Board:</strong> Clears the pyramid and all pieces for a fresh start.</p>
+    <p><strong>Solve Pyramid:</strong> Automatically arranges the pieces to complete the pyramid.</p>
+    <p><strong>Show All Possible Solutions:</strong> View all possible ways to complete the pyramid with the available pieces.</p>
+</div>
+
+<p class="text-center">Challenge yourself by arranging pieces to complete the pyramid in different configurations!</p>
 
 <a href="{% url 'pyramid_puzzle' %}" class="btn btn-primary">Go to puzzle</a>
+
+<a href="{% url 'pyramid_generator' %}" class='btn btn-primary'>Generate all possible solutions</a>
 
 
 {% endblock %}

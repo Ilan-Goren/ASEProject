@@ -15,7 +15,7 @@ export var global_pieces = {};
     raycaster.setFromCamera(mouse, camera);
   
     // Check intersections with pieces in piecesGroup
-    const intersects = raycaster.intersectObjects(piecesGroup.children, true);
+    const intersects = raycaster.intersectObjects(piecesGroup, true);
   
     // If a piece is clicked, store it in selected variable
     if (intersects.length > 0) {
@@ -46,57 +46,65 @@ export var global_pieces = {};
     }
   }
 
-  export function keyboardHandler(event, camera){
+  export function keyboardHandler(event, camera, piecesGroup) {
     if (selected) {
       const moveAmount = 2;
-      const prevPosition = selected.position.clone();
+      let targetGroup = null;
+
+      piecesGroup.forEach(group => {
+        if (group.children.includes(selected)) {
+          targetGroup = group;
+        }
+      });
+
+      const movingObject = targetGroup;
+  
       const cameraDirection = new THREE.Vector3();
       camera.getWorldDirection(cameraDirection);
-  
-      cameraDirection.y = 0; // Ignore the Y component
-      cameraDirection.normalize(); // Normalize the projected direction
+      cameraDirection.y = 0;
+      cameraDirection.normalize();
 
+      if (false) {
+        // overlap to be implemented
+        
+      }
+      else {
+  
       if (event.shiftKey) {
         switch (event.key) {
           case 'ArrowUp': // Move up
-            selected.position.y += moveAmount;
+            movingObject.position.y += moveAmount;
             break;
           case 'ArrowDown': // Move down
-            selected.position.y = Math.max(selected.position.y - moveAmount, 0); // Ensure Y doesn't go below 0
+            movingObject.position.y = Math.max(movingObject.position.y - moveAmount, 0); // Ensure Y doesn't go below 0
             break;
         }
       } else {
         switch (event.key) {
           case 'ArrowUp': // Move forward
-            selected.position.addScaledVector(cameraDirection, moveAmount);
+            movingObject.position.addScaledVector(cameraDirection, moveAmount);
             break;
           case 'ArrowDown': // Move backward
-            selected.position.addScaledVector(cameraDirection, -moveAmount);
+            movingObject.position.addScaledVector(cameraDirection, -moveAmount);
             break;
           case 'ArrowLeft': // Move left
             const leftDirection = new THREE.Vector3().crossVectors(cameraDirection, new THREE.Vector3(0, 1, 0)).normalize();
-            selected.position.addScaledVector(leftDirection, -moveAmount);
+            movingObject.position.addScaledVector(leftDirection, -moveAmount);
             break;
           case 'ArrowRight': // Move right
             const rightDirection = new THREE.Vector3().crossVectors(cameraDirection, new THREE.Vector3(0, 1, 0)).normalize();
-            selected.position.addScaledVector(rightDirection, moveAmount);
+            movingObject.position.addScaledVector(rightDirection, moveAmount);
             break;
         }
       }
-  
       // Ensure Y position doesn't go negative
-      selected.position.y = Math.max(selected.position.y, 0);
+      movingObject.position.y = Math.max(movingObject.position.y, 0);
   
-      // Increment by 2-units for X and Z axes
-      selected.position.x = Math.round(selected.position.x / 2) * 2;
-      selected.position.z = Math.round(selected.position.z / 2) * 2;
-  
-      // Check for overlap after movement
-      // if (checkOverlap(selected)) {
-      //   // Revert to the previous position if there's an overlap
-      //   selected.position.copy(prevPosition);
-      // }
+      // Snap to a 2-unit grid on X and Z axes
+      movingObject.position.x = Math.round(movingObject.position.x / 2) * 2;
+      movingObject.position.z = Math.round(movingObject.position.z / 2) * 2;
     }
+  }
   }
 
 
@@ -104,72 +112,38 @@ export var global_pieces = {};
                                      MAIN FUNCTIONS
 ******************************************************************************************/
 
-// function checkOverlap(piece, piecesGroup) {
-//   const boundingBox = new THREE.Box3().setFromObject(piece);
+// function checkOverlap(pieceGroup, piecesGroup) {
+//   // Iterate over all groups in piecesGroup
+//   for (let i = 0; i < piecesGroup.length; i++) {
+//     const otherGroup = piecesGroup[i];
 
-//   for (let i = 0; i < piecesGroup.children.length; i++) {
-//     const otherPiece = piecesGroup.children[i];
-//     if (otherPiece !== piece) {
-//       const otherBoundingBox = new THREE.Box3().setFromObject(otherPiece);
+//     // Skip the same group
+//     if (otherGroup === pieceGroup) continue;
 
-//       // Calculate the overlap dimensions
-//       const overlapX = Math.max(0, Math.min(boundingBox.max.x, otherBoundingBox.max.x) - Math.max(boundingBox.min.x, otherBoundingBox.min.x));
-//       const overlapY = Math.max(0, Math.min(boundingBox.max.y, otherBoundingBox.max.y) - Math.max(boundingBox.min.y, otherBoundingBox.min.y));
-//       const overlapZ = Math.max(0, Math.min(boundingBox.max.z, otherBoundingBox.max.z) - Math.max(boundingBox.min.z, otherBoundingBox.min.z));
+//     // Compare each child in pieceGroup with each child in otherGroup
+//     for (let pieceChild of pieceGroup.children) {
+//       const pieceBoundingBox = new THREE.Box3().setFromObject(pieceChild);
 
-//       if (overlapX > 0 && overlapY > 0 && overlapZ > 0) {
-//         return true;
+//       for (let otherChild of otherGroup.children) {
+//         const otherBoundingBox = new THREE.Box3().setFromObject(otherChild);
+
+//         // Check for overlap in all dimensions
+//         if (
+//           pieceBoundingBox.min.x < otherBoundingBox.max.x &&
+//           pieceBoundingBox.max.x > otherBoundingBox.min.x &&
+//           pieceBoundingBox.min.y < otherBoundingBox.max.y &&
+//           pieceBoundingBox.max.y > otherBoundingBox.min.y &&
+//           pieceBoundingBox.min.z < otherBoundingBox.max.z &&
+//           pieceBoundingBox.max.z > otherBoundingBox.min.z
+//         ) {
+//           return true; // Overlap detected
+//         }
 //       }
 //     }
 //   }
-//   return false;
+
+//   return false; // No overlap detected
 // }
-
-
-// Function to parse the table data and return it as an array of layers
-export function parseTableData() {
-  const layers = [];
-  const tables = document.querySelectorAll('.pyramid table');
-  
-  tables.forEach(table => {
-    const rows = [];
-    const cells = table.querySelectorAll('tr');
-    
-    cells.forEach(row => {
-      const values = Array.from(row.querySelectorAll('td')).map(cell => ({
-        value: parseInt(cell.textContent),
-        className: cell.className
-      }));
-      rows.push(values);
-    });
-
-    layers.push(rows);
-  });
-
-  return layers;
-}
-
-// Function to create the pyramid
-export function createPyramid(layers) {
-  layers.forEach((layer, layerIndex) => {
-    layer.forEach((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
-        if (cell.value === 1) {
-          const color = colorMapping[cell.className] || 0xffffff;
-          const material = new THREE.MeshStandardMaterial({ color });
-          const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
-          const sphere = new THREE.Mesh(sphereGeometry, material);
-
-          sphere.position.set(1 + colIndex * 2 - layer.length, 4.5 - layerIndex, 1 + rowIndex * 2 - layer[0].length);
-          pyramidGroup.add(sphere);
-        }
-      });
-    });
-  });
-
-  // Add the entire group to the scene
-  scene.add(pyramidGroup);
-}
 
 export function detectPiecesOnPlane(piecesGroup) {
   const piecesOnPlane = [];
@@ -180,15 +154,15 @@ export function detectPiecesOnPlane(piecesGroup) {
   const planeMinZ = -5;
   const planeMaxZ = 5;
 
-  piecesGroup.children.forEach(piece => {
-    // Calculate the bounding box of the piece
-    piece.updateMatrixWorld(true);
-    const boundingBox = new THREE.Box3().setFromObject(piece);
+  piecesGroup.forEach(pieceGroup => {
+    pieceGroup.updateMatrixWorld(true);
 
-    const worldPosition = new THREE.Vector3();
-    const position = piece.getWorldPosition(worldPosition);
+    // Calculate the bounding box for the entire group after rotation
+    const boundingBox = new THREE.Box3().setFromObject(pieceGroup);
 
-    // Check if the entire bounding box is within the plane boundaries
+    pieceGroup = pieceGroup.clone()
+    pieceGroup.rotation.x -= THREE.MathUtils.degToRad(90);
+    
     if (
       boundingBox.min.x >= planeMinX &&
       boundingBox.max.x <= planeMaxX &&
@@ -196,45 +170,13 @@ export function detectPiecesOnPlane(piecesGroup) {
       boundingBox.max.z <= planeMaxZ
     ) {
       piecesOnPlane.push({
-        piece: piece,
-        position: position.clone(), // Use the already-calculated position
+        piece: pieceGroup,
+        position: pieceGroup.position.clone(),
       });
     }
   });
 
-  // Return false if no pieces are found on the plane, else return the array
   return piecesOnPlane.length > 0 ? piecesOnPlane : false;
-}
-
-export function createPieces(piecesGroup) {
-  let offset = 0;
-
-  Object.entries(pieces).forEach(([key, value]) => {
-    const color = colorMapping[key] || 0xffffff;
-    const material = new THREE.MeshStandardMaterial({ color });
-    
-    // Collect geometries for each sphere in this piece
-    const geometries = value.map(pos => {
-      const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
-      sphereGeometry.translate(pos[0], pos[1], pos[2]); // Position each sphere
-      return sphereGeometry;
-    });
-
-    // Merge all sphere geometries into one geometry
-    const mergedGeometry = BufferGeometryUtils.mergeGeometries(geometries);
-
-    const pieceMesh = new THREE.Mesh(mergedGeometry, material);
-    pieceMesh.userData.name = `piece ${key}`
-
-    // Position the piece and add to piecesGroup
-    pieceMesh.position.setX(offset);
-    pieceMesh.rotation.x += THREE.MathUtils.degToRad(90);
-    piecesGroup.add(pieceMesh)
-    offset += 10;
-  });
-
-  // Set initial position and rotation of piecesGroup
-  piecesGroup.position.set(-60, 1, 10);
 }
 
 export function rotateHandler(){
@@ -249,4 +191,47 @@ export function rotateHandler(){
     } else {
       console.log('No piece selected for rotation');
     }
+}
+
+
+export function createPieces() {
+  const piecesGroup = [];
+  const radius = 18; // Radius of the circle
+  const numPieces = Object.entries(pieces).length; // Number of pieces to place
+  const angleStep = (2 * Math.PI) / numPieces; // Angle between each piece
+
+  let angle = 0; // initial angle
+
+  Object.entries(pieces).forEach(([key, value]) => {
+    const color = colorMapping[key] || 0xffffff;
+    const material = new THREE.MeshStandardMaterial({ color });
+
+    // Create a group and name the group
+    const pieceGroup = new THREE.Group();
+    pieceGroup.name = `piece${key}`;
+
+    // Create spheres
+    value.forEach(pos => {
+      const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
+      const sphereMesh = new THREE.Mesh(sphereGeometry, material);
+      sphereMesh.position.set(pos[0], pos[1], pos[2]);
+      pieceGroup.add(sphereMesh); // Add sphere to this piece's group
+    });
+
+    // Position the group in a circle
+    const x = radius * Math.cos(angle); // Calculate X
+    const z = radius * Math.sin(angle); // Calculate Z
+    pieceGroup.position.set(x, 1, z); // Position around the plane
+
+    // Rotate the piece group
+    pieceGroup.rotation.x += THREE.MathUtils.degToRad(90);
+
+    // Add the piece to piecesGroup
+    piecesGroup.push(pieceGroup);
+
+    // Increment the angle
+    angle += angleStep;
+  });
+
+  return piecesGroup;
 }
