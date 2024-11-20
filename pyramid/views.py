@@ -56,6 +56,11 @@ def pyramid_solutions(request):
             solutions = manager.list()
             process = None
             return redirect('pyramid_generator')
+        
+    return render(request, 'pyramid/solutions.html', {
+    'solutions': solutions,
+    'solutions_len': len(solutions)
+    })
 
 
 ##########################################################################################

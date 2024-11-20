@@ -2,6 +2,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
 import { pieces, colorMapping } from './defs.js';
 
+const allPyramids = []
+var selected = null;
+
+console.log(`checkpoint start of doc`);
 // Scene setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xefefef);
@@ -18,6 +22,10 @@ scene.add(directionalLight);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 400 );
 camera.position.set(7, 20, 60);  // Initial camera position
 camera.lookAt(0,0,0)
+
+// Mouse and Raycaster setup
+const mouse = new THREE.Vector2();
+const raycaster = new THREE.Raycaster();
 
 // Renderer setup
 const canvas = document.querySelector('canvas.threejs');
@@ -41,7 +49,7 @@ const textureLoader = new THREE.TextureLoader();
 const planeTextureUrl = document.getElementById('texture-url').textContent.trim();
 
 const planeTexture = textureLoader.load(planeTextureUrl, () => {
-  console.log("Texture Loaded");
+  console.log("Texture Loaded");  
 });
 
 planeTexture.wrapS = THREE.RepeatWrapping;
@@ -60,6 +68,44 @@ planeMain.rotation.x = -Math.PI / 2; // Rotate to lay flat
 scene.add(planeMain);
 
 const dataFromBackend = JSON.parse(document.getElementById('pyramid-data').textContent);
+
+function onClickHandler(event) {
+  console.log('entering')
+  // Calculate mouse position
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+
+  // Check intersections with pieces in piecesGroup
+  const intersects = raycaster.intersectObjects(allPyramids, true);
+
+  // If a piece is clicked, store it in selected variable
+  if (intersects.length > 0) {
+    if (selected){
+      selected.material.emissive.set(0x000000);
+      selected.material.emissiveIntensity = 0;
+    }
+    selected = intersects[0].object;
+    console.log('selected piece:', selected.parent);
+
+    selected.material.emissive.setHex(0xeeeeee);
+    selected.material.emissiveIntensity = 0.5;
+    console.log(selected.position)
+  }
+  else {
+    // If no piece is clicked, set selected to null
+    if (selected) {
+      selected.material.emissive.set(0x000000); // Reset the previous piece highlight
+      selected.material.emissiveIntensity = 0;
+    }
+    selected = null;
+    console.log('nothing selected');
+    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0); // Horizontal plane at y = 0
+    const point = new THREE.Vector3();
+    raycaster.ray.intersectPlane(plane, point);
+    console.log('Click position on plane:', point);
+  }
+}
 
 // Function to create a pyramid
 function createPyramid(data, pyramidGroup) {
@@ -84,6 +130,7 @@ function createPyramid(data, pyramidGroup) {
             });
         });
     });
+    return pyramidGroup
 }
 
 const forestWidth = 300;
@@ -100,7 +147,8 @@ const spacingZ = forestDepth / numRows;
 
 dataFromBackend.forEach((solution, index) => {
     const pyramidGroup = new THREE.Group();
-    createPyramid(solution, pyramidGroup);
+    const pyramid = createPyramid(solution, pyramidGroup);
+    allPyramids.push(pyramid);
 
     const columnIndex = index % numColumns;
     const rowIndex = Math.floor(index / numColumns);
@@ -114,6 +162,9 @@ dataFromBackend.forEach((solution, index) => {
     scene.add(pyramidGroup);
 });
 
+renderer.domElement.addEventListener('click', (event) => onClickHandler(
+  event
+));
 
 // Handle window resize
 window.addEventListener('resize', () => {
@@ -122,12 +173,15 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
   
-  // Render loop
-  const renderLoop = () => {
-    controls.update();
-    renderer.render(scene, camera);
-    requestAnimationFrame(renderLoop);
+// Render loop
+const renderLoop = () => {
+  controls.update();
+  renderer.render(scene, camera);
+  console.log(`checkpoint1`);
   
-  };
-  
-  renderLoop();
+  requestAnimationFrame(renderLoop);
+
+};
+console.log(`checkpoint2`);
+
+renderLoop();

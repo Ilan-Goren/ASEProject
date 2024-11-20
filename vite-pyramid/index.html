@@ -8,62 +8,16 @@
     <title>Vite App</title>
   </head>
 <body>
-    <button id="tc"> Toggle Camera Control</button>
-    <button id="svv"> Split View V</button>
+  <div class="button-container">
+    <button id="tc">Toggle Camera Control</button>
+    <button id="get_sol">Get Solution</button>
+    <button id="rotate">Rotate</button>
+    <button id="change-orientation">Change Orientation</button>
+    <button id="reset-piece">Reset Piece</button>
+  </div>
 
-    <button id="get_sol"> Get Soluton for this configuration </button>
-    <button id="rotate"> Rotate </button>
-    <button id="change-orientation"> Change orientation </button>
-    <button id="reset-piece"> Reset Piece </button>
     <canvas class="threejs"></canvas>
     <script type="module" src="/puzzle.js"></script>
 </body>
-
-<main style="display: none;"> <!-- Hide this section for now -->
-<div class="pyramid">
-
-<!-- Layer 5 1x1 -->
-<div class="layer-title">Layer 5 - 1x1</div>
-<table>
-  <tr><td class="1">1</td></tr>
-</table>
-
-<!-- Layer 4 2x2 -->
-<div class="layer-title">Layer 4 - 2x2</div>
-  <table>
-    <tr><td class="1">1</td><td class="2">1</td></tr>
-    <tr><td class="3">1</td><td class="4">1</td></tr>
-  </table>
-
-  <!-- Layer 3 3x3 -->
-  <div class="layer-title">Layer 3 - 3x3</div>
-  <table>
-    <tr><td class="1">1</td><td class="2">1</td><td class="3">1</td></tr>
-    <tr><td class="4">1</td><td class="1">1</td><td class="2">1</td></tr>
-    <tr><td class="3">1</td><td class="4">1</td><td class="1">1</td></tr>
-  </table>
-
-  <!-- Layer 2 4x4 -->
-  <div class="layer-title">Layer 2 - 4x4</div>
-  <table>
-    <tr><td class="1">1</td><td class="2">1</td><td class="3">1</td><td class="4">1</td></tr>
-    <tr><td class="5">1</td><td class="1">1</td><td class="2">1</td><td class="3">1</td></tr>
-    <tr><td class="4">1</td><td class="5">1</td><td class="1">1</td><td class="2">1</td></tr>
-    <tr><td class="3">1</td><td class="4">1</td><td class="5">1</td><td class="1">1</td></tr>
-  </table>
-
-  <!-- Layer 1 5x5 -->
-  <div class="layer-title">Layer 1 - 5x5</div>
-  <table>
-    <tr><td class="1">1</td><td class="2">1</td><td class="3">1</td><td class="4">1</td><td class="5">1</td></tr>
-    <tr><td class="6">1</td><td class="1">1</td><td class="2">1</td><td class="3">1</td><td class="4">1</td></tr>
-    <tr><td class="5">1</td><td class="6">1</td><td class="1">1</td><td class="2">1</td><td class="3">1</td></tr>
-    <tr><td class="4">1</td><td class="5">1</td><td class="6">1</td><td class="1">1</td><td class="2">1</td></tr>
-    <tr><td class="3">1</td><td class="4">1</td><td class="5">1</td><td class="6">1</td><td class="1">1</td></tr>
-  </table>
-</div>
-</main>
-
-<!-- <canvas id="overlayCanvas"></canvas> -->
 
 </html>

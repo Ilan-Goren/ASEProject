@@ -5,65 +5,36 @@ body {
   height: 100%;
   padding: 0;
 }
-main {
-  display: none;
-}
-#tc { /* toggle camera button */
-  position: absolute;
-  font-size: 16px; 
-  cursor: pointer;   
-  top: 10px;
-  left: 10px;
-}
-#svv { /* toggle camera button */
-  position: absolute;
-  font-size: 16px; 
-  cursor: pointer;   
-  top: 10px;
-  left: 200px;
-}
-
-#rotate { /* toggle camera button */
-  position: absolute;
-  font-size: 16px; 
-  cursor: pointer;   
-  top: 10px;
-  left: 310px;
-}
-
-#change-orientation { /* toggle camera button */
-  position: absolute;
-  font-size: 16px; 
-  cursor: pointer;   
-  top: 10px;
-  left: 400px;
-}
-
-#reset-piece { /* toggle camera button */
-  position: absolute;
-  font-size: 16px; 
-  cursor: pointer;   
-  top: 10px;
-  left: 600px;
-}
-
-#get_sol { /* toggle camera button */
-  position: absolute;
-  font-size: 16px; 
-  cursor: pointer;   
-  top: 10px;
-  left: 650px;
-}
 
 canvas {
   display: block; /* Prevents any extra spacing around the canvas */
 }
 
-  /* Layout for the pieces scene */
-  .pieces-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
-  }
+button {
+  position: relative; /* Changed to relative to allow better flexbox alignment */
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  margin: 10px; /* Adds spacing between buttons */
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.button-container {
+  display: flex; /* Enables flexbox for the button container */
+  flex-wrap: wrap; /* Ensures buttons wrap to the next line if needed */
+  gap: 10px; /* Adds spacing between buttons */
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
