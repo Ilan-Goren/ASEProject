@@ -9,24 +9,39 @@ main {
   height: 100%;
   padding: 0;
 }
-
-/* Layout for the pieces scene */
-.pieces-container {
+/* Overlay styles */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.piece {
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  vertical-align: middle;
-  display: inline-block;
-  color: #fff;
-  font-size: 16px;
-  line-height: 40px;
-  border-radius: 5px;
-  border: 2px solid #ccc;
+.overlay-content {
+  position: relative;
+  width: 80%;
+  height: 80%;
+}
+
+#overlay-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Button styles */
+#close-overlay-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
 }

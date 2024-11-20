@@ -12,6 +12,16 @@
     {{ solutions|safe }}
 </script>
 
+<button id="view-pyramid-button">View Pyramid</button>
+<button id="close-overlay-button" style="display: none;">Close</button>
+
+<!-- Overlay container -->
+<div id="overlay" class="overlay" style="display: none;">
+  <div class="overlay-content">
+    <canvas id="overlay-canvas"></canvas>
+  </div>
+</div>
+
 <canvas class="threejs"></canvas>
 
 <script type="module" src="{% static 'pyramid/js/solutions.js' %}">
