@@ -6,6 +6,7 @@ let intervalID;
 let stopButton = document.getElementById('stopButton');
 let startButton = document.getElementById('startButton');
 let see_solutions = document.getElementById('see_sols_button');
+// let startGenerator = document.getElementById('startGeneratorForm')
 
 let sfs = document.querySelector('.s_f_s');
 let wts = document.querySelector('.w_t_s');
@@ -16,7 +17,7 @@ let wts = document.querySelector('.w_t_s');
                                 SOLVER EVENT LISTENERS 
 ******************************************************************************************/
 
-document.getElementById('startGeneratorForm').addEventListener('submit', startSolver);
+startButton.addEventListener('click', startSolver);
 stopButton.addEventListener('click', stopSolver);
 
 /******************************************************************************************
@@ -38,18 +39,6 @@ function startSolver(event) {
         });
 }
 
-
-// Update solutions function
-function updateSolutions() {
-    intervalID = setInterval(() => {
-        fetch('get-solution-count')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('solutions_found').innerText = data.length;
-            })
-    }, 50); // Update every 50 ms
-}
-
 // Stop solver function
 function stopSolver() {
     clearInterval(intervalID); // Stop the interval
@@ -64,4 +53,15 @@ function stopSolver() {
                 console.log('Error: js248'); // Alert the user if the response status is 400
             }
         })
+}
+
+// Update solutions function
+function updateSolutions() {
+    intervalID = setInterval(() => {
+        fetch('get-solution-count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('solutions_found').innerText = data.length;
+            })
+    }, 50); // Update every 50 ms
 }

@@ -1,20 +1,19 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
-import { pieces, colorMapping } from './defs.js';
+import { createPyramid, setEmissiveForSelected } from './functions.js';
 
 const allPyramids = []
 var selected = null;
 
-console.log(`checkpoint start of doc`);
 // Scene setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xefefef);
 
 // Ambient Light setup
-const ambientLight = new THREE.AmbientLight(0x404040, 30);
+const ambientLight = new THREE.AmbientLight(0xefefef, 1.5);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(5, 5, 5).normalize();
 scene.add(directionalLight);
 
@@ -49,7 +48,7 @@ const textureLoader = new THREE.TextureLoader();
 const planeTextureUrl = document.getElementById('texture-url').textContent.trim();
 
 const planeTexture = textureLoader.load(planeTextureUrl, () => {
-  console.log("Texture Loaded");  
+  // console.log("Texture Loaded");  
 });
 
 planeTexture.wrapS = THREE.RepeatWrapping;
@@ -67,37 +66,37 @@ const planeMain = new THREE.Mesh(planeGeometryMain, planeMaterialMain);
 planeMain.rotation.x = -Math.PI / 2; // Rotate to lay flat
 scene.add(planeMain);
 
-const dataFromBackend = JSON.parse(document.getElementById('pyramid-data').textContent);
+ /******************************************************************************************
+                                     SELECTING PYRAMIDS
+******************************************************************************************/
+
+// Get the bounding rectangle of the canvas or main block
+const rect = canvas.getBoundingClientRect();
 
 function onClickHandler(event) {
-  console.log('entering')
-  // Calculate mouse position
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+  // Get mouse position relative to the canvas
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
   raycaster.setFromCamera(mouse, camera);
 
   // Check intersections with pieces in piecesGroup
   const intersects = raycaster.intersectObjects(allPyramids, true);
 
-  // If a piece is clicked, store it in selected variable
   if (intersects.length > 0) {
+    // if there is already a piece selected
     if (selected){
-      selected.material.emissive.set(0x000000);
-      selected.material.emissiveIntensity = 0;
+      setEmissiveForSelected(selected, false);
     }
+
     selected = intersects[0].object;
     console.log('selected piece:', selected.parent);
 
-    selected.material.emissive.setHex(0xeeeeee);
-    selected.material.emissiveIntensity = 0.5;
-    console.log(selected.position)
+    setEmissiveForSelected(selected, true);
   }
   else {
-    // If no piece is clicked, set selected to null
-    if (selected) {
-      selected.material.emissive.set(0x000000); // Reset the previous piece highlight
-      selected.material.emissiveIntensity = 0;
-    }
+    setEmissiveForSelected(selected, false);
     selected = null;
     console.log('nothing selected');
     const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0); // Horizontal plane at y = 0
@@ -107,31 +106,11 @@ function onClickHandler(event) {
   }
 }
 
-// Function to create a pyramid
-function createPyramid(data, pyramidGroup) {
-    data.forEach((layer, layerIndex) => {
-        layer.forEach((row, rowIndex) => {
-            row.forEach((cellValue, colIndex) => {
-                if (cellValue > 0) {
-                    const color = colorMapping[cellValue.toString()];
-                    const material = new THREE.MeshStandardMaterial({ color });
-                    const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
-                    const sphere = new THREE.Mesh(sphereGeometry, material);
+ /******************************************************************************************
+                                     DISPLAYING PYRAMIDS
+******************************************************************************************/
 
-                    const x = colIndex * 2 - row.length;
-                    const y = layerIndex * 2;
-                    const z = rowIndex * 2 - layer[0].length;
-
-                    sphere.position.set(x, y, z);
-
-                    // Add the sphere to the pyramid group
-                    pyramidGroup.add(sphere);
-                }
-            });
-        });
-    });
-    return pyramidGroup
-}
+const dataFromBackend = JSON.parse(document.getElementById('pyramid-data').textContent);
 
 const forestWidth = 300;
 const forestDepth = 300;
@@ -145,10 +124,10 @@ const numRows = Math.ceil(numPyramids / numColumns);
 const spacingX = forestWidth / numColumns;
 const spacingZ = forestDepth / numRows;
 
+
 dataFromBackend.forEach((solution, index) => {
-    const pyramidGroup = new THREE.Group();
-    const pyramid = createPyramid(solution, pyramidGroup);
-    allPyramids.push(pyramid);
+    const pyramidGroup = createPyramid(solution);
+    allPyramids.push(pyramidGroup);
 
     const columnIndex = index % numColumns;
     const rowIndex = Math.floor(index / numColumns);
@@ -161,6 +140,91 @@ dataFromBackend.forEach((solution, index) => {
     pyramidGroup.position.set(x, 1, z);
     scene.add(pyramidGroup);
 });
+
+ /******************************************************************************************
+                                     DISPLAY A PYRAMID
+******************************************************************************************/
+
+const viewPyramidButton = document.getElementById('view-pyramid-button');
+const overlay = document.getElementById('overlay');
+const closeOverlayButton = document.getElementById('close-overlay-button');
+const overlayCanvas = document.getElementById('overlay-canvas');
+viewPyramidButton.addEventListener('click', () => showOverlay(selected));
+
+
+function showOverlay(selected) {
+  if (selected){
+    selected.parent.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.material.emissive.set(0x000000);
+        child.material.emissiveIntensity = 0;
+
+      }
+    });
+    
+    let pyramidGroup = selected.parent
+    closeOverlayButton.style.display = 'flex';
+    overlay.style.display = 'flex';
+    renderPyramidInOverlay(pyramidGroup);
+  }
+}
+
+closeOverlayButton.addEventListener('click', closeOverlay)
+function closeOverlay(){
+  overlay.style.display = 'none';
+  closeOverlayButton.style.display = 'none';
+}
+
+function renderPyramidInOverlay(pyramidGroup) {
+  const overlayScene = new THREE.Scene();
+  overlayScene.background = new THREE.Color(0xefefef);
+  
+  const overlayCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  
+  const overlayRenderer = new THREE.WebGLRenderer({
+    canvas: overlayCanvas,
+    antialias: true
+  });
+
+  overlayRenderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Set up lighting
+  const overlayLight = new THREE.AmbientLight(0x404040, 5);
+  overlayScene.add(overlayLight);
+  
+  const overlayDirectionalLight = new THREE.DirectionalLight(0xffffff, 2);
+  overlayScene.add(overlayDirectionalLight);
+
+  // OrbitControls setup
+  const controls = new OrbitControls(overlayCamera, overlayRenderer.domElement);
+
+  controls.enableDamping = true;  // Smooth movement
+  controls.dampingFactor = 0.25;
+  controls.screenSpacePanning = false;
+  controls.maxPolarAngle = Math.PI / 2;
+
+  // Camera setup
+  overlayCamera.position.set(0, 10, 40);
+  overlayCamera.lookAt(0, 0, 0);
+
+  // Clone the pyramid group and add it to the scene
+  const pyramidClone = pyramidGroup.clone();
+  pyramidClone.position.set(0, 0, 0);
+  overlayScene.add(pyramidClone);
+
+  // Render the pyramid
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    overlayRenderer.render(overlayScene, overlayCamera);
+  }
+
+  animate();
+}
+
+ /******************************************************************************************
+                                     MAIN
+******************************************************************************************/
 
 renderer.domElement.addEventListener('click', (event) => onClickHandler(
   event
@@ -177,11 +241,7 @@ window.addEventListener('resize', () => {
 const renderLoop = () => {
   controls.update();
   renderer.render(scene, camera);
-  console.log(`checkpoint1`);
-  
   requestAnimationFrame(renderLoop);
-
 };
-console.log(`checkpoint2`);
 
 renderLoop();
