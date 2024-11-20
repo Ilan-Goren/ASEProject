@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
 import { DragControls } from 'three/addons/controls/DragControls.js'; // Import DragControls
-import { global_pieces, rotateHandler, onClickHandler, keyboardHandler, selected, createPieces, detectPiecesOnPlane } from './functions.js';
+import { fixPositionAfterRotation, rotateHandler, onClickHandler, keyboardHandler, selected, createPieces, detectPiecesOnPlane } from './functions.js';
 import { pieces, colorMapping } from './defs.js';
 
 // Scene setup
@@ -110,6 +110,7 @@ scene.add(frame);
 const piecesGroup = createPieces();
 piecesGroup.forEach(piece  => {
   scene.add(piece);
+
 })
 
 
@@ -146,6 +147,8 @@ piecesGroup.forEach(piece => {
                                         BUTTONS HANDLERS
 ******************************************************************************************/
 
+
+
 const toggleButton = document.getElementById('tc');
 toggleButton.addEventListener('click', ()=>{
   controls.enabled = !controls.enabled;
@@ -159,19 +162,17 @@ resetButton.addEventListener('click', ()=>{
   }
 })
 
-
 const rotateButton = document.getElementById('rotate');
-rotateButton.addEventListener('click', () => {
-  if (selected) {
-    selected.parent.rotation.z += THREE.MathUtils.degToRad(90);
-    selected.parent.position.y = 1;
+rotateButton.addEventListener('click', () => rotateHandler(piecesGroup));
 
-    console.log(`ROTATIONS: ${THREE.MathUtils.radToDeg(selected.parent.rotation.x)} ${THREE.MathUtils.radToDeg(selected.parent.rotation.y)} ${THREE.MathUtils.radToDeg(selected.parent.rotation.z)}`)
-  }
+const getSolutionButton = document.getElementById('get_sol');
+getSolutionButton.addEventListener('click', () => {
+  console.log(detectPiecesOnPlane(piecesGroup));
 });
 
 
-let isPieceFlat = false;
+
+let isPieceFlat = true;
 const changeOr = document.getElementById('change-orientation');
 changeOr.addEventListener('click', () => {
   if (selected) {
@@ -179,8 +180,18 @@ changeOr.addEventListener('click', () => {
 
     selected.parent.rotateX(THREE.MathUtils.degToRad(rotationAngle)); 
 
-    selected.parent.updateMatrixWorld(true); 
-    selected.parent.position.y = 1;
+    fixPositionAfterRotation(selected.parent)
+
+    // Create a BoxHelper to visualize the bounding box
+    const boxHelper = new THREE.BoxHelper(selected.parent, 0xff0000); // Red color for visualization
+    scene.add(boxHelper);
+
+    // Optionally, you can remove the old BoxHelper before adding the new one
+    // This step is necessary if you want to replace the box each time
+    if (selected.parent.boxHelper) {
+      scene.remove(selected.parent.boxHelper);
+    }
+    selected.parent.boxHelper = boxHelper;
 
     isPieceFlat = !isPieceFlat; // Toggle orientation
   }
@@ -206,7 +217,7 @@ const renderLoop = () => {
   renderer.render(scene, camera);
 
   if (detectPiecesOnPlane(piecesGroup)){
-    console.log(detectPiecesOnPlane(piecesGroup))
+    console.log(detectPiecesOnPlane(piecesGroup));
   }
   
   requestAnimationFrame(renderLoop);
