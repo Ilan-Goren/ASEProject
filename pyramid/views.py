@@ -3,13 +3,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib import messages
 from multiprocessing import Process, Manager
+from django.core.serializers import serialize
 import json
-
-# Placeholder imports for the 3D solver (to be implemented later)
-from .pyramid_solver import PyramidSolver
+from .Pyramid import Pyramid, pyramid_get_all_solutions
 
 # Instance of PyramidSolver for managing 3D pyramid configurations.
-pyramid_solver = PyramidSolver()
+pyramid_solver = Pyramid()
 
 # Manager for multiprocessing to store shared data
 manager = Manager()
@@ -24,96 +23,125 @@ def home(request):
     """
     return render(request, 'pyramid/home.html')
 
+def generator(request):
+    """
+    Displays the generator page for the Polysphere Pyramid application.
+    """
+    return render(request, 'pyramid/generator.html', {
+        'solutions_len': len(solutions)
+    })
+
+
 def puzzle(request):
     """
-    Displays the pyramid puzzle page without referencing undefined attributes.
+    Displays the puzzle page for the Polysphere Pyramid application.
     """
     return render(request, 'pyramid/puzzle.html')
-    
-@csrf_exempt
-def pyramid_solver(request):
+
+def pyramid_solutions(request):
     """
-    Handles requests for solving the pyramid configuration.
+    Displays the pyramid solutions page.
     """
+    global solutions, process
+
     if request.method == 'POST':
         button_pressed = request.POST.get('button')
-        if button_pressed == 'all_solutions':
-            if pyramid_solver.is_board_empty():
-                messages.add_message(request, messages.ERROR, "You need to place at least one piece!", extra_tags='danger')
-            else:
-                response = pyramid_solver.solve_all_partial_config()
-                if not response:
-                    messages.add_message(request, messages.ERROR, "No solutions found with the current configuration.", extra_tags='danger')
-        elif button_pressed == 'complete_board':
-            response = pyramid_solver.solve_partial_config()
-            if not response:
-                messages.add_message(request, messages.ERROR, "No solution found for this configuration.", extra_tags='danger')
-    return redirect('pyramid_puzzle')
-
-# @csrf_exempt
-# def start_generator(request):
-#     """
-#     Starts the solution generation process.
-#     """
-#     global process, solutions
-#     if request.method == 'POST':
-#         if process:
-#             return JsonResponse({"status": "already running"})
+        if button_pressed == 'generatorSolutions':
+            return render(request, 'pyramid/solutions.html', {
+                'solutions': solutions,
+                'solutions_len': len(solutions)
+            })
         
-#         process = Process(target=pyramid_solver.generate_solutions, args=(solutions,))
-#         process.start()
-#         return JsonResponse({"status": "started"}, status=200)
-#     return JsonResponse({"error": "Invalid request"}, status=400)
+        elif button_pressed == 'reset':
+            solutions = manager.list()
+            process = None
+            return redirect('pyramid_generator')
 
-# @csrf_exempt
-# def stop_generator(request):
-#     """
-#     Stops the solution generation process.
-#     """
-#     global process
-#     if request.method == 'POST':
-#         if process and process.is_alive():
-#             process.terminate()
-#             process.join()
-#             return redirect("pyramid_solutions")
-#         return JsonResponse({"error": "Solver not running"}, status=400)
-#     return JsonResponse({"error": "Invalid request"}, status=400)
 
-# @csrf_exempt
-# def piece_manipulate(request):
-#     """
-#     Handles piece manipulation requests.
-#     """
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         action = data.get('action')
+##########################################################################################
+#                           SOLUTIONS GENERATOR FUNCTIONS                                #
+##########################################################################################
 
-#         if action == 'rotate':
-#             pieceKey = data["pieceKey"]
-#             response = pyramid_solver.rotate_piece(pieceKey)
-#             if not response:
-#                 messages.add_message(request, messages.ERROR, "Error rotating piece", extra_tags='danger')
+# Allows requests without CSRF token.
+@csrf_exempt
+def get_solution_count(request):
+    """
+    Returns the current count of generated solutions.
 
-#         elif action == 'flip':
-#             pieceKey = data["pieceKey"]
-#             response = pyramid_solver.flip_piece(pieceKey)
-#             if not response:
-#                 messages.add_message(request, messages.ERROR, "Error flipping piece", extra_tags='danger')
+    This function processes the HTTP request and responds with the number of solutions that have been generated.
 
-#         elif action == 'remove':
-#             position = tuple(data["position"].values())
-#             response = pyramid_solver.remove_piece(position)
-#             if not response:
-#                 messages.add_message(request, messages.ERROR, "Error removing piece", extra_tags='danger')
+    :param request: The HTTP request object.
+    :type request: HttpRequest
 
-#         elif action == 'place':
-#             pieceKey = data["pieceKey"]
-#             posDict = data["occupiedCells"]
-#             positionPlace = [(cell['row'], cell['col']) for cell in posDict]
-#             response = pyramid_solver.place_piece(pieceKey, positionPlace)
-#             if not response:
-#                 messages.add_message(request, messages.ERROR, "Error placing piece", extra_tags='danger')
-#         else:
-#             messages.add_message(request, messages.ERROR, "Invalid action!", extra_tags='danger')
-#         return JsonResponse({'status': 'success'}, status=200)
-#     return redirect('pyramid_puzzle')
+    :returns: 
+        JsonResponse: 
+            A JSON response containing the key "length" with the total count of generated solutions.
+    """
+    return JsonResponse({"length": len(solutions)})
+
+# Allows requests without CSRF token.
+@csrf_exempt
+def start_generator(request):
+    """
+    Handles the HTTP request to initiate the solution generation process.
+
+    This function checks if the solution generation process is active and, if not, starts a new process. 
+    It manages incoming requests and ensures only one process is active at a time.
+
+    :param request: The HTTP request object.
+    :type request: HttpRequest
+
+    :global process: The multiprocessing.Process instance that handles solution generation.
+    :global solutions: A list for storing generated solutions.
+
+    :returns: 
+        JsonResponse:
+            - A JSON response with {"status": "started"} and a 200 status code if the process starts successfully.
+            - A JSON response with {"status": "already running"} if the process is already active.
+            - A JSON response with {"error": "Invalid request"} and a 400 status code for invalid requests.
+    """
+    global process, solutions # Declare process and solutions as global
+    if request.method == 'POST':
+        if process: 
+            # Check if Process exists and is running first before starting
+            return JsonResponse({"status": "already running"}, status=400)
+
+        process = Process(target=pyramid_get_all_solutions, args=(solutions,))
+        process.start()
+        return JsonResponse({"status": "started"}, status=200)
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+# Allows requests without CSRF token.
+@csrf_exempt
+def stop_generator(request):
+    """
+    Stops the solution generation process if it is currently running.
+
+    This function handles a POST request to terminate the ongoing solution generation process. 
+    It checks the state of the process and responds accordingly.
+
+    :param request: The HTTP request object, expected to be a POST request.
+    :type request: HttpRequest
+
+    :globals: 
+        process: The process responsible for handling solution generation.
+
+    :returns: 
+        JsonResponse:
+            - Redirects to "pyramid_solutions" if the process terminates successfully.
+            - Returns a JSON response with a 400 status if the process isn't running.
+            - Returns a JSON response with a 400 status for invalid requests.
+    """
+    global process
+    if request.method == 'POST':
+        if process and process.is_alive():  
+            # Check if Process exists and is running first before terminating
+            process.terminate()  # terminate process
+            process.join()
+            return redirect("pyramid_generator")
+        
+        return JsonResponse({"error": "Solver not running"}, status=400)
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+

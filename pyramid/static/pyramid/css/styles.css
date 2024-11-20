@@ -1,0 +1,24 @@
+canvas {
+    display: block; /* Prevents any extra spacing around the canvas */
+  }
+
+  /* Layout for the pieces scene */
+  .pieces-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .piece {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    color: #fff;
+    font-size: 16px;
+    line-height: 40px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+  }

@@ -27,7 +27,6 @@ class pyramid_board:
         for z in range(self.layers):
             for y in range(self.layers - z):
                 for x in range(self.layers - z):
-                    print((x,y,z))
                     self.cells[self.convert_array_coords_to_board_coords((x,y,z))] = board_array[z][y][x]
 
     def convert_board_coords_to_array_coords(self, board_coords):

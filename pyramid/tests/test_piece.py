@@ -7,3 +7,7 @@ class PieceTestCase(TestCase):
         piece_one = piece.Piece(11)
         print("transformations:")
         print(piece_one.transformations)
+
+    def test_visulaise_piece(self):
+        for p in piece.pieces.values():
+            piece.visualise_piece(p)
