@@ -1,8 +1,16 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
 import { DragControls } from 'three/addons/controls/DragControls.js'; // Import DragControls
-import { fixPositionAfterRotation, rotateHandler, onClickHandler, keyboardHandler, selected, createPieces, detectPiecesOnPlane } from './functions.js';
-import { pieces, colorMapping } from './defs.js';
+import { 
+  extractDataFromPlane, 
+  changeOrientationHandler,
+  rotateHandler, 
+  onClickHandler, 
+  keyboardHandler, 
+  selected, 
+  createPieces, 
+  detectPiecesOnPlane 
+} from './functions.js';
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -43,8 +51,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // Grid and Axes Helpers setup
 const axesHelper = new THREE.AxesHelper(10);
 scene.add(axesHelper);
-// const gridHelper = new THREE.GridHelper(200, 100, 0x000000, 0xffffff);
-// scene.add(gridHelper);
 
 // OrbitControls setup
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -59,8 +65,8 @@ const textureLoader = new THREE.TextureLoader();
 const planeTexture = textureLoader.load('snow_texture.webp', () => {
   console.log("Texture Loaded");
 });
-planeTexture.wrapS = THREE.RepeatWrapping; // Ensure the texture wraps correctly on the X axis
-planeTexture.wrapT = THREE.RepeatWrapping; // Ensure the texture wraps correctly on the Y axis
+planeTexture.wrapS = THREE.RepeatWrapping;
+planeTexture.wrapT = THREE.RepeatWrapping;
 
 // Create the main large plane with texture
 const planeGeometryMain = new THREE.PlaneGeometry(1000, 1000);
@@ -104,15 +110,10 @@ frame.position.set(0, 0.1, 0); // Position slightly above the plane
 // Add the frame to the scene
 scene.add(frame);
 
-// // Create a groups
-// const piecesGroup = new THREE.Group();
-
 const piecesGroup = createPieces();
 piecesGroup.forEach(piece  => {
   scene.add(piece);
-
 })
-
 
  /******************************************************************************************
                                         DRAG CONTROLS
@@ -144,10 +145,8 @@ piecesGroup.forEach(piece => {
 })
 
  /******************************************************************************************
-                                        BUTTONS HANDLERS
+                                    BUTTONS EVENT LISTENERS
 ******************************************************************************************/
-
-
 
 const toggleButton = document.getElementById('tc');
 toggleButton.addEventListener('click', ()=>{
@@ -167,37 +166,22 @@ rotateButton.addEventListener('click', () => rotateHandler(piecesGroup));
 
 const getSolutionButton = document.getElementById('get_sol');
 getSolutionButton.addEventListener('click', () => {
-  console.log(detectPiecesOnPlane(piecesGroup));
-});
 
+  
+  console.log(detectPiecesOnPlane(piecesGroup));
+
+  const piecesOnplane = detectPiecesOnPlane(piecesGroup)
+
+  console.log(extractDataFromPlane(piecesOnplane, 5))
+});
 
 
 let isPieceFlat = true;
 const changeOr = document.getElementById('change-orientation');
 changeOr.addEventListener('click', () => {
-  if (selected) {
-    const rotationAngle = isPieceFlat ? -90 : 90;
-
-    selected.parent.rotateX(THREE.MathUtils.degToRad(rotationAngle)); 
-
-    fixPositionAfterRotation(selected.parent)
-
-    // Create a BoxHelper to visualize the bounding box
-    const boxHelper = new THREE.BoxHelper(selected.parent, 0xff0000); // Red color for visualization
-    scene.add(boxHelper);
-
-    // Optionally, you can remove the old BoxHelper before adding the new one
-    // This step is necessary if you want to replace the box each time
-    if (selected.parent.boxHelper) {
-      scene.remove(selected.parent.boxHelper);
-    }
-    selected.parent.boxHelper = boxHelper;
-
-    isPieceFlat = !isPieceFlat; // Toggle orientation
-  }
+  isPieceFlat = changeOrientationHandler(piecesGroup, isPieceFlat);
 });
 
-console.log (piecesGroup)
 document.addEventListener('keydown', (event) => keyboardHandler(event, camera, piecesGroup));
 
 renderer.domElement.addEventListener('click', (event) => onClickHandler(
@@ -215,11 +199,6 @@ window.addEventListener('resize', () => {
 const renderLoop = () => {
   controls.update();
   renderer.render(scene, camera);
-
-  if (detectPiecesOnPlane(piecesGroup)){
-    console.log(detectPiecesOnPlane(piecesGroup));
-  }
-  
   requestAnimationFrame(renderLoop);
 
 };

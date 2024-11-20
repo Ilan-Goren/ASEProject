@@ -89,8 +89,6 @@ export function keyboardHandler(event, camera, piecesGroup) {
           break;
       }
     }
-
-      
     /* Handle movement to be 2 units in x and z axis. 
     However restrict movement beyond point 0 (under plane) */
     
@@ -121,7 +119,7 @@ function overlapHandler(selected, piecesGroup){
         selected.material.emissiveIntensity = 0;
       }
     }
-  } 
+  }
 }
 
 export function rotateHandler(piecesGroup) {
@@ -135,6 +133,18 @@ export function rotateHandler(piecesGroup) {
   } else {
     console.log('No piece selected for rotation');
   }
+}
+
+export function changeOrientationHandler(piecesGroup, isPieceFlat) {
+  if (selected) {
+    const rotationAngle = isPieceFlat ? -90 : 90;
+    selected.parent.rotateX(THREE.MathUtils.degToRad(rotationAngle)); 
+
+    fixPositionAfterRotation(selected.parent)
+    overlapHandler(selected, piecesGroup);
+    isPieceFlat = !isPieceFlat;
+  }
+  return isPieceFlat;
 }
 
  /******************************************************************************************
@@ -198,7 +208,7 @@ export function createPieces() {
 
     // Create a group and name the group
     const pieceGroup = new THREE.Group();
-    pieceGroup.name = `piece${key}`;
+    pieceGroup.name = key;
 
     // Create spheres
     value.forEach(pos => {
@@ -264,21 +274,53 @@ export function detectPiecesOnPlane(piecesGroup) {
     const groupBoundingBox = new THREE.Box3().setFromObject(pieceGroup);
 
     if (groupBoundingBox.intersectsBox(boundaryBox)) {
+      let spheresGroup = []
       // Check if all spheres in the group have positions within the boundary
       const allInBounds = pieceGroup.children.every(sphere => {
         const spherePosition = new THREE.Vector3();
         sphere.getWorldPosition(spherePosition);
+
+        spheresGroup.push({
+          piece: pieceGroup.name,
+          position: spherePosition
+      })
         return boundaryBox.containsPoint(spherePosition); // Validate position
       });
 
       if (allInBounds) {
-        piecesInBounds.push({
-          piece: pieceGroup,
-          position: pieceGroup.position.clone(),
-        });
+        piecesInBounds.push(spheresGroup);
       }
     }
   });
 
   return piecesInBounds.length > 0 ? piecesInBounds : false; // Return pieces within bounds or false
+}
+
+export function extractDataFromPlane(input) {
+  const layers = 5
+  let pyramid = Array.from({ length: layers }, (_, z) =>
+    Array.from({ length: layers - z }, () =>
+      Array(layers - z).fill(0)
+    )
+  );
+
+  input.forEach(layer => {
+    layer.forEach(item => {
+      const { piece, position } = item;
+
+      const layerIndex = Math.round(position.y / 2) - 1;
+      const rowIndex = Math.round((position.x + layers - 1 - layerIndex) / 2);
+      const colIndex = Math.round((position.z + layers - 1 - layerIndex) / 2);
+
+      if (
+        pyramid[layerIndex] &&
+        pyramid[layerIndex][rowIndex] &&
+        pyramid[layerIndex][rowIndex][colIndex] !== undefined
+      ) {
+        pyramid[layerIndex][rowIndex][colIndex] = piece;
+      }
+    });
+  });
+
+  return pyramid;
 }
