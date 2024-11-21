@@ -119,30 +119,30 @@ piecesGroup.forEach(piece  => {
                                         DRAG CONTROLS
 ******************************************************************************************/
 
-piecesGroup.forEach(piece => {
-  const dragControls = new DragControls(piece.children, camera, renderer.domElement);
-  dragControls.transformGroup = true;
+// piecesGroup.forEach(piece => {
+//   const dragControls = new DragControls(piece.children, camera, renderer.domElement);
+//   dragControls.transformGroup = true;
 
-  let initialY = 1; // To store the initial Y position
-  dragControls.addEventListener('dragstart', (event) => {
-    controls.enabled = false;
-    const object = event.object;
-    initialY = object.position.y; // Store the Y position when the drag starts
-  });
+//   let initialY = 1; // To store the initial Y position
+//   dragControls.addEventListener('dragstart', (event) => {
+//     controls.enabled = false;
+//     const object = event.object;
+//     initialY = object.position.y; // Store the Y position when the drag starts
+//   });
 
-  dragControls.addEventListener('dragend', () => {
-    controls.enabled = true;
-  });
+//   dragControls.addEventListener('dragend', () => {
+//     controls.enabled = true;
+//   });
 
-  dragControls.addEventListener('drag', (event) => {
-    const object = event.object;
+//   dragControls.addEventListener('drag', (event) => {
+//     const object = event.object;
 
-    // Allow movement in X and Z axis
-    object.position.x = Math.round(object.position.x / 2) * 2;
-    object.position.z = Math.round(object.position.z / 2) * 2;
-    object.position.y = initialY; // Do not change Y on drag
-  });
-})
+//     // Allow movement in X and Z axis
+//     object.position.x = Math.round(object.position.x / 2) * 2;
+//     object.position.z = Math.round(object.position.z / 2) * 2;
+//     object.position.y = initialY; // Do not change Y on drag
+//   });
+// })
 
  /******************************************************************************************
                                     BUTTONS EVENT LISTENERS
@@ -155,10 +155,7 @@ toggleButton.addEventListener('click', ()=>{
 
 const resetButton = document.getElementById('reset-piece');
 resetButton.addEventListener('click', ()=>{
-  if (selected){
-    selected.parent.rotation.set(0,0,0);
-    selected.parent.rotateX(THREE.MathUtils.degToRad(90));
-  }
+  window.location.reload()
 })
 
 const rotateButton = document.getElementById('rotate');
@@ -166,15 +163,11 @@ rotateButton.addEventListener('click', () => rotateHandler(piecesGroup));
 
 const getSolutionButton = document.getElementById('get_sol');
 getSolutionButton.addEventListener('click', () => {
-
-  
   console.log(detectPiecesOnPlane(piecesGroup));
-
   const piecesOnplane = detectPiecesOnPlane(piecesGroup)
 
   console.log(extractDataFromPlane(piecesOnplane, 5))
 });
-
 
 let isPieceFlat = true;
 const changeOr = document.getElementById('change-orientation');

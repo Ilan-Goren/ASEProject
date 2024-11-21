@@ -19,7 +19,7 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
   // If a piece is clicked, store it in selected variable
   if (intersects.length > 0) {
     if (selected){
-      selected.material.emissive.set(0x000000);
+      selected.material.emissive.set(0x000000); // Reset the previous piece highlight
       selected.material.emissiveIntensity = 0;
     }
     selected = intersects[0].object;
@@ -55,7 +55,6 @@ export function keyboardHandler(event, camera, piecesGroup) {
     
     const moveAmount = 2; 
     const movingObject = selected.parent;
-    const prevPosition = movingObject.position.clone();
 
     const cameraDirection = new THREE.Vector3();
     camera.getWorldDirection(cameraDirection);
@@ -93,10 +92,12 @@ export function keyboardHandler(event, camera, piecesGroup) {
     However restrict movement beyond point 0 (under plane) */
     
     movingObject.position.x = Math.round(movingObject.position.x / 2) * 2;
-    movingObject.position.y = Math.max(movingObject.position.y, 0);
+    movingObject.position.y = Math.max(movingObject.position.y, 1);
     movingObject.position.z = Math.round(movingObject.position.z / 2) * 2;
 
-    overlapHandler(selected, piecesGroup)
+    insideBoundariesHandler(piecesGroup);
+    overlapHandler(selected, piecesGroup);
+    
   }
 }
 
@@ -105,17 +106,19 @@ function overlapHandler(selected, piecesGroup){
   if (selected){
     if (checkOverlap(selected.parent, piecesGroup)){
       overlapExists = true;
+      updateStatusMessage('True', 'none');
       selected.material.emissive.setHex(0xFF0000);
       selected.material.emissiveIntensity = 20;
     }
     else{
+      updateStatusMessage('False', 'none');
       overlapExists = false
       if (selected){
         selected.material.emissive.setHex(0xeeeeee);
         selected.material.emissiveIntensity = 0.5;
       }
       else{
-        selected.material.emissive.set(0x000000);
+        selected.material.emissive.set(0x000000); // Reset the previous piece highlight
         selected.material.emissiveIntensity = 0;
       }
     }
@@ -222,11 +225,9 @@ export function createPieces() {
     const x = radius * Math.cos(angle);
     const z = radius * Math.sin(angle);
     pieceGroup.position.set(x, 1, z);
-
     rotateWithQuaternion(pieceGroup, 'x', 90)
 
     pieceGroup.updateMatrix();
-
     // Add the piece to piecesGroup
     piecesGroup.push(pieceGroup);
 
@@ -239,22 +240,33 @@ export function createPieces() {
 
 
 function rotateWithQuaternion(object, axis, angle) {
-  // Create a quaternion representing the rotation
-  const quaternion = new THREE.Quaternion();
+  if (!object.rotationTracker) {
+    object.rotationTracker = { x: 0, y: 0, z: 0 };
+  }
   angle = THREE.MathUtils.degToRad(angle);
+  const quaternion = new THREE.Quaternion();
 
-  // Set quaternion based on the axis and angle
+  // Determine the axis of rotation and apply the rotation
   if (axis === 'x') {
     quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0).normalize(), angle);
-  }
-  else if (axis === 'y') {
+    object.rotationTracker.x += THREE.MathUtils.radToDeg(angle);
+  } else if (axis === 'y') {
     quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0).normalize(), angle);
-  }
-  else if (axis === 'z') {
+    object.rotationTracker.y += THREE.MathUtils.radToDeg(angle);
+  } else if (axis === 'z') {
     quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1).normalize(), angle);
+    object.rotationTracker.z += THREE.MathUtils.radToDeg(angle);
   }
 
   object.quaternion.multiply(quaternion);
+  object.quaternion.normalize();
+
+  // Reset the tracker and quaternion for any 360-degree rotations
+  ['x', 'y', 'z'].forEach((axis) => {
+    if (object.rotationTracker[axis] >= 360 || object.rotationTracker[axis] <= -360) {
+      object.rotationTracker[axis] %= 360; // Reset tracker to within -360 to 360 range
+    }
+  });
 }
 
 
@@ -296,7 +308,59 @@ export function detectPiecesOnPlane(piecesGroup) {
   return piecesInBounds.length > 0 ? piecesInBounds : false; // Return pieces within bounds or false
 }
 
+
+export function insideBoundariesHandler(piecesGroup) {
+  const piecesCorrectlyPlaced = [];
+
+  // looping over each piece
+  piecesGroup.forEach(pieceGroup => {
+    pieceGroup.updateMatrixWorld(true); // Ensure the world matrix is updated
+
+    const y_pos = pieceGroup.position.y
+    let boundryPoint = 5 - y_pos / 2
+
+    // Define the boundaries of the plane
+    const boundaryBox = new THREE.Box3(
+      new THREE.Vector3(-boundryPoint, -Infinity, -boundryPoint),
+      new THREE.Vector3(boundryPoint, Infinity, boundryPoint)
+    );
+
+    const groupBoundingBox = new THREE.Box3().setFromObject(pieceGroup);
+
+    if (groupBoundingBox.intersectsBox(boundaryBox)) {
+
+      // Check if all spheres in the group have positions within the boundary
+      const allInBounds = pieceGroup.children.every(sphere => {
+        const spherePosition = new THREE.Vector3();
+        sphere.getWorldPosition(spherePosition);
+
+        return boundaryBox.containsPoint(spherePosition); // Validate position
+      });
+
+      if (allInBounds) {
+        piecesCorrectlyPlaced.push(pieceGroup);
+      }
+    }
+  });
+  updateStatusMessage(false, piecesCorrectlyPlaced.length);
+
+  return piecesCorrectlyPlaced.length > 0 ? piecesCorrectlyPlaced : false;
+}
+
+function updateStatusMessage(message1='none', message2='none') {
+  if (message1 != 'none'){
+    document.getElementById('statusMessage1').textContent = `Overlap status: ${message1}`;
+  }
+  if (message2 != 'none'){
+    document.getElementById('statusMessage2').textContent = `Number of pieces within bounds ${message2}`;
+  }
+}
+
+
 export function extractDataFromPlane(input) {
+  if (overlapExists){
+    return False
+  }
   const layers = 5
   let pyramid = Array.from({ length: layers }, (_, z) =>
     Array.from({ length: layers - z }, () =>
