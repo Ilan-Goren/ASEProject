@@ -2,58 +2,75 @@ from django.test import TestCase
 from ..solver_functions import solver, pyramid_board, piece, algorithm_x_functions
 
 class SolverTestCase(TestCase):
+
+    def setUp(self):
+        """
+        Initialize the test case with a solver instance, a pyramid board, and a list of pieces.
+        """
+        self.s = solver.Solver()
+        self.b = pyramid_board.pyramid_board(2)
+        self.pieces = [piece.Piece(p) for p in piece.pieces]
+
     def test_generate_board_cell_indexes(self):
         """
-        Test the generate_board_cell_indexes method to ensure it generates indexes correctly.
+        Ensure generate_board_cell_indexes correctly generates indexes for the board cells.
         """
-        s = solver.Solver()
-        b = pyramid_board.pyramid_board(2)
-        s.generate_board_cell_indexes(b)
-        self.assertTrue(b.cells)
-        self.assertTrue(s.index_to_cell)
-        self.assertTrue(s.cell_to_index)
+        self.s.generate_board_cell_indexes(self.b)
+        self.assertTrue(self.b.cells)
+        self.assertEqual(len(self.s.index_to_cell), self.b.count_cells())
+        self.assertEqual(len(self.s.cell_to_index), self.b.count_cells())
 
     def test_packing_matrix(self):
         """
-        Test the initialise_packing_matrix method to ensure it initializes the packing matrix correctly.
+        Ensure initialise_packing_matrix correctly initializes the packing matrix.
         """
-        s = solver.Solver()
-        b = pyramid_board.pyramid_board(2)
-        pieces = [piece.Piece(p) for p in piece.pieces]
-        s.initialise_packing_matrix(b, pieces)
-        self.assertEqual(s.matrix.num_cols, b.count_cells() + len(pieces))
+        self.s.initialise_packing_matrix(self.b, self.pieces)
+        self.assertEqual(self.s.matrix.num_cols, self.b.count_cells() + len(self.pieces))
 
     def test_solve(self):
         """
-        Test the solve method to ensure it solves the puzzle correctly.
+        Ensure the solve method correctly solves the puzzle.
         """
-        s = solver.Solver()
-        b = pyramid_board.pyramid_board(2)
         pieces = [piece.Piece(11, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]),
                   piece.Piece(12, [(0, 0, 0)]),
                   piece.Piece(13, [(0, 0, 0)])]
-        rows = s.solve(pieces, b)
+        rows = self.s.solve(pieces, self.b)
         self.assertTrue(rows)
+        self.assertEqual(len(rows), len(pieces))
 
     def test_rows_to_array_sol(self):
         """
-        Test the rows_to_array_sol method to ensure it converts rows to array solution correctly.
+        Ensure rows_to_array_sol correctly converts rows to an array solution.
         """
-        s = solver.Solver()
-        b = pyramid_board.pyramid_board(2)
         pieces = [piece.Piece(11, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]),
                   piece.Piece(12, [(0, 0, 0)]),
                   piece.Piece(13, [(0, 0, 0)])]
-        rows = s.solve(pieces, b)
-        solution_array = s.rows_to_array_sol(rows, b)
+        rows = self.s.solve(pieces, self.b)
+        solution_array = self.s.rows_to_array_sol(rows, self.b)
         self.assertTrue(solution_array)
+        self.assertEqual(len(solution_array), self.b.count_cells())
 
     def test_generate_solutions(self):
         """
-        Test the generate_solutions method to ensure it generates solutions correctly.
+        Ensure generate_solutions correctly generates solutions for the puzzle.
         """
-        s = solver.Solver()
         b = pyramid_board.pyramid_board(5)
-        pieces = [piece.Piece(p) for p in piece.pieces]
-        solutions = list(s.generate_solutions(pieces, b))
+        solutions = list(self.s.generate_solutions(self.pieces, b))
         self.assertTrue(solutions)
+        self.assertGreater(len(solutions), 0)
+
+    def test_empty_board(self):
+        """
+        Ensure the solver handles an empty board correctly.
+        """
+        empty_board = pyramid_board.pyramid_board(0)
+        rows = self.s.solve(self.pieces, empty_board)
+        self.assertFalse(rows)
+
+    def test_invalid_piece(self):
+        """
+        Ensure the solver handles an invalid piece correctly.
+        """
+        invalid_piece = piece.Piece(99, [(0, 0, 0), (0, 0, 1)])
+        rows = self.s.solve([invalid_piece], self.b)
+        self.assertFalse(rows)

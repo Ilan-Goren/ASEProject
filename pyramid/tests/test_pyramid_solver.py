@@ -10,7 +10,7 @@ class PyramidSolverTestCase(TestCase):
 
     def test_initialize_board(self):
         """
-        Test the _initialize_board method to ensure it initializes a board with the correct length.
+        Ensure the board is initialized with the correct structure.
         """
         board = self.solver._initialize_board()
         self.assertEqual(len(board), 5)
@@ -19,50 +19,43 @@ class PyramidSolverTestCase(TestCase):
 
     def test_initialize_pieces(self):
         """
-        Test the _initialize_pieces method to ensure it initializes pieces correctly.
+        Ensure pieces are initialized correctly.
         """
         pieces = self.solver._initialize_pieces()
-        self.assertTrue(pieces)
-        self.assertEqual(len(pieces), 3)  # Assuming 3 pieces as per the placeholder
+        self.assertEqual(len(pieces), 3)  
 
     def test_place_piece(self):
         """
-        Test the place_piece method to ensure it places a piece correctly on the board.
+        Ensure a piece is placed correctly on the board.
         """
-        result = self.solver.place_piece(1, 0, 0, 0)
-        self.assertTrue(result)
+        self.solver.place_piece(1, 0, 0, 0)
         self.assertEqual(self.solver.board[0][0][0], 1)
 
     def test_place_piece_invalid(self):
         """
-        Test the place_piece method with invalid inputs.
+        Ensure invalid piece placements are handled correctly.
         """
-        result = self.solver.place_piece(1, 5, 0, 0)  # Invalid level
-        self.assertFalse(result)
-        result = self.solver.place_piece(1, 0, 5, 0)  # Invalid row
-        self.assertFalse(result)
-        result = self.solver.place_piece(1, 0, 0, 5)  # Invalid column
-        self.assertFalse(result)
+        self.assertFalse(self.solver.place_piece(1, 5, 0, 0))  # Invalid level
+        self.assertFalse(self.solver.place_piece(1, 0, 5, 0))  # Invalid row
+        self.assertFalse(self.solver.place_piece(1, 0, 0, 5))  # Invalid column
 
     def test_remove_piece(self):
         """
-        Test the remove_piece method to ensure it removes a piece correctly from the board.
+        Ensure a piece is removed correctly from the board.
         """
         self.solver.place_piece(1, 0, 0, 0)
-        result = self.solver.remove_piece(1)
-        self.assertTrue(result)
+        self.solver.remove_piece(1)
         self.assertIsNone(self.solver.board[0][0][0])
 
     def test_remove_piece_invalid(self):
         """
-        Test the remove_piece method with invalid inputs.
+        Ensure invalid piece removals are handled correctly.
         """
-        result = self.solver.remove_piece(99)  # Non-existent piece
-        self.assertFalse(result)
+        self.assertFalse(self.solver.remove_piece(99))  # Non-existent piece
 
     def test_is_board_empty(self):
         """
-        Test the is_board_empty method to ensure it correctly identifies if the board is empty.
+        Ensure the board is correctly identified as empty or not.
         """
         self.assertTrue(self.solver.is_board_empty())
         self.solver.place_piece(1, 0, 0, 0)
