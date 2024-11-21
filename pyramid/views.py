@@ -57,6 +57,12 @@ def pyramid_solutions(request):
             process = None
             return redirect('pyramid_generator')
 
+def index(request):
+    """
+    Displays the index page for the Polysphere Pyramid application.
+    """
+    context = {}  # Add any context data if needed
+    return render(request, 'pyramid/index.html', context)
 
 ##########################################################################################
 #                           SOLUTIONS GENERATOR FUNCTIONS                                #
