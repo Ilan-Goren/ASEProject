@@ -48,10 +48,6 @@ const renderer = new THREE.WebGLRenderer({
  });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Grid and Axes Helpers setup
-const axesHelper = new THREE.AxesHelper(10);
-scene.add(axesHelper);
-
 // OrbitControls setup
 const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -75,6 +71,19 @@ const planeMaterialMain = new THREE.MeshStandardMaterial({
   side: THREE.FrontSide,
   roughness: 10,
 });
+
+const geometry = new THREE.ConeGeometry(15, 20, 4, 1, true);
+
+const material = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  wireframe: true,
+});
+
+const wireframePyramid = new THREE.Mesh(geometry, material);
+
+wireframePyramid.rotation.y = Math.PI / 4;
+scene.add(wireframePyramid);
+
 
 const planeMain = new THREE.Mesh(planeGeometryMain, planeMaterialMain);
 planeMain.rotation.x = -Math.PI / 2; // Rotate to lay flat
@@ -158,8 +167,14 @@ resetButton.addEventListener('click', ()=>{
   window.location.reload()
 })
 
+let isPieceFlat = true;
+const changeOr = document.getElementById('change-orientation');
+changeOr.addEventListener('click', () => {
+  isPieceFlat = changeOrientationHandler(piecesGroup, isPieceFlat);
+});
+
 const rotateButton = document.getElementById('rotate');
-rotateButton.addEventListener('click', () => rotateHandler(piecesGroup));
+rotateButton.addEventListener('click', () => rotateHandler(piecesGroup, isPieceFlat));
 
 const getSolutionButton = document.getElementById('get_sol');
 getSolutionButton.addEventListener('click', () => {
@@ -167,12 +182,6 @@ getSolutionButton.addEventListener('click', () => {
   const piecesOnplane = detectPiecesOnPlane(piecesGroup)
 
   console.log(extractDataFromPlane(piecesOnplane, 5))
-});
-
-let isPieceFlat = true;
-const changeOr = document.getElementById('change-orientation');
-changeOr.addEventListener('click', () => {
-  isPieceFlat = changeOrientationHandler(piecesGroup, isPieceFlat);
 });
 
 document.addEventListener('keydown', (event) => keyboardHandler(event, camera, piecesGroup));

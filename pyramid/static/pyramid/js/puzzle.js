@@ -1,8 +1,16 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
 import { DragControls } from 'three/addons/controls/DragControls.js'; // Import DragControls
-import { fixPositionAfterRotation, rotateHandler, onClickHandler, keyboardHandler, selected, createPieces, detectPiecesOnPlane } from './functions.js';
-import { pieces, colorMapping } from './defs.js';
+import { 
+  extractDataFromPlane, 
+  changeOrientationHandler,
+  rotateHandler, 
+  onClickHandler, 
+  keyboardHandler, 
+  selected, 
+  createPieces, 
+  detectPiecesOnPlane 
+} from './functions.js';
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -40,12 +48,6 @@ const renderer = new THREE.WebGLRenderer({
  });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Grid and Axes Helpers setup
-const axesHelper = new THREE.AxesHelper(10);
-scene.add(axesHelper);
-// const gridHelper = new THREE.GridHelper(200, 100, 0x000000, 0xffffff);
-// scene.add(gridHelper);
-
 // OrbitControls setup
 const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -56,11 +58,12 @@ controls.maxPolarAngle = Math.PI / 2;
 
 // Create a texture loader
 const textureLoader = new THREE.TextureLoader();
-const planeTexture = textureLoader.load('snow_texture.webp', () => {
+const planeTextureUrl = document.getElementById('texture-url').textContent.trim();
+const planeTexture = textureLoader.load(planeTextureUrl, () => {
   console.log("Texture Loaded");
 });
-planeTexture.wrapS = THREE.RepeatWrapping; // Ensure the texture wraps correctly on the X axis
-planeTexture.wrapT = THREE.RepeatWrapping; // Ensure the texture wraps correctly on the Y axis
+planeTexture.wrapS = THREE.RepeatWrapping;
+planeTexture.wrapT = THREE.RepeatWrapping;
 
 // Create the main large plane with texture
 const planeGeometryMain = new THREE.PlaneGeometry(1000, 1000);
@@ -69,6 +72,19 @@ const planeMaterialMain = new THREE.MeshStandardMaterial({
   side: THREE.FrontSide,
   roughness: 10,
 });
+
+const geometry = new THREE.ConeGeometry(15, 20, 4, 1, true);
+
+const material = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  wireframe: true,
+});
+
+const wireframePyramid = new THREE.Mesh(geometry, material);
+
+wireframePyramid.rotation.y = Math.PI / 4;
+scene.add(wireframePyramid);
+
 
 const planeMain = new THREE.Mesh(planeGeometryMain, planeMaterialMain);
 planeMain.rotation.x = -Math.PI / 2; // Rotate to lay flat
@@ -104,49 +120,43 @@ frame.position.set(0, 0.1, 0); // Position slightly above the plane
 // Add the frame to the scene
 scene.add(frame);
 
-// // Create a groups
-// const piecesGroup = new THREE.Group();
-
 const piecesGroup = createPieces();
 piecesGroup.forEach(piece  => {
   scene.add(piece);
-
 })
 
  /******************************************************************************************
                                         DRAG CONTROLS
 ******************************************************************************************/
 
-piecesGroup.forEach(piece => {
-  const dragControls = new DragControls(piece.children, camera, renderer.domElement);
-  dragControls.transformGroup = true;
+// piecesGroup.forEach(piece => {
+//   const dragControls = new DragControls(piece.children, camera, renderer.domElement);
+//   dragControls.transformGroup = true;
 
-  let initialY = 1; // To store the initial Y position
-  dragControls.addEventListener('dragstart', (event) => {
-    controls.enabled = false;
-    const object = event.object;
-    initialY = object.position.y; // Store the Y position when the drag starts
-  });
+//   let initialY = 1; // To store the initial Y position
+//   dragControls.addEventListener('dragstart', (event) => {
+//     controls.enabled = false;
+//     const object = event.object;
+//     initialY = object.position.y; // Store the Y position when the drag starts
+//   });
 
-  dragControls.addEventListener('dragend', () => {
-    controls.enabled = true;
-  });
+//   dragControls.addEventListener('dragend', () => {
+//     controls.enabled = true;
+//   });
 
-  dragControls.addEventListener('drag', (event) => {
-    const object = event.object;
+//   dragControls.addEventListener('drag', (event) => {
+//     const object = event.object;
 
-    // Allow movement in X and Z axis
-    object.position.x = Math.round(object.position.x / 2) * 2;
-    object.position.z = Math.round(object.position.z / 2) * 2;
-    object.position.y = initialY; // Do not change Y on drag
-  });
-})
+//     // Allow movement in X and Z axis
+//     object.position.x = Math.round(object.position.x / 2) * 2;
+//     object.position.z = Math.round(object.position.z / 2) * 2;
+//     object.position.y = initialY; // Do not change Y on drag
+//   });
+// })
 
  /******************************************************************************************
-                                        BUTTONS HANDLERS
+                                    BUTTONS EVENT LISTENERS
 ******************************************************************************************/
-
-
 
 const toggleButton = document.getElementById('tc');
 toggleButton.addEventListener('click', ()=>{
@@ -155,48 +165,46 @@ toggleButton.addEventListener('click', ()=>{
 
 const resetButton = document.getElementById('reset-piece');
 resetButton.addEventListener('click', ()=>{
-  if (selected){
-    selected.parent.rotation.set(0,0,0);
-    selected.parent.rotateX(THREE.MathUtils.degToRad(90));
-  }
+  window.location.reload()
 })
-
-const rotateButton = document.getElementById('rotate');
-rotateButton.addEventListener('click', () => rotateHandler(piecesGroup));
-
-const getSolutionButton = document.getElementById('get_sol');
-getSolutionButton.addEventListener('click', () => {
-  console.log(detectPiecesOnPlane(piecesGroup));
-});
-
-
 
 let isPieceFlat = true;
 const changeOr = document.getElementById('change-orientation');
 changeOr.addEventListener('click', () => {
-  if (selected) {
-    const rotationAngle = isPieceFlat ? -90 : 90;
-
-    selected.parent.rotateX(THREE.MathUtils.degToRad(rotationAngle)); 
-
-    fixPositionAfterRotation(selected.parent)
-
-    // Create a BoxHelper to visualize the bounding box
-    const boxHelper = new THREE.BoxHelper(selected.parent, 0xff0000); // Red color for visualization
-    scene.add(boxHelper);
-
-    // Optionally, you can remove the old BoxHelper before adding the new one
-    // This step is necessary if you want to replace the box each time
-    if (selected.parent.boxHelper) {
-      scene.remove(selected.parent.boxHelper);
-    }
-    selected.parent.boxHelper = boxHelper;
-
-    isPieceFlat = !isPieceFlat; // Toggle orientation
-  }
+  isPieceFlat = changeOrientationHandler(piecesGroup, isPieceFlat);
 });
 
-console.log (piecesGroup)
+
+
+const rotateButton = document.getElementById('rotate');
+rotateButton.addEventListener('click', () => rotateHandler(piecesGroup, isPieceFlat));
+
+const getSolutionButton = document.getElementById('get_sol');
+getSolutionButton.addEventListener('click', () => {
+  const piecesOnPlane = detectPiecesOnPlane(piecesGroup);
+
+  // Extract the data from the plane
+  const [pyramid, piecesPlaced] = extractDataFromPlane(piecesOnPlane, 5);
+
+  fetch("pyramid_partial_config_solutions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ pyramid: pyramid,
+      piecesPlaced, piecesPlaced
+     }) // Convert data to JSON string
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+});
+
+
+
 document.addEventListener('keydown', (event) => keyboardHandler(event, camera, piecesGroup));
 
 renderer.domElement.addEventListener('click', (event) => onClickHandler(
@@ -214,11 +222,6 @@ window.addEventListener('resize', () => {
 const renderLoop = () => {
   controls.update();
   renderer.render(scene, camera);
-
-  if (detectPiecesOnPlane(piecesGroup)){
-    console.log(detectPiecesOnPlane(piecesGroup));
-  }
-  
   requestAnimationFrame(renderLoop);
 
 };

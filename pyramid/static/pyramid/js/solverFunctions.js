@@ -18,8 +18,8 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
 
   // If a piece is clicked, store it in selected variable
   if (intersects.length > 0) {
-    if (selected && !selected.parent.halfIn){
-      selected.material.emissive.set(0x000000); // Reset the previous piece highlight
+    if (selected){
+      selected.material.emissive.set(0x000000);
       selected.material.emissiveIntensity = 0;
     }
     selected = intersects[0].object;
@@ -37,11 +37,8 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
         selected.material.emissiveIntensity = 10;
       }
       else{
-        if (selected.parent.halfIn){
-          selected.material.emissive.set(0x000000); // Reset the previous piece highlight
-          selected.material.emissiveIntensity = 0;
-        }
-
+        selected.material.emissive.set(0x000000); // Reset the previous piece highlight
+        selected.material.emissiveIntensity = 0;
       }
     }
     selected = null;
@@ -56,8 +53,9 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
 export function keyboardHandler(event, camera, piecesGroup) {
   if (selected) {
     
-    const moveAmount = 1; 
+    const moveAmount = 2; 
     const movingObject = selected.parent;
+    const prevPosition = movingObject.position.clone();
 
     const cameraDirection = new THREE.Vector3();
     camera.getWorldDirection(cameraDirection);
@@ -67,10 +65,10 @@ export function keyboardHandler(event, camera, piecesGroup) {
     if (event.shiftKey) {
       switch (event.key) {
         case 'ArrowUp': // Move up
-          movingObject.position.y += (moveAmount + 1);
+          movingObject.position.y += moveAmount;
           break;
         case 'ArrowDown': // Move down
-          movingObject.position.y = Math.max(movingObject.position.y - (moveAmount + 1), 0); // Ensure Y doesn't go below 0
+          movingObject.position.y = Math.max(movingObject.position.y - moveAmount, 0); // Ensure Y doesn't go below 0
           break;
       }
     } else {
@@ -91,17 +89,16 @@ export function keyboardHandler(event, camera, piecesGroup) {
           break;
       }
     }
+
+      
     /* Handle movement to be 2 units in x and z axis. 
     However restrict movement beyond point 0 (under plane) */
     
-    movingObject.position.x = Math.round(movingObject.position.x);
-    movingObject.position.y = Math.max(movingObject.position.y, 1);
-    movingObject.position.z = Math.round(movingObject.position.z);
+    movingObject.position.x = Math.round(movingObject.position.x / 2) * 2;
+    movingObject.position.y = Math.max(movingObject.position.y, 0);
+    movingObject.position.z = Math.round(movingObject.position.z / 2) * 2;
 
-    insideBoundariesHandler(piecesGroup);
-    overlapHandler(selected, piecesGroup);
-    partiallyInsideBoudariesHandler(selected);
-    
+    overlapHandler(selected, piecesGroup)
   }
 }
 
@@ -110,47 +107,28 @@ function overlapHandler(selected, piecesGroup){
   if (selected){
     if (checkOverlap(selected.parent, piecesGroup)){
       overlapExists = true;
-      updateStatusMessage('True', 'none');
       selected.material.emissive.setHex(0xFF0000);
       selected.material.emissiveIntensity = 20;
     }
     else{
-      updateStatusMessage('False', 'none');
       overlapExists = false
       if (selected){
         selected.material.emissive.setHex(0xeeeeee);
         selected.material.emissiveIntensity = 0.5;
       }
       else{
-        selected.material.emissive.set(0x000000); // Reset the previous piece highlight
+        selected.material.emissive.set(0x000000);
         selected.material.emissiveIntensity = 0;
       }
     }
-  }
+  } 
 }
 
-function partiallyInsideBoudariesHandler(selected){
-  if (selected.parent.halfIn){
-    selected.material.emissive.setHex(0xFF0000);
-    selected.material.emissiveIntensity = 20;
-  }
-  else {
-    selected.material.emissive.set(0x000000);
-    selected.material.emissiveIntensity = 0;
-  }
-}
-
-export function rotateHandler(piecesGroup, isPieceFlat) {
+export function rotateHandler(piecesGroup) {
   if (selected) {
-    if (isPieceFlat){
-      rotateWithQuaternion(selected.parent, 'z', 90);
-    }
-    else {
-      rotateWithQuaternion(selected.parent, 'y', 90);
-    }
+    rotateWithQuaternion(selected.parent, 'z', 90);
     fixPositionAfterRotation(selected.parent);
 
-    insideBoundariesHandler(piecesGroup);
     overlapHandler(selected, piecesGroup);
 
     console.log(`ROTATIONS: ${THREE.MathUtils.radToDeg(selected.parent.rotation.x)} ${THREE.MathUtils.radToDeg(selected.parent.rotation.y)} ${THREE.MathUtils.radToDeg(selected.parent.rotation.z)}`);
@@ -159,30 +137,37 @@ export function rotateHandler(piecesGroup, isPieceFlat) {
   }
 }
 
-export function changeOrientationHandler(piecesGroup, isPieceFlat) {
-  if (selected) {
-    const rotationAngleX = isPieceFlat ? -90 : 90;
-    const rotationAngleY = isPieceFlat ? -45 : 45;
-    if (isPieceFlat){
-      selected.parent.rotateX(THREE.MathUtils.degToRad(rotationAngleX));
-      selected.parent.rotateY(THREE.MathUtils.degToRad(rotationAngleY));
-    }
-    else {
-      selected.parent.rotateY(THREE.MathUtils.degToRad(rotationAngleY));
-      selected.parent.rotateX(THREE.MathUtils.degToRad(rotationAngleX));
-    }
-    
-    fixPositionAfterRotation(selected.parent)
-    insideBoundariesHandler(piecesGroup);
-    overlapHandler(selected, piecesGroup);
-    isPieceFlat = !isPieceFlat;
-  }
-  return isPieceFlat;
-}
-
  /******************************************************************************************
                                      MAIN FUNCTIONS
 ******************************************************************************************/
+
+
+// Function to create a pyramid
+export function createPyramid(data) {
+    const pyramidGroup = new THREE.Group()
+    data.forEach((layer, layerIndex) => {
+        layer.forEach((row, rowIndex) => {
+            row.forEach((cellValue, colIndex) => {
+                if (cellValue > 0) {
+                    const color = colorMapping[cellValue.toString()];
+                    const material = new THREE.MeshStandardMaterial({ color });
+                    const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
+                    const sphere = new THREE.Mesh(sphereGeometry, material);
+
+                    const x = colIndex * 2 - row.length;
+                    const y = layerIndex * 2;
+                    const z = rowIndex * 2 - layer[0].length;
+
+                    sphere.position.set(x, y, z);
+
+                    // Add the sphere to the pyramid group
+                    pyramidGroup.add(sphere);
+                }
+            });
+        });
+    });
+    return pyramidGroup
+}
 
 function checkOverlap(pieceGroup, piecesGroup, tolerance = 1.9) {
   // iterate over all groups in piecesGroup
@@ -219,15 +204,11 @@ export function fixPositionAfterRotation(pieceGroup) {
     if (boundingBox.min.y < planeY ) {
       const offsetY = Math.abs(boundingBox.min.y - planeY);
       pieceGroup.position.y += offsetY;
-      pieceGroup.position.x = Math.round(pieceGroup.position.x)
-      pieceGroup.position.z = Math.round(pieceGroup.position.z)
     }
-    
+
     else if (boundingBox.min.y > planeY) {
       const offsetY = Math.abs(planeY - boundingBox.min.y);
       pieceGroup.position.y -= offsetY;
-      pieceGroup.position.x = Math.round(pieceGroup.position.x)
-      pieceGroup.position.z= Math.round(pieceGroup.position.z)
     }
 }
 
@@ -245,7 +226,7 @@ export function createPieces() {
 
     // Create a group and name the group
     const pieceGroup = new THREE.Group();
-    pieceGroup.name = key;
+    pieceGroup.name = `piece${key}`;
 
     // Create spheres
     value.forEach(pos => {
@@ -256,12 +237,14 @@ export function createPieces() {
     });
 
     // Position the group in a circle
-    const x = Math.round(radius * Math.cos(angle));
-    const z = Math.round(radius * Math.sin(angle));
+    const x = radius * Math.cos(angle);
+    const z = radius * Math.sin(angle);
     pieceGroup.position.set(x, 1, z);
+
     rotateWithQuaternion(pieceGroup, 'x', 90)
 
     pieceGroup.updateMatrix();
+
     // Add the piece to piecesGroup
     piecesGroup.push(pieceGroup);
 
@@ -274,33 +257,22 @@ export function createPieces() {
 
 
 function rotateWithQuaternion(object, axis, angle) {
-  if (!object.rotationTracker) {
-    object.rotationTracker = { x: 0, y: 0, z: 0 };
-  }
-  angle = THREE.MathUtils.degToRad(angle);
+  // Create a quaternion representing the rotation
   const quaternion = new THREE.Quaternion();
+  angle = THREE.MathUtils.degToRad(angle);
 
-  // Determine the axis of rotation and apply the rotation
+  // Set quaternion based on the axis and angle
   if (axis === 'x') {
     quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0).normalize(), angle);
-    object.rotationTracker.x += THREE.MathUtils.radToDeg(angle);
-  } else if (axis === 'y') {
+  }
+  else if (axis === 'y') {
     quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0).normalize(), angle);
-    object.rotationTracker.y += THREE.MathUtils.radToDeg(angle);
-  } else if (axis === 'z') {
+  }
+  else if (axis === 'z') {
     quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1).normalize(), angle);
-    object.rotationTracker.z += THREE.MathUtils.radToDeg(angle);
   }
 
   object.quaternion.multiply(quaternion);
-  object.quaternion.normalize();
-
-  // Reset the tracker and quaternion for any 360-degree rotations
-  ['x', 'y', 'z'].forEach((axis) => {
-    if (object.rotationTracker[axis] >= 360 || object.rotationTracker[axis] <= -360) {
-      object.rotationTracker[axis] %= 360; // Reset tracker to within -360 to 360 range
-    }
-  });
 }
 
 
@@ -320,21 +292,18 @@ export function detectPiecesOnPlane(piecesGroup) {
     const groupBoundingBox = new THREE.Box3().setFromObject(pieceGroup);
 
     if (groupBoundingBox.intersectsBox(boundaryBox)) {
-      let spheresGroup = []
       // Check if all spheres in the group have positions within the boundary
       const allInBounds = pieceGroup.children.every(sphere => {
         const spherePosition = new THREE.Vector3();
         sphere.getWorldPosition(spherePosition);
-
-        spheresGroup.push({
-          piece: pieceGroup.name,
-          position: spherePosition
-      })
         return boundaryBox.containsPoint(spherePosition); // Validate position
       });
 
       if (allInBounds) {
-        piecesInBounds.push(spheresGroup);
+        piecesInBounds.push({
+          piece: pieceGroup,
+          position: pieceGroup.position.clone(),
+        });
       }
     }
   });
@@ -342,107 +311,20 @@ export function detectPiecesOnPlane(piecesGroup) {
   return piecesInBounds.length > 0 ? piecesInBounds : false; // Return pieces within bounds or false
 }
 
-
-export function insideBoundariesHandler(piecesGroup) {
-  const piecesCorrectlyPlaced = [];
-
-  // looping over each piece
-  piecesGroup.forEach(pieceGroup => {
-    pieceGroup.updateMatrixWorld(true); // Ensure the world matrix is updated
-
-    const y_pos = pieceGroup.position.y
-    let boundryPoint = 5 - Math.round((y_pos - 1) / 2) - 1
-
-    // Define the boundaries of the plane
-    const boundaryBox = new THREE.Box3(
-      new THREE.Vector3(-boundryPoint, -Infinity, -boundryPoint),
-      new THREE.Vector3(boundryPoint, Infinity, boundryPoint)
-    );
-
-    const groupBoundingBox = new THREE.Box3().setFromObject(pieceGroup);
-
-    if (groupBoundingBox.intersectsBox(boundaryBox)) {
-
-      // Check if all spheres in the group have positions within the boundary
-      const allInBounds = pieceGroup.children.every(sphere => {
-        const spherePosition = new THREE.Vector3();
-        sphere.getWorldPosition(spherePosition);
-
-        const y_pos = spherePosition.y
-        let boundryPoint = 5 - Math.round((y_pos - 1) / 2) - 1
-        console.log(boundryPoint);
-        console.log(spherePosition)
-        const boundaryBox = new THREE.Box3(
-          new THREE.Vector3(-boundryPoint - 0.1, -Infinity, -boundryPoint - 0.1),
-          new THREE.Vector3(boundryPoint + 0.1, Infinity, boundryPoint + 0.1)
-        );
-
-        return boundaryBox.containsPoint(spherePosition); // Validate position
-      });
-
-      if (allInBounds) {
-        pieceGroup.halfIn = false;
-
-        pieceGroup.children.forEach(child => {
-          const spherePosition = new THREE.Vector3();
-          child.getWorldPosition(spherePosition);
-          console.log(spherePosition);
+export function setEmissiveForSelected(selected, state){
+    if (selected) {
+      if (state){
+        selected.parent.children.forEach(sphere => {
+          sphere.material.emissive.setHex(0xeeeeee);
+          sphere.material.emissiveIntensity = 0.5;
+    
         })
-
-        piecesCorrectlyPlaced.push(pieceGroup);
       }
       else {
-        pieceGroup.halfIn = true;
+        selected.parent.children.forEach(sphere => {
+          sphere.material.emissive.set(0x000000);
+          sphere.material.emissiveIntensity = 0;
+        })
       }
     }
-    else {
-      pieceGroup.halfIn = false;
-    }
-  });
-  updateStatusMessage(false, piecesCorrectlyPlaced.length);
-
-
-  return piecesCorrectlyPlaced.length > 0 ? piecesCorrectlyPlaced : false;
-}
-
-function updateStatusMessage(message1='none', message2='none') {
-  if (message1 != 'none'){
-    document.getElementById('statusMessage1').textContent = `Overlap status: ${message1}`;
   }
-  if (message2 != 'none'){
-    document.getElementById('statusMessage2').textContent = `Number of pieces within bounds ${message2}`;
-  }
-}
-
-
-export function extractDataFromPlane(input) {
-  if (overlapExists){
-    return False
-  }
-  const layers = 5
-  let pyramid = Array.from({ length: layers }, (_, z) =>
-    Array.from({ length: layers - z }, () =>
-      Array(layers - z).fill(0)
-    )
-  );
-
-  input.forEach(layer => {
-    layer.forEach(item => {
-      const { piece, position } = item;
-
-      const layerIndex = Math.round(position.y / 2) - 1;
-      const rowIndex = Math.round((position.x + layers - 1 - layerIndex) / 2);
-      const colIndex = Math.round((position.z + layers - 1 - layerIndex) / 2);
-
-      if (
-        pyramid[layerIndex] &&
-        pyramid[layerIndex][rowIndex] &&
-        pyramid[layerIndex][rowIndex][colIndex] !== undefined
-      ) {
-        pyramid[layerIndex][rowIndex][colIndex] = piece;
-      }
-    });
-  });
-
-  return pyramid;
-}

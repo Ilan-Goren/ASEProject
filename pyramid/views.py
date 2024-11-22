@@ -5,7 +5,7 @@ from django.contrib import messages
 from multiprocessing import Process, Manager
 from django.core.serializers import serialize
 import json
-from .Pyramid import Pyramid, pyramid_get_all_solutions
+from .Pyramid import Pyramid, pyramid_get_all_solutions, pyramid_get_partial_config_solutions
 
 # Instance of PyramidSolver for managing 3D pyramid configurations.
 pyramid_solver = Pyramid()
@@ -61,6 +61,26 @@ def pyramid_solutions(request):
     'solutions': solutions,
     'solutions_len': len(solutions)
     })
+
+@csrf_exempt
+def pyramid_partial_config_solutions(request):
+    global solutions
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        
+        piecesPlaced = list(map(int, set(data['piecesPlaced'])))
+        pyramid = data['pyramid']
+        print(piecesPlaced)
+
+        result = [
+            [[int(item) if isinstance(item, str) and item.isdigit() else item for item in sublist] for sublist in group]
+            for group in pyramid
+        ]
+
+        solutions = pyramid_get_partial_config_solutions(result, piecesPlaced)
+        
+    return redirect('pyramid_home')
 
 
 ##########################################################################################

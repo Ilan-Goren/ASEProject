@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
-import { createPyramid, setEmissiveForSelected } from './functions.js';
+import { createPyramid, setEmissiveForSelected } from './solverFunctions.js';
 
 const allPyramids = []
 var selected = null;
@@ -76,8 +76,8 @@ const rect = canvas.getBoundingClientRect();
 function onClickHandler(event) {
 
   // Get mouse position relative to the canvas
-  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
 
@@ -112,6 +112,8 @@ function onClickHandler(event) {
 
 const dataFromBackend = JSON.parse(document.getElementById('pyramid-data').textContent);
 
+console.log(dataFromBackend)
+
 const forestWidth = 300;
 const forestDepth = 300;
 
@@ -145,12 +147,14 @@ dataFromBackend.forEach((solution, index) => {
                                      DISPLAY A PYRAMID
 ******************************************************************************************/
 
-const viewPyramidButton = document.getElementById('view-pyramid-button');
+const viewPyramidButton = document.getElementById('view-pyramid');
 const overlay = document.getElementById('overlay');
-const closeOverlayButton = document.getElementById('close-overlay-button');
+const closeOverlayButton = document.getElementById('close-view');
 const overlayCanvas = document.getElementById('overlay-canvas');
-viewPyramidButton.addEventListener('click', () => showOverlay(selected));
 
+closeOverlayButton.addEventListener('click', closeOverlay)
+
+viewPyramidButton.addEventListener('click', () => showOverlay(selected));
 
 function showOverlay(selected) {
   if (selected){
@@ -163,16 +167,13 @@ function showOverlay(selected) {
     });
     
     let pyramidGroup = selected.parent
-    closeOverlayButton.style.display = 'flex';
-    overlay.style.display = 'flex';
+    overlay.style.display = 'block';
     renderPyramidInOverlay(pyramidGroup);
   }
 }
 
-closeOverlayButton.addEventListener('click', closeOverlay)
 function closeOverlay(){
   overlay.style.display = 'none';
-  closeOverlayButton.style.display = 'none';
 }
 
 function renderPyramidInOverlay(pyramidGroup) {
@@ -201,7 +202,6 @@ function renderPyramidInOverlay(pyramidGroup) {
   controls.enableDamping = true;  // Smooth movement
   controls.dampingFactor = 0.25;
   controls.screenSpacePanning = false;
-  controls.maxPolarAngle = Math.PI / 2;
 
   // Camera setup
   overlayCamera.position.set(0, 10, 40);
