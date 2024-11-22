@@ -6,8 +6,7 @@ import {
   changeOrientationHandler,
   rotateHandler, 
   onClickHandler, 
-  keyboardHandler, 
-  selected, 
+  keyboardHandler,
   createPieces, 
   detectPiecesOnPlane 
 } from './functions.js';

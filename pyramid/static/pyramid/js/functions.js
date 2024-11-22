@@ -19,7 +19,7 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
   // If a piece is clicked, store it in selected variable
   if (intersects.length > 0) {
     if (selected && !selected.parent.halfIn){
-      selected.material.emissive.set(0x000000); // Reset the previous piece highlight
+      selected.material.emissive.set(0x000000);
       selected.material.emissiveIntensity = 0;
     }
     selected = intersects[0].object;
@@ -32,24 +32,17 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
   else {
     // If no piece is clicked, set selected to null
     if (selected) {
-      if (overlapExists){
-        selected.material.emissive.setHex(0xFF0000);
-        selected.material.emissiveIntensity = 10;
-      }
-      else{
-        if (selected.parent.halfIn){
-          selected.material.emissive.set(0x000000); // Reset the previous piece highlight
+      if (!overlapExists && !selected.parent.halfIn){
+          selected.material.emissive.set(0x000000);
           selected.material.emissiveIntensity = 0;
-        }
-
       }
-    }
     selected = null;
     console.log('nothing selected');
     const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0); // Horizontal plane at y = 0
     const point = new THREE.Vector3();
     raycaster.ray.intersectPlane(plane, point);
     console.log('Click position on plane:', point);
+  }
   }
 }
 
@@ -122,7 +115,7 @@ function overlapHandler(selected, piecesGroup){
         selected.material.emissiveIntensity = 0.5;
       }
       else{
-        selected.material.emissive.set(0x000000); // Reset the previous piece highlight
+        selected.material.emissive.set(0x000000);
         selected.material.emissiveIntensity = 0;
       }
     }
@@ -134,9 +127,15 @@ function partiallyInsideBoudariesHandler(selected){
     selected.material.emissive.setHex(0xFF0000);
     selected.material.emissiveIntensity = 20;
   }
-  else {
-    selected.material.emissive.set(0x000000);
-    selected.material.emissiveIntensity = 0;
+  else if (!overlapExists) {
+    if (selected){
+      selected.material.emissive.setHex(0xeeeeee);
+      selected.material.emissiveIntensity = 0.5;
+    }
+    else{
+      selected.material.emissive.set(0x000000);
+      selected.material.emissiveIntensity = 0;
+    }
   }
 }
 
@@ -151,7 +150,9 @@ export function rotateHandler(piecesGroup, isPieceFlat) {
     fixPositionAfterRotation(selected.parent);
 
     insideBoundariesHandler(piecesGroup);
+    
     overlapHandler(selected, piecesGroup);
+    partiallyInsideBoudariesHandler(selected);
 
     console.log(`ROTATIONS: ${THREE.MathUtils.radToDeg(selected.parent.rotation.x)} ${THREE.MathUtils.radToDeg(selected.parent.rotation.y)} ${THREE.MathUtils.radToDeg(selected.parent.rotation.z)}`);
   } else {
@@ -175,6 +176,7 @@ export function changeOrientationHandler(piecesGroup, isPieceFlat) {
     fixPositionAfterRotation(selected.parent)
     insideBoundariesHandler(piecesGroup);
     overlapHandler(selected, piecesGroup);
+    partiallyInsideBoudariesHandler(selected);
     isPieceFlat = !isPieceFlat;
   }
   return isPieceFlat;
@@ -263,6 +265,8 @@ export function createPieces() {
 
     pieceGroup.updateMatrix();
     // Add the piece to piecesGroup
+
+    pieceGroup.halfIn = false;
     piecesGroup.push(pieceGroup);
 
     // Increment the angle for the next piece placement
@@ -415,10 +419,16 @@ function updateStatusMessage(message1='none', message2='none') {
 }
 
 
-export function extractDataFromPlane(input) {
+export function extractDataFromPlane(input, piecesGroup) {
   if (overlapExists){
-    return False
+    return false
   }
+
+  piecesGroup.forEach(piece => {
+    if (piece.halfIn){
+      return false
+    }
+  })
   const piecesAlreadyPlaced = [];
 
   const layers = 5
