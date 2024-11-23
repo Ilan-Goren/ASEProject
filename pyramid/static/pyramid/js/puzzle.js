@@ -5,11 +5,21 @@ import {
   extractDataFromPlane, 
   changeOrientationHandler,
   rotateHandler, 
+  flipHandler, 
   onClickHandler, 
   keyboardHandler,
   createPieces, 
-  detectPiecesOnPlane 
+  insideBoundariesHandler
 } from './functions.js';
+
+import { 
+  updateStatusMessage, 
+} from './helpers.js';
+
+
+/******************************************************************************************
+                                       SETUP
+******************************************************************************************/
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -55,8 +65,9 @@ controls.dampingFactor = 0.25;
 controls.screenSpacePanning = false;
 controls.maxPolarAngle = Math.PI / 2;
 
-// Create a texture loader
-const textureLoader = new THREE.TextureLoader();
+
+// Create large plane for the whole space and load it from an existing texture
+const textureLoader = new THREE.TextureLoader(); // Create a texture loader
 const planeTextureUrl = document.getElementById('texture-url').textContent.trim();
 const planeTexture = textureLoader.load(planeTextureUrl, () => {
   console.log("Texture Loaded");
@@ -72,24 +83,21 @@ const planeMaterialMain = new THREE.MeshStandardMaterial({
   roughness: 10,
 });
 
-const geometry = new THREE.ConeGeometry(15, 20, 4, 1, true);
-
-const material = new THREE.MeshBasicMaterial({
-  color: 0xffffff,
-  wireframe: true,
-});
-
-const wireframePyramid = new THREE.Mesh(geometry, material);
-
-wireframePyramid.rotation.y = Math.PI / 4;
-scene.add(wireframePyramid);
-
-
 const planeMain = new THREE.Mesh(planeGeometryMain, planeMaterialMain);
 planeMain.rotation.x = -Math.PI / 2; // Rotate to lay flat
 scene.add(planeMain);
 
-// Create the small plane
+// Create frame for pyramid for better user experience
+const geometry = new THREE.ConeGeometry(15, 20, 4, 1, true);
+const material = new THREE.MeshBasicMaterial({
+  color: 0xffffff, // color of the frame (white)
+  wireframe: true,
+});
+const wireframePyramid = new THREE.Mesh(geometry, material);
+wireframePyramid.rotation.y = Math.PI / 4; // adjust rotation to the plane
+scene.add(wireframePyramid); // add frame to the scene
+
+// Create the small plane for placing pieces on
 const planeGeometry = new THREE.PlaneGeometry(10, 10);
 const planeMaterial = new THREE.MeshStandardMaterial({
   color: 0x111111,
@@ -153,7 +161,7 @@ piecesGroup.forEach(piece  => {
 //   });
 // })
 
- /******************************************************************************************
+/******************************************************************************************
                                     BUTTONS EVENT LISTENERS
 ******************************************************************************************/
 
@@ -161,48 +169,28 @@ const toggleButton = document.getElementById('tc');
 toggleButton.addEventListener('click', ()=>{
   controls.enabled = !controls.enabled;
 })
-
 const resetButton = document.getElementById('reset-piece');
 resetButton.addEventListener('click', ()=>{
   window.location.reload()
 })
-
 let isPieceFlat = true;
 const changeOr = document.getElementById('change-orientation');
 changeOr.addEventListener('click', () => {
   isPieceFlat = changeOrientationHandler(piecesGroup, isPieceFlat);
 });
-
-
-
 const rotateButton = document.getElementById('rotate');
 rotateButton.addEventListener('click', () => rotateHandler(piecesGroup, isPieceFlat));
+const flipButton = document.getElementById('flip');
+flipButton.addEventListener('click', () => flipHandler(piecesGroup, isPieceFlat));
 
 const getSolutionButton = document.getElementById('get_sol');
 getSolutionButton.addEventListener('click', () => {
-  const piecesOnPlane = detectPiecesOnPlane(piecesGroup);
+  const piecesOnPlane = insideBoundariesHandler(piecesGroup);
 
-  // Extract the data from the plane
-  const [pyramid, piecesPlaced] = extractDataFromPlane(piecesOnPlane, 5);
-
-  fetch("pyramid_partial_config_solutions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ pyramid: pyramid,
-      piecesPlaced, piecesPlaced
-     }) // Convert data to JSON string
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
+  if (!extractDataFromPlane(piecesOnPlane, piecesGroup)){
+    updateStatusMessage('Cannot find a solution, fix overlapping or out of bound pieces');
+  }
 });
-
-
 
 document.addEventListener('keydown', (event) => keyboardHandler(event, camera, piecesGroup));
 
@@ -216,6 +204,10 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+/******************************************************************************************
+                                    RENDER LOOP
+******************************************************************************************/
 
 // Render loop
 const renderLoop = () => {

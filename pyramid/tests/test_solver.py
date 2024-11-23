@@ -138,7 +138,7 @@ class SolverTestCase(TestCase):
         for p in piece.pieces:
             pieces.append(piece.Piece(p))
 
-        i = 0;
+        i = 0
         for rows in s.generate_solutions(pieces, b):
             i += 1
             print(i)

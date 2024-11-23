@@ -1,4 +1,5 @@
 from .solver_functions import solver, pyramid_board, piece
+from .solver_functions.piece import pieces
 
 class Pyramid:
     def __init__(self):
@@ -24,17 +25,18 @@ def pyramid_get_all_solutions(solutions):
         print(i)
 
 
-def pyramid_get_partial_config_solutions(array_board, pieces):
+def pyramid_get_partial_config_solutions(array_board, pieces_placed):
     s = solver.Solver()
     b = pyramid_board.pyramid_board(5)
-    print(array_board)
 
     b.convert_from_3D_array(array_board)
-    print(b)
 
-    piecesPlaced = []
-    for p in pieces:
-        piecesPlaced.append(piece.Piece(p))
+    pieces_to_place = []
 
-    rows = s.solve(piecesPlaced, b)
+    for p in list(pieces.keys()):
+        if p in pieces_placed:
+            continue
+        pieces_to_place.append(piece.Piece(p))
+
+    rows = s.solve(pieces_to_place, b)
     return s.rows_to_array_sol(rows, b)
