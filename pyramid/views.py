@@ -57,6 +57,39 @@ def pyramid_solutions(request):
             process = None
             return redirect('pyramid_generator')
         
+        elif button_pressed == 'partialConfigSolutions':
+            pyramid_json = request.POST.get('pyramid', 0)
+            pieces_placed_json = request.POST.get('piecesPlaced', 0)
+            if not pyramid_json or not pieces_placed_json:
+                return redirect('pyramid_puzzle')
+            
+            pyramid = json.loads(pyramid_json)
+            pieces_placed = json.loads(pieces_placed_json)
+            result = [
+                [[int(item) if isinstance(item, str) and item.isdigit() else item for item in sublist] for sublist in group]
+                for group in pyramid
+            ]
+
+            if not pyramid_json or not pieces_placed_json:
+                return redirect('pyramid_home')
+            
+            pieces_placed = set(int(p) for p in pieces_placed)
+
+            print('######################')
+            print('######################')
+
+            solutions = [pyramid_get_partial_config_solutions(result, pieces_placed)]
+
+            print(solutions)
+            print(len(solutions))
+            print('######################')
+            print('######################')
+            # Render the solutions page
+            return render(request, 'pyramid/solutions.html', {
+                'solutions': solutions,
+                'solutions_len': len(solutions)
+            })
+        
     return render(request, 'pyramid/solutions.html', {
     'solutions': solutions,
     'solutions_len': len(solutions)
@@ -71,7 +104,6 @@ def pyramid_partial_config_solutions(request):
         
         piecesPlaced = list(map(int, set(data['piecesPlaced'])))
         pyramid = data['pyramid']
-        print(piecesPlaced)
 
         result = [
             [[int(item) if isinstance(item, str) and item.isdigit() else item for item in sublist] for sublist in group]
@@ -79,8 +111,20 @@ def pyramid_partial_config_solutions(request):
         ]
 
         solutions = pyramid_get_partial_config_solutions(result, piecesPlaced)
-        
-    return redirect('pyramid_home')
+        print('######################')
+        print('######################')
+        print(solutions)
+        print('######################')
+        print('######################')
+
+        return render(request, 'pyramid/solutions.html', {
+        'solutions': solutions,
+        'solutions_len': len(solutions)
+        })
+    
+    return render(request, 'error_template.html', {'error': 'Invalid request method'})
+
+
 
 
 ##########################################################################################

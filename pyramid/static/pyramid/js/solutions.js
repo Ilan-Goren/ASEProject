@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
-import { createPyramid, setEmissiveForSelected } from './solverFunctions.js';
+import { createPyramid, setEmissiveForSelected } from './functions.js';
+import { setEmissiveForSelected } from './helpers.js';
 
 const allPyramids = []
 var selected = null;

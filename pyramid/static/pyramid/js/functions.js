@@ -1,5 +1,9 @@
 import * as THREE from 'three';
 import { pieces, colorMapping } from './defs.js';
+import { 
+  updateStatusMessage,
+} from './helpers.js';
+
 export var selected = null;
 export var overlapExists = false;
 
@@ -18,7 +22,7 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
 
   // If a piece is clicked, store it in selected variable
   if (intersects.length > 0) {
-    if (selected && !selected.parent.halfIn){
+    if (selected && !selected.parent.partiallyInBounds){
       selected.material.emissive.set(0x000000);
       selected.material.emissiveIntensity = 0;
     }
@@ -32,7 +36,7 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
   else {
     // If no piece is clicked, set selected to null
     if (selected) {
-      if (!overlapExists && !selected.parent.halfIn){
+      if (!overlapExists && !selected.parent.partiallyInBounds){
           selected.material.emissive.set(0x000000);
           selected.material.emissiveIntensity = 0;
       }
@@ -92,50 +96,9 @@ export function keyboardHandler(event, camera, piecesGroup) {
     movingObject.position.z = Math.round(movingObject.position.z);
 
     insideBoundariesHandler(piecesGroup);
-    overlapHandler(selected, piecesGroup);
-    partiallyInsideBoudariesHandler(selected);
+    highlightOverlappingPieces(selected, piecesGroup);
+    highlightPiecesPartiallyInsideBounds(selected);
     
-  }
-}
-
-/* Function to use after movement of a piece to handle overlapping  */
-function overlapHandler(selected, piecesGroup){
-  if (selected){
-    if (checkOverlap(selected.parent, piecesGroup)){
-      overlapExists = true;
-      updateStatusMessage('True', 'none');
-      selected.material.emissive.setHex(0xFF0000);
-      selected.material.emissiveIntensity = 20;
-    }
-    else{
-      updateStatusMessage('False', 'none');
-      overlapExists = false
-      if (selected){
-        selected.material.emissive.setHex(0xeeeeee);
-        selected.material.emissiveIntensity = 0.5;
-      }
-      else{
-        selected.material.emissive.set(0x000000);
-        selected.material.emissiveIntensity = 0;
-      }
-    }
-  }
-}
-
-function partiallyInsideBoudariesHandler(selected){
-  if (selected.parent.halfIn){
-    selected.material.emissive.setHex(0xFF0000);
-    selected.material.emissiveIntensity = 20;
-  }
-  else if (!overlapExists) {
-    if (selected){
-      selected.material.emissive.setHex(0xeeeeee);
-      selected.material.emissiveIntensity = 0.5;
-    }
-    else{
-      selected.material.emissive.set(0x000000);
-      selected.material.emissiveIntensity = 0;
-    }
   }
 }
 
@@ -151,12 +114,36 @@ export function rotateHandler(piecesGroup, isPieceFlat) {
 
     insideBoundariesHandler(piecesGroup);
     
-    overlapHandler(selected, piecesGroup);
-    partiallyInsideBoudariesHandler(selected);
+    highlightOverlappingPieces(selected, piecesGroup);
+    highlightPiecesPartiallyInsideBounds(selected);
+
+    updateStatusMessage('Piece Rotated Successfully!')
 
     console.log(`ROTATIONS: ${THREE.MathUtils.radToDeg(selected.parent.rotation.x)} ${THREE.MathUtils.radToDeg(selected.parent.rotation.y)} ${THREE.MathUtils.radToDeg(selected.parent.rotation.z)}`);
   } else {
-    console.log('No piece selected for rotation');
+    updateStatusMessage('No piece selected!');
+  }
+}
+
+export function flipHandler(piecesGroup, isPieceFlat) {
+  if (selected) {
+    if (isPieceFlat){
+      rotateWithQuaternion(selected.parent, 'y', 180);
+    }
+    else {
+      rotateWithQuaternion(selected.parent, 'y', 180);
+    }
+    fixPositionAfterRotation(selected.parent);
+
+    insideBoundariesHandler(piecesGroup);
+    
+    highlightOverlappingPieces(selected, piecesGroup);
+    highlightPiecesPartiallyInsideBounds(selected);
+
+    updateStatusMessage('Piece Flipped Successfully!')
+
+  } else {
+    updateStatusMessage('No piece selected!');
   }
 }
 
@@ -175,18 +162,61 @@ export function changeOrientationHandler(piecesGroup, isPieceFlat) {
     
     fixPositionAfterRotation(selected.parent)
     insideBoundariesHandler(piecesGroup);
-    overlapHandler(selected, piecesGroup);
-    partiallyInsideBoudariesHandler(selected);
+    highlightOverlappingPieces(selected, piecesGroup);
+    highlightPiecesPartiallyInsideBounds(selected);
     isPieceFlat = !isPieceFlat;
+  }
+  else {
+    updateStatusMessage('No piece selected!');
   }
   return isPieceFlat;
 }
+
+  /* Function to use after movement of a piece to handle overlapping  */
+  export function highlightOverlappingPieces(selected, piecesGroup){
+    if (selected){
+      if (checkOverlap(selected.parent, piecesGroup)){
+        overlapExists = true;
+        updateStatusMessage('Overlap', 'none');
+        selected.material.emissive.setHex(0xFF0000);
+        selected.material.emissiveIntensity = 20;
+      }
+      else{
+        overlapExists = false
+        if (selected){
+          selected.material.emissive.setHex(0xeeeeee);
+          selected.material.emissiveIntensity = 0.5;
+        }
+        else{
+          selected.material.emissive.set(0x000000);
+          selected.material.emissiveIntensity = 0;
+        }
+      }
+    }
+  }
+
+  export function highlightPiecesPartiallyInsideBounds(selected){
+    if (selected.parent.partiallyInBounds){
+      selected.material.emissive.setHex(0xFF0000);
+      selected.material.emissiveIntensity = 20;
+    }
+    else if (!overlapExists) {
+      if (selected){
+        selected.material.emissive.setHex(0xeeeeee);
+        selected.material.emissiveIntensity = 0.5;
+      }
+      else{
+        selected.material.emissive.set(0x000000);
+        selected.material.emissiveIntensity = 0;
+      }
+    }
+  }
 
  /******************************************************************************************
                                      MAIN FUNCTIONS
 ******************************************************************************************/
 
-function checkOverlap(pieceGroup, piecesGroup, tolerance = 1.9) {
+export function checkOverlap(pieceGroup, piecesGroup, tolerance = 1.9) {
   // iterate over all groups in piecesGroup
   for (let i = 0; i < piecesGroup.length; i++) {
     const otherGroup = piecesGroup[i];
@@ -266,7 +296,7 @@ export function createPieces() {
     pieceGroup.updateMatrix();
     // Add the piece to piecesGroup
 
-    pieceGroup.halfIn = false;
+    pieceGroup.partiallyInBounds = false;
     piecesGroup.push(pieceGroup);
 
     // Increment the angle for the next piece placement
@@ -308,47 +338,9 @@ function rotateWithQuaternion(object, axis, angle) {
 }
 
 
-export function detectPiecesOnPlane(piecesGroup) {
-  const piecesInBounds = [];
-
-  // Define the boundaries of the plane
-  const boundaryBox = new THREE.Box3(
-    new THREE.Vector3(-5, -Infinity, -5),
-    new THREE.Vector3(5, Infinity, 5)
-  );
-
-  // looping over each piece
-  piecesGroup.forEach(pieceGroup => {
-    pieceGroup.updateMatrixWorld(true); // Ensure the world matrix is updated
-
-    const groupBoundingBox = new THREE.Box3().setFromObject(pieceGroup);
-
-    if (groupBoundingBox.intersectsBox(boundaryBox)) {
-      let spheresGroup = []
-      // Check if all spheres in the group have positions within the boundary
-      const allInBounds = pieceGroup.children.every(sphere => {
-        const spherePosition = new THREE.Vector3();
-        sphere.getWorldPosition(spherePosition);
-
-        spheresGroup.push({
-          piece: pieceGroup.name,
-          position: spherePosition
-      })
-        return boundaryBox.containsPoint(spherePosition); // Validate position
-      });
-
-      if (allInBounds) {
-        piecesInBounds.push(spheresGroup);
-      }
-    }
-  });
-
-  return piecesInBounds.length > 0 ? piecesInBounds : false; // Return pieces within bounds or false
-}
-
-
 export function insideBoundariesHandler(piecesGroup) {
   const piecesCorrectlyPlaced = [];
+  const piecesInBounds = [];
 
   // looping over each piece
   piecesGroup.forEach(pieceGroup => {
@@ -366,7 +358,7 @@ export function insideBoundariesHandler(piecesGroup) {
     const groupBoundingBox = new THREE.Box3().setFromObject(pieceGroup);
 
     if (groupBoundingBox.intersectsBox(boundaryBox)) {
-
+      let spheresGroup = []
       // Check if all spheres in the group have positions within the boundary
       const allInBounds = pieceGroup.children.every(sphere => {
         const spherePosition = new THREE.Vector3();
@@ -380,12 +372,16 @@ export function insideBoundariesHandler(piecesGroup) {
           new THREE.Vector3(-boundryPoint - 0.1, -Infinity, -boundryPoint - 0.1),
           new THREE.Vector3(boundryPoint + 0.1, Infinity, boundryPoint + 0.1)
         );
+          spheresGroup.push({
+            piece: pieceGroup.name,
+            position: spherePosition
+        })
 
         return boundaryBox.containsPoint(spherePosition); // Validate position
       });
 
       if (allInBounds) {
-        pieceGroup.halfIn = false;
+        pieceGroup.partiallyInBounds = false;
 
         pieceGroup.children.forEach(child => {
           const spherePosition = new THREE.Vector3();
@@ -394,29 +390,21 @@ export function insideBoundariesHandler(piecesGroup) {
         })
 
         piecesCorrectlyPlaced.push(pieceGroup);
+        piecesInBounds.push(spheresGroup);
       }
       else {
-        pieceGroup.halfIn = true;
+        pieceGroup.partiallyInBounds = true;
       }
     }
     else {
-      pieceGroup.halfIn = false;
+      pieceGroup.partiallyInBounds = false;
     }
   });
-  updateStatusMessage(false, piecesCorrectlyPlaced.length);
-
-
-  return piecesCorrectlyPlaced.length > 0 ? piecesCorrectlyPlaced : false;
+  updateStatusMessage('none', piecesCorrectlyPlaced.length);
+  return piecesCorrectlyPlaced.length > 0 ? piecesInBounds : false;
 }
 
-function updateStatusMessage(message1='none', message2='none') {
-  if (message1 != 'none'){
-    document.getElementById('statusMessage1').textContent = `Overlap status: ${message1}`;
-  }
-  if (message2 != 'none'){
-    document.getElementById('statusMessage2').textContent = `Number of pieces within bounds ${message2}`;
-  }
-}
+
 
 
 export function extractDataFromPlane(input, piecesGroup) {
@@ -425,10 +413,11 @@ export function extractDataFromPlane(input, piecesGroup) {
   }
 
   piecesGroup.forEach(piece => {
-    if (piece.halfIn){
+    if (piece.partiallyInBounds){
       return false
     }
   })
+  
   const piecesAlreadyPlaced = [];
 
   const layers = 5
@@ -456,5 +445,39 @@ export function extractDataFromPlane(input, piecesGroup) {
     });
   });
 
-  return [pyramid, piecesAlreadyPlaced];
+  const pyramidJSON = JSON.stringify(pyramid);
+  const piecesPlacedJSON = JSON.stringify(piecesAlreadyPlaced);
+
+  document.getElementById('pyramidField').value = pyramidJSON;
+  document.getElementById('piecesPlacedField').value = piecesPlacedJSON;
+
+  return true;
+  //[pyramid, piecesAlreadyPlaced];
+}
+
+// Function to create a pyramid
+export function createPyramid(data) {
+  const pyramidGroup = new THREE.Group()
+  data.forEach((layer, layerIndex) => {
+      layer.forEach((row, rowIndex) => {
+          row.forEach((cellValue, colIndex) => {
+              if (cellValue > 0) {
+                  const color = colorMapping[cellValue.toString()];
+                  const material = new THREE.MeshStandardMaterial({ color });
+                  const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
+                  const sphere = new THREE.Mesh(sphereGeometry, material);
+
+                  const x = colIndex * 2 - row.length;
+                  const y = layerIndex * 2;
+                  const z = rowIndex * 2 - layer[0].length;
+
+                  sphere.position.set(x, y, z);
+
+                  // Add the sphere to the pyramid group
+                  pyramidGroup.add(sphere);
+              }
+          });
+      });
+  });
+  return pyramidGroup
 }
