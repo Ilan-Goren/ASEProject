@@ -7,7 +7,7 @@ import {
 export var selected = null;
 export var overlapExists = false;
 
- /******************************************************************************************
+/******************************************************************************************
                                   HANDLER FUNCTIONS
 ******************************************************************************************/
 
@@ -452,7 +452,6 @@ export function extractDataFromPlane(input, piecesGroup) {
   document.getElementById('piecesPlacedField').value = piecesPlacedJSON;
 
   return true;
-  //[pyramid, piecesAlreadyPlaced];
 }
 
 // Function to create a pyramid
@@ -480,4 +479,21 @@ export function createPyramid(data) {
       });
   });
   return pyramidGroup
+}
+
+// Function to adjust spacing between layers in a pyramid group
+export function adjustPyramidSpacing(pyramidGroup, orientation = 'vertical') {
+  pyramidGroup.children.forEach((sphere) => {
+      const { x, y, z } = sphere.position;
+      if (orientation === 'vertical') {
+          sphere.position.set(x, y + Math.floor(y / 2) * 2, z);
+      } else if (orientation === 'horizontal') {
+        const diagonalLayer = Math.floor((x + z));
+        sphere.position.set(
+            x / 4 + diagonalLayer * 4,
+            y ,
+            z + diagonalLayer);
+        }
+  });
+  return pyramidGroup.clone()
 }

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
-import { createPyramid, setEmissiveForSelected } from './functions.js';
+import { createPyramid, adjustPyramidSpacing } from './functions.js';
 import { setEmissiveForSelected } from './helpers.js';
 
 const allPyramids = []
@@ -11,10 +11,10 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xefefef);
 
 // Ambient Light setup
-const ambientLight = new THREE.AmbientLight(0xefefef, 1.5);
+const ambientLight = new THREE.AmbientLight(0x404040, 5);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.position.set(5, 5, 5).normalize();
 scene.add(directionalLight);
 
@@ -48,9 +48,7 @@ const textureLoader = new THREE.TextureLoader();
 
 const planeTextureUrl = document.getElementById('texture-url').textContent.trim();
 
-const planeTexture = textureLoader.load(planeTextureUrl, () => {
-  // console.log("Texture Loaded");  
-});
+const planeTexture = textureLoader.load(planeTextureUrl);
 
 planeTexture.wrapS = THREE.RepeatWrapping;
 planeTexture.wrapT = THREE.RepeatWrapping;
@@ -67,7 +65,7 @@ const planeMain = new THREE.Mesh(planeGeometryMain, planeMaterialMain);
 planeMain.rotation.x = -Math.PI / 2; // Rotate to lay flat
 scene.add(planeMain);
 
- /******************************************************************************************
+/******************************************************************************************
                                      SELECTING PYRAMIDS
 ******************************************************************************************/
 
@@ -113,12 +111,8 @@ function onClickHandler(event) {
 
 const dataFromBackend = JSON.parse(document.getElementById('pyramid-data').textContent);
 
-console.log(dataFromBackend)
-
-const forestWidth = 300;
-const forestDepth = 300;
-
-const placedPositions = [];
+const forestWidth = dataFromBackend.length / 2;
+const forestDepth = dataFromBackend.length / 2;
 
 const numPyramids = dataFromBackend.length;
 const numColumns = Math.ceil(Math.sqrt(numPyramids));
@@ -127,34 +121,70 @@ const numRows = Math.ceil(numPyramids / numColumns);
 const spacingX = forestWidth / numColumns;
 const spacingZ = forestDepth / numRows;
 
+const loadingRadius = 150;
+const loadedPyramids = new Map();
 
-dataFromBackend.forEach((solution, index) => {
-    const pyramidGroup = createPyramid(solution);
-    allPyramids.push(pyramidGroup);
+function updatePyramids() {
+  const cameraFrustum = new THREE.Frustum();
+  const cameraMatrix = new THREE.Matrix4();
+  
+  cameraMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+  cameraFrustum.setFromProjectionMatrix(cameraMatrix);
 
-    const columnIndex = index % numColumns;
-    const rowIndex = Math.floor(index / numColumns);
+  const cameraPosition = camera.position;
 
-    const x = (columnIndex * spacingX) - (forestWidth / 2);
-    const z = (rowIndex * spacingZ) - (forestDepth / 2);
+  dataFromBackend.forEach((solution, index) => {
+      const columnIndex = index % numColumns;
+      const rowIndex = Math.floor(index / numColumns);
 
-    placedPositions.push({ x, z });
+      const x = (columnIndex * spacingX) - (forestWidth / 2);
+      const z = (rowIndex * spacingZ) - (forestDepth / 2);
+      const pyramidPosition = new THREE.Vector3(x, 1, z);
 
-    pyramidGroup.position.set(x, 1, z);
-    scene.add(pyramidGroup);
-});
+      const distance = pyramidPosition.distanceTo(cameraPosition);
+
+      if (distance <= loadingRadius) {
+          if (cameraFrustum.containsPoint(pyramidPosition)) {
+              if (!loadedPyramids.has(index)) {
+                  const pyramidGroup = createPyramid(solution);
+                  allPyramids.push(pyramidGroup);
+                  pyramidGroup.position.set(x, 1, z);
+                  scene.add(pyramidGroup);
+                  loadedPyramids.set(index, pyramidGroup);
+              }
+          }
+      }
+
+      if (distance > loadingRadius || !cameraFrustum.containsPoint(pyramidPosition)) {
+          if (loadedPyramids.has(index)) {
+              const pyramidToRemove = loadedPyramids.get(index);
+              scene.remove(pyramidToRemove);
+              loadedPyramids.delete(index);
+          }
+      }
+  });
+}
 
  /******************************************************************************************
                                      DISPLAY A PYRAMID
 ******************************************************************************************/
+var view = 'n';
 
 const viewPyramidButton = document.getElementById('view-pyramid');
+// Horizontal view
+const hbutton = document.getElementById('h-view');
+// Vertical view
+const vbutton = document.getElementById('v-view');
+// Normal view
+const nbutton = document.getElementById('n-view');
+// Overlay Section
 const overlay = document.getElementById('overlay');
+// Close Overlay button
 const closeOverlayButton = document.getElementById('close-view');
+// Overlay Canvas
 const overlayCanvas = document.getElementById('overlay-canvas');
 
 closeOverlayButton.addEventListener('click', closeOverlay)
-
 viewPyramidButton.addEventListener('click', () => showOverlay(selected));
 
 function showOverlay(selected) {
@@ -163,7 +193,6 @@ function showOverlay(selected) {
       if (child instanceof THREE.Mesh) {
         child.material.emissive.set(0x000000);
         child.material.emissiveIntensity = 0;
-
       }
     });
     
@@ -209,8 +238,43 @@ function renderPyramidInOverlay(pyramidGroup) {
   overlayCamera.lookAt(0, 0, 0);
 
   // Clone the pyramid group and add it to the scene
-  const pyramidClone = pyramidGroup.clone();
+  let pyramidClone = pyramidGroup.clone();
   pyramidClone.position.set(0, 0, 0);
+
+
+  hbutton.addEventListener('click', () => {
+    if (view != 'n'){
+      overlayScene.remove(pyramidClone);
+      pyramidClone = pyramidGroup.clone();
+      overlayScene.add(pyramidClone);
+    }
+    adjustPyramidSpacing(pyramidClone, 'horizontal');
+    nbutton.style.display = 'block';
+    view = 'h';
+  })
+
+  nbutton.addEventListener('click', () => {
+    // remove the altered view from the scene
+    overlayScene.remove(pyramidClone)
+    // set the pyramid clone to the original with spheres in positions
+    pyramidClone = pyramidGroup.clone();
+    // add the normal pyramid to the scene
+    overlayScene.add(pyramidClone);
+    view = 'n'; // set the view variable to 'n' (normal)
+    nbutton.style.display = 'none'; // hide the button
+  })
+  
+  vbutton.addEventListener('click', () => {
+    if (view != 'n'){
+      overlayScene.remove(pyramidClone);
+      pyramidClone = pyramidGroup.clone();
+      overlayScene.add(pyramidClone);
+    }
+    adjustPyramidSpacing(pyramidClone, 'vertical');
+    nbutton.style.display = 'block';
+    view = 'v';
+  })
+
   overlayScene.add(pyramidClone);
 
   // Render the pyramid
@@ -219,7 +283,6 @@ function renderPyramidInOverlay(pyramidGroup) {
     controls.update();
     overlayRenderer.render(overlayScene, overlayCamera);
   }
-
   animate();
 }
 
@@ -241,6 +304,7 @@ window.addEventListener('resize', () => {
 // Render loop
 const renderLoop = () => {
   controls.update();
+  updatePyramids();
   renderer.render(scene, camera);
   requestAnimationFrame(renderLoop);
 };
