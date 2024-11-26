@@ -4,12 +4,10 @@ function showLoading() {
 }
 
 function goBack() {
-    // Redirect to the previous page and reload as a GET request
-    // This ensures loading overlay do not stay.
-    if (document.referrer) {
-        window.location.href = document.referrer;
-    } else {
-        // Fallback if no referrer exists
-        window.history.back();
-    }
+    // get the current URL
+    const currentUrl = window.location.href;
+    // trim the last part
+    const trimmedUrl = currentUrl.replace(/\/[^\/]*\/?$/, '/');
+    // go to the trimmed url
+    window.location.href = trimmedUrl;
 }

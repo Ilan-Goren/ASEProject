@@ -1,15 +1,6 @@
 from .solver_functions import solver, pyramid_board, piece
 from .solver_functions.piece import pieces
 
-class Pyramid:
-    def __init__(self):
-        pass
-    def solve_partial_config(self, pyramid):
-        pass
-    def generate_all_solutions(self):
-        pass
-
-
 def pyramid_get_all_solutions(solutions):
     s = solver.Solver()
     b = pyramid_board.pyramid_board(5)
@@ -28,6 +19,7 @@ def pyramid_get_all_solutions(solutions):
 def pyramid_get_partial_config_solutions(array_board, pieces_placed):
     s = solver.Solver()
     b = pyramid_board.pyramid_board(5)
+    solutions = []
 
     b.convert_from_3D_array(array_board)
 
@@ -38,5 +30,6 @@ def pyramid_get_partial_config_solutions(array_board, pieces_placed):
             continue
         pieces_to_place.append(piece.Piece(p))
 
-    rows = s.solve(pieces_to_place, b)
-    return s.rows_to_array_sol(rows, b)
+    for rows in s.generate_solutions(pieces_to_place, b):
+        solutions.append(s.rows_to_array_sol(rows, b))
+    return solutions

@@ -5,10 +5,7 @@ from django.contrib import messages
 from multiprocessing import Process, Manager
 from django.core.serializers import serialize
 import json
-from .Pyramid import Pyramid, pyramid_get_all_solutions, pyramid_get_partial_config_solutions
-
-# Instance of PyramidSolver for managing 3D pyramid configurations.
-pyramid_solver = Pyramid()
+from .Pyramid import pyramid_get_all_solutions, pyramid_get_partial_config_solutions
 
 # Manager for multiprocessing to store shared data
 manager = Manager()
@@ -75,57 +72,17 @@ def pyramid_solutions(request):
             
             pieces_placed = set(int(p) for p in pieces_placed)
 
-            print('######################')
-            print('######################')
-
-            solutions = [pyramid_get_partial_config_solutions(result, pieces_placed)]
-
-            print(solutions)
-            print(len(solutions))
-            print('######################')
-            print('######################')
+            results = pyramid_get_partial_config_solutions(result, pieces_placed)
+            if not solutions:
+                return redirect('pyramid_puzzle')
+            solutions = results
             # Render the solutions page
             return render(request, 'pyramid/solutions.html', {
                 'solutions': solutions,
                 'solutions_len': len(solutions)
             })
         
-    return render(request, 'pyramid/solutions.html', {
-    'solutions': solutions,
-    'solutions_len': len(solutions)
-    })
-
-@csrf_exempt
-def pyramid_partial_config_solutions(request):
-    global solutions
-
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        
-        piecesPlaced = list(map(int, set(data['piecesPlaced'])))
-        pyramid = data['pyramid']
-
-        result = [
-            [[int(item) if isinstance(item, str) and item.isdigit() else item for item in sublist] for sublist in group]
-            for group in pyramid
-        ]
-
-        solutions = pyramid_get_partial_config_solutions(result, piecesPlaced)
-        print('######################')
-        print('######################')
-        print(solutions)
-        print('######################')
-        print('######################')
-
-        return render(request, 'pyramid/solutions.html', {
-        'solutions': solutions,
-        'solutions_len': len(solutions)
-        })
-    
-    return render(request, 'error_template.html', {'error': 'Invalid request method'})
-
-
-
+    return redirect('polysphere_home')
 
 ##########################################################################################
 #                           SOLUTIONS GENERATOR FUNCTIONS                                #
