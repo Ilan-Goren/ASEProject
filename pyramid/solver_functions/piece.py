@@ -32,6 +32,8 @@ class Piece:
     def __init__(self, piece_id, custom_shape=None):
         self.id = piece_id
         if custom_shape is None:
+            if(pieces.get(piece_id)) is None:
+                raise KeyError("Piece id not found")
             self.transformations = build_transformations(pieces.get(piece_id))
         else:
             self.transformations = build_transformations(custom_shape)
