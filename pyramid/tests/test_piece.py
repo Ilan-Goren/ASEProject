@@ -1,74 +1,57 @@
 from django.test import TestCase
-from ..pyramid_solver import PyramidSolver
+from pyramid.solver_functions.piece import Piece, build_transformations, rotate_z, rotate_xy, reflect, normalize_transformation, visualise_piece
 
-class PieceTestCase(TestCase):
 
+
+class TestPieceFunctions(TestCase):
     def setUp(self):
-        """
-        Set up the test case with a PyramidSolver instance and an initial board state.
-        """
-        self.solver = PyramidSolver()
-        
-    def tearDown(self):
-        """
-        Clean up after each test case.
-        """
-        self.solver = None
+        self.piece = Piece(1)
+        self.custom_shape = [(0, 0, 0), (1, 1, 1)]
 
-    def test_creating_piece(self):
-        """
-        Test that a Piece object is created with the correct transformations.
-        """
-        piece_id = 1
-        level, row, col = 0, 0, 0
-        result = self.solver.place_piece(piece_id, level, row, col)
-        self.assertTrue(result)
-        self.assertEqual(self.solver.board[level][row][col], piece_id)
+    def test_build_transformations(self):
+        transformations = build_transformations(self.piece.transformations[0])
+        self.assertIsNotNone(transformations)
+        self.assertTrue(len(transformations) > 0)
+
+    def test_rotate_z(self):
+        rotated_shapes = rotate_z(self.custom_shape)
+        self.assertIsNotNone(rotated_shapes)
+        self.assertEqual(len(rotated_shapes), 4)
+        for shape in rotated_shapes:
+            self.assertNotEqual(self.custom_shape, shape)
+
+    def test_rotate_xy(self):
+        rotated_shape = rotate_xy((1, 2, 3))
+        self.assertEqual(rotated_shape, (2, -1, 3))
+
+    def test_reflect(self):
+        reflected_shape = reflect((1, 2, 3))
+        self.assertEqual(reflected_shape, (-1, 2, 3))
+
+    def test_normalize_transformation(self):
+        normalized_shape = normalize_transformation(self.custom_shape)
+        self.assertIsNotNone(normalized_shape)
+        self.assertEqual(normalized_shape, [(0, 0, 0), (1, 1, 1)])
 
     def test_visualise_piece(self):
-        """
-        Test that the visualise_piece function runs without errors for all pieces.
-        """
-        for piece in self.solver.pieces_left:
-            try:
-                self.solver.visualise_piece(piece)
-            except Exception as e:
-                self.fail(f"visualise_piece raised an exception: {e}")
+        try:
+            visualise_piece(self.custom_shape)
+        except Exception as e:
+            self.fail(f"visualise_piece raised an exception {e}")
 
-    def test_place_piece(self):
-        """
-        Test that a piece is placed correctly on the board.
-        """
-        self.assertTrue(self.solver.place_piece(1, 0, 0, 0))
-        self.assertEqual(self.solver.board[0][0][0], 1)
+    def test_empty_visualise_piece(self):
+        try:
+            visualise_piece([])
+        except Exception as e:
+            self.fail(f"visualise_piece raised an exception {e}")
 
-    def test_place_piece_invalid(self):
-        """
-        Test that invalid piece placements are handled correctly.
-        """
-        self.assertFalse(self.solver.place_piece(1, 5, 0, 0))  # Invalid level
-        self.assertFalse(self.solver.place_piece(1, 0, 5, 0))  # Invalid row
-        self.assertFalse(self.solver.place_piece(1, 0, 0, 5))  # Invalid column
+    def test_invalid_piece_id(self):
+        with self.assertRaises(KeyError):
+            Piece(99)
 
-    def test_remove_piece(self):
-        """
-        Test that a piece is removed correctly from the board.
-        """
-        self.solver.place_piece(1, 0, 0, 0)
-        self.solver.remove_piece(1)
-        self.assertIsNone(self.solver.board[0][0][0])
-
-    def test_remove_piece_invalid(self):
-        """
-        Test that invalid piece removals are handled correctly.
-        """
-        self.assertFalse(self.solver.remove_piece(99))  # Non-existent piece
-
-    def test_is_board_empty(self):
-        """
-        Test that the board is correctly identified as empty or not.
-        """
-        self.assertTrue(self.solver.is_board_empty())
-        self.solver.place_piece(1, 0, 0, 0)
-        self.assertFalse(self.solver.is_board_empty())
+    def test_custom_shape_piece(self):
+        piece = Piece(99, self.custom_shape)
+        self.assertEqual(piece.id, 99)
+        self.assertIsNotNone(piece.transformations)
+        self.assertIn(self.custom_shape, piece.transformations)
 
