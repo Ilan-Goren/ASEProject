@@ -1,4 +1,4 @@
-from .solver_functions import solver, pyramid_board, piece
+from .solver_functions.solver import Solver, pyramid_board, piece
 
 class Pyramid:
     def __init__(self):
@@ -10,7 +10,7 @@ class Pyramid:
 
 
 def pyramid_get_all_solutions(solutions):
-    s = solver.Solver()
+    s = Solver()
     b = pyramid_board.pyramid_board(5)
 
     pieces = []

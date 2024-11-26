@@ -1,5 +1,5 @@
-import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt  # Add this import
 
 #hard-coded pieces for 3D board
 '''
@@ -32,6 +32,8 @@ class Piece:
     def __init__(self, piece_id, custom_shape=None):
         self.id = piece_id
         if custom_shape is None:
+            if(pieces.get(piece_id)) is None:
+                raise KeyError("Piece id not found")
             self.transformations = build_transformations(pieces.get(piece_id))
         else:
             self.transformations = build_transformations(custom_shape)
@@ -107,6 +109,7 @@ def visualise_piece(coords):
     # Set fixed limits for x and y axes
     ax.set_xlim(0, 6)
     ax.set_ylim(0, 6)
+    ax.set_zlim(0, 6)  # Add this line to set z-axis limits
 
     # Set labels for clarity
     ax.set_xlabel('X')
