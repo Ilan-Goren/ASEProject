@@ -4,6 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="{% static '/js/main.js' %}" defer></script>
     <link href="{% static '/pyramid/css/styles.css' %}" rel="stylesheet">
     <title> Pyramid Puzzle </title>
   </head>
@@ -35,7 +36,7 @@
       {% csrf_token %}
       <input type="hidden" id="pyramidField" name="pyramid" value="">
       <input type="hidden" id="piecesPlacedField" name="piecesPlaced" value="">
-      <button name="button" type="submit" value="partialConfigSolutions" id="get_sol">Get Solution</button>
+      <button name="button" type="submit" value="partialConfigSolutions" id="get_sol" onsubmit="showLoading()">Get Solution</button>
     </form>
 
     

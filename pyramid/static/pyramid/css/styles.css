@@ -15,7 +15,7 @@ body {
   color: white;
   font-size: 18px; 
   width: auto;
-  height: 75px;
+  height: 120px;
   display: flex; 
   flex-direction: column; 
   justify-content: space-between;
