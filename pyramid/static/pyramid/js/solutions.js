@@ -111,17 +111,18 @@ function onClickHandler(event) {
 
 const dataFromBackend = JSON.parse(document.getElementById('pyramid-data').textContent);
 
-const forestWidth = dataFromBackend.length / 2;
-const forestDepth = dataFromBackend.length / 2;
-
 const numPyramids = dataFromBackend.length;
+
+const forestWidth = Math.max(dataFromBackend.length / 2, 150);
+const forestDepth = Math.max(dataFromBackend.length / 2, 150);
+
 const numColumns = Math.ceil(Math.sqrt(numPyramids));
 const numRows = Math.ceil(numPyramids / numColumns);
 
 const spacingX = forestWidth / numColumns;
 const spacingZ = forestDepth / numRows;
 
-const loadingRadius = 150;
+var loadingRadius = 150;
 const loadedPyramids = new Map();
 
 function updatePyramids() {
@@ -163,6 +164,21 @@ function updatePyramids() {
           }
       }
   });
+}
+
+const changeRadiusButton = document.getElementById('applyChanges');
+changeRadiusButton.addEventListener('click', changeRadius);
+
+function changeRadius() {
+  const inputElement = document.getElementById('radiusInput');
+  const inputValue = inputElement.value;
+
+  if (1000 >= inputValue && inputValue >= 50) {
+    loadingRadius = inputValue;
+
+  } else {
+    alert('Please choose a reasonable radius.');
+  }
 }
 
  /******************************************************************************************

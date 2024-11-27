@@ -408,12 +408,19 @@ export function insideBoundariesHandler(piecesGroup) {
 
 
 export function extractDataFromPlane(input, piecesGroup) {
+  if (!input){
+    alert('Add pieces to the pyramid to get solutions.')
+    return false
+  }
+
   if (overlapExists){
+    alert('Overlapping exists, fix it first to get accurate solutions.')
     return false
   }
 
   piecesGroup.forEach(piece => {
     if (piece.partiallyInBounds){
+      alert('One or more pieces are placed incorrectly.')
       return false
     }
   })

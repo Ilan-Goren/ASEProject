@@ -15,10 +15,17 @@
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
       }
     }
-</script>
+  </script>
 
   <body>
-<div id="texture-url" style="display: none;">{% static 'pyramid/js/snow_texture.webp' %}</div>
+    <div id="statusSection">
+      Solutions: {{ solutions_len }}
+      <div id="statusMessage">Specify the radius of sight:</div> 
+      <input id="radiusInput" type="number" placeholder="Enter radius">
+      <button id="applyChanges">Apply</button>
+    </div>
+
+    <div id="texture-url" style="display: none;">{% static 'pyramid/js/snow_texture.webp' %}</div>
 
 <script id="pyramid-data" type="application/json">
     {{ solutions|safe }}

@@ -73,7 +73,7 @@ def pyramid_solutions(request):
             pieces_placed = set(int(p) for p in pieces_placed)
 
             results = pyramid_get_partial_config_solutions(result, pieces_placed)
-            if not solutions:
+            if not results:
                 return redirect('pyramid_puzzle')
             solutions = results
             # Render the solutions page
@@ -82,7 +82,7 @@ def pyramid_solutions(request):
                 'solutions_len': len(solutions)
             })
         
-    return redirect('polysphere_home')
+    return redirect('pyramid_home')
 
 ##########################################################################################
 #                           SOLUTIONS GENERATOR FUNCTIONS                                #
