@@ -1,7 +1,5 @@
 import time
 
-from numpy.f2py.auxfuncs import throw_error
-
 from . import algorithm_x_functions, piece, pyramid_board
 
 class Solver:
@@ -72,7 +70,7 @@ class Solver:
         for i, p in enumerate(remaining_pieces):
             for placed_id in placed_pieces.keys():
                 if placed_id == p.id:
-                    throw_error("Placed pieces cannot have same ID as remaining pieces")
+                    raise Exception("Placed pieces cannot have same ID as remaining pieces")
             # Keep track of original id's compared to enumerated ones
             self.id_conversions[i + 1] = p.id
             p.id = i + 1
