@@ -1,0 +1,26 @@
+Pyramid JavaScript Functions
+============================
+
+.. js:autofunction:: resetButton
+   :noindex:
+
+.. js:autofunction:: changeOr
+   :noindex:
+
+.. js:autofunction:: rotateButton
+   :noindex:
+
+.. js:autofunction:: flipButton
+   :noindex:
+
+.. js:autofunction:: getSolutionButton
+   :noindex:
+
+.. js:autofunction:: keyboardHandler
+   :noindex:
+
+.. js:autofunction:: onClickHandler
+   :noindex:
+
+.. js:autofunction:: resize
+   :noindex:

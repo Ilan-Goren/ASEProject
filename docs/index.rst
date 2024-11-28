@@ -7,5 +7,5 @@ ASEProject documentation
    :maxdepth: 2
    :caption: Content:
 
-   modules/views
    modules/polysphere
+   modules/pyramid

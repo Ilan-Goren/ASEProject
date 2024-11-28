@@ -9,7 +9,7 @@
     <title> Pyramid Puzzle </title>
   </head>
 
-  <script type="importmap">
+<script type="importmap">
     {
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
@@ -20,8 +20,6 @@
 
 <div id="texture-url" style="display: none;">{% static 'pyramid/js/snow_texture.webp' %}</div>
 
-
-
 <body>
   <!-- HTML -->
   <div id="statusSection">
@@ -30,13 +28,11 @@
   </div>
 
   <div class="button-container">
-    <button id="tc">Toggle Camera Control</button>
-
     <form action="{% url 'pyramid_solutions' %}" method="POST">
       {% csrf_token %}
       <input type="hidden" id="pyramidField" name="pyramid" value="">
       <input type="hidden" id="piecesPlacedField" name="piecesPlaced" value="">
-      <button name="button" type="submit" value="partialConfigSolutions" id="get_sol" onclick="showLoading()">Get Solution</button>
+      <button name="button" type="submit" value="partialConfigSolutions" id="get_sol" onclick="showLoading()">Solve</button>
     </form>
 
     

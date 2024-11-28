@@ -20,7 +20,10 @@ release = 'v2.0'
 
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx_js'
 ]
+
+js_source_path = "../pyramid/static/pyramid/js"
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
