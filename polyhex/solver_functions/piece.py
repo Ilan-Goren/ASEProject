@@ -38,8 +38,9 @@ class Piece:
 def build_transformations(cells):
 
     transformations = []
+    y = 0
     for i in range(2):
-        for i in range(6):
+        for x in range(6):
             cells = sorted(normalize_transformation([rotate_xy(c) for c in cells]))
             transformations.append(cells)
             leaning_cells = sorted(normalize_transformation([lean(c) for c in cells]))
@@ -111,6 +112,7 @@ def visualise_piece(coords):
     # Set fixed limits for x and y axes
     ax.set_xlim(0, 6)
     ax.set_ylim(0, 6)
+    ax.set_zlim(0, 6)
 
     # Set labels for clarity
     ax.set_xlabel('X')

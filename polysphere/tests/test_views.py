@@ -45,7 +45,7 @@ class ViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'polysphere/puzzle.html')
 
         self.assertEqual(response.context['pieces'], polysphere.pieces_left)
-        self.assertEqual(response.context['board'], polysphere.board)
+        self.assertEqual(response.context['board'], polysphere.Board)
         self.assertEqual(response.context['positions'], polysphere.piece_positions)
         self.assertEqual(response.context['all_solutions_partial_config'], polysphere.all_solutions_partial_config)
         self.assertEqual(response.context['sol_length'], len(polysphere.all_solutions_partial_config))
@@ -58,7 +58,7 @@ class ViewsTestCase(TestCase):
         '''
         test reset button for puzzle page
         '''
-        polysphere.board = ['a', 'b', 'c']
+        polysphere.Board = ['a', 'b', 'c']
         polysphere.piece_positions = {'A': [(2,3)]}
         polysphere.all_solutions_partial_config = ['board1', 'board2', 'board3']
 

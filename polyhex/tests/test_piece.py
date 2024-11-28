@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from ..solver_functions import piece
 
-class HexPieceTestCase(TestCase):
+class PieceTestCase(TestCase):
 
     def test_visulaise_piece(self):
         for p in piece.pieces.values():
@@ -52,7 +52,6 @@ class HexPieceTestCase(TestCase):
         cells = [(0, 0, 0), (0, 1, 0), (1, 0, 0), (1, 1, 0), (2, 0, 0)]
         transformations = piece.build_transformations(cells)
         for t in transformations:
-            print(t)
             piece.visualise_piece(t)
 
     def test_hex_piece_constructor(self):
