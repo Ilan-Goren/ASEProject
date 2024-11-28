@@ -4,4 +4,137 @@
 
 
 {% block main %}
+<style>
+    .container {
+        display: flex;
+        justify-content: center; /* Center the layers horizontally */
+
+    }
+    table {
+        border-collapse: collapse;
+        margin: 20px auto;
+    }
+    td {
+        width: 30px;
+        height: 30px;
+        border: 1px solid black;
+        text-align: center;
+    }
+    .pyramid {
+        margin-top: 20px;
+    }
+    .pyramid tr {
+        display: flex;
+        justify-content: center; /* Centers the cells horizontally */
+    }
+</style>
+
+<h1>Layers</h1>
+<div class="container">
+    <!-- Layer 1 -->
+    <table class="pyramid">
+        <caption style="text-align: center;">Layer 1</caption>
+        <tbody>
+            <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Layer 2 -->
+    <table class="pyramid">
+        <caption style="text-align: center;">Layer 2</caption>
+        <tbody>
+            <tr>
+                <td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Layer 3 -->
+    <table class="pyramid">
+        <caption style="text-align: center;">Layer 3</caption>
+        <tbody>
+            <tr>
+                <td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Layer 4 -->
+    <table class="pyramid">
+        <caption style="text-align: center;">Layer 4</caption>
+        <tbody>
+            <tr>
+                <td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Layer 5 -->
+    <table class="pyramid">
+        <caption style="text-align: center;">Layer 5</caption>
+        <tbody>
+            <tr>
+                <td></td><td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Layer 6 -->
+    <table class="pyramid">
+        <caption style="text-align: center;">Layer 6</caption>
+        <tbody>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 {% endblock %}

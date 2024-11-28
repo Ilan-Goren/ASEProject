@@ -3,7 +3,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib import messages
 from multiprocessing import Process, Manager
-from django.core.serializers import serialize
 import json
 from .Pyramid import pyramid_get_all_solutions, pyramid_get_partial_config_solutions
 

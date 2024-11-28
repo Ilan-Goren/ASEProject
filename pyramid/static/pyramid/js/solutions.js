@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
-import { createPyramid, adjustPyramidSpacing } from './functions.js';
+import { createPyramid, adjustPyramidSpacing, removeAllGroupsFromScene } from './functions.js';
 import { setEmissiveForSelected } from './helpers.js';
 
 const allPyramids = []
@@ -113,8 +113,8 @@ const dataFromBackend = JSON.parse(document.getElementById('pyramid-data').textC
 
 const numPyramids = dataFromBackend.length;
 
-const forestWidth = Math.max(dataFromBackend.length / 2, 150);
-const forestDepth = Math.max(dataFromBackend.length / 2, 150);
+const forestWidth = Math.max(dataFromBackend.length, 150);
+const forestDepth = Math.max(dataFromBackend.length, 150);
 
 const numColumns = Math.ceil(Math.sqrt(numPyramids));
 const numRows = Math.ceil(numPyramids / numColumns);
@@ -122,7 +122,7 @@ const numRows = Math.ceil(numPyramids / numColumns);
 const spacingX = forestWidth / numColumns;
 const spacingZ = forestDepth / numRows;
 
-var loadingRadius = 150;
+var loadingRadius = 100;
 const loadedPyramids = new Map();
 
 function updatePyramids() {
@@ -184,7 +184,34 @@ function changeRadius() {
  /******************************************************************************************
                                      DISPLAY A PYRAMID
 ******************************************************************************************/
-var view = 'n';
+var overlayOpened = false;
+
+function buttonHandler (camera, scene, pyramidClone, pyramidGroup, view){
+  var pyramidClone = pyramidGroup.clone();
+  
+  switch (view){
+    case 'h':
+      removeAllGroupsFromScene(scene);
+      adjustPyramidSpacing(pyramidClone, 'horizontal');
+      scene.add(pyramidClone)
+      view = 'h';
+      break;
+    case 'v':
+      removeAllGroupsFromScene(scene);
+      adjustPyramidSpacing(pyramidClone, 'vertical');
+      scene.add(pyramidClone)
+      view = 'h';
+      break;
+    case 'n':
+      removeAllGroupsFromScene(scene);
+      scene.add(pyramidClone);
+      view = 'n';
+      break;
+  }
+    
+    pyramidClone.position.set(0, 0, 0);
+    camera.lookAt(0, 0, 0);
+}
 
 const viewPyramidButton = document.getElementById('view-pyramid');
 // Horizontal view
@@ -214,12 +241,14 @@ function showOverlay(selected) {
     
     let pyramidGroup = selected.parent
     overlay.style.display = 'block';
+    overlayOpened = true;
     renderPyramidInOverlay(pyramidGroup);
   }
 }
 
 function closeOverlay(){
   overlay.style.display = 'none';
+  overlayOpened = false;
 }
 
 function renderPyramidInOverlay(pyramidGroup) {
@@ -256,50 +285,29 @@ function renderPyramidInOverlay(pyramidGroup) {
   // Clone the pyramid group and add it to the scene
   let pyramidClone = pyramidGroup.clone();
   pyramidClone.position.set(0, 0, 0);
+  overlayScene.add(pyramidClone);
 
 
   hbutton.addEventListener('click', () => {
-    if (view != 'n'){
-      overlayScene.remove(pyramidClone);
-      pyramidClone = pyramidGroup.clone();
-      overlayScene.add(pyramidClone);
-    }
-    adjustPyramidSpacing(pyramidClone, 'horizontal');
-    nbutton.style.display = 'block';
-    view = 'h';
-  })
+    buttonHandler(overlayCamera, overlayScene, pyramidClone, pyramidGroup, 'h')
+})
 
   nbutton.addEventListener('click', () => {
-    // remove the altered view from the scene
-    overlayScene.remove(pyramidClone)
-    // set the pyramid clone to the original with spheres in positions
-    pyramidClone = pyramidGroup.clone();
-    // add the normal pyramid to the scene
-    overlayScene.add(pyramidClone);
-    view = 'n'; // set the view variable to 'n' (normal)
-    nbutton.style.display = 'none'; // hide the button
-  })
+    buttonHandler(overlayCamera, overlayScene, pyramidClone, pyramidGroup, 'n')
+    })
   
   vbutton.addEventListener('click', () => {
-    if (view != 'n'){
-      overlayScene.remove(pyramidClone);
-      pyramidClone = pyramidGroup.clone();
-      overlayScene.add(pyramidClone);
-    }
-    adjustPyramidSpacing(pyramidClone, 'vertical');
-    nbutton.style.display = 'block';
-    view = 'v';
+    buttonHandler(overlayCamera, overlayScene, pyramidClone, pyramidGroup, 'v')
   })
-
-  overlayScene.add(pyramidClone);
 
   // Render the pyramid
   function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    overlayRenderer.render(overlayScene, overlayCamera);
+      if (!overlayOpened) return;
+      requestAnimationFrame(animate);
+      controls.update();
+      overlayRenderer.render(overlayScene, overlayCamera);
   }
-  animate();
+    animate();
 }
 
  /******************************************************************************************

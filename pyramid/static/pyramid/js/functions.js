@@ -502,3 +502,11 @@ export function adjustPyramidSpacing(pyramidGroup, orientation = 'vertical') {
   });
   return pyramidGroup.clone()
 }
+
+export function removeAllGroupsFromScene(scene) {
+  scene.children.forEach(child => {
+      if (child instanceof THREE.Group) {
+          scene.remove(child);
+      }
+  });
+}

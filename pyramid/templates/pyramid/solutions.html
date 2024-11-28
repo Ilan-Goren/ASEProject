@@ -21,7 +21,7 @@
     <div id="statusSection">
       Solutions: {{ solutions_len }}
       <div id="statusMessage">Specify the radius of sight:</div> 
-      <input id="radiusInput" type="number" placeholder="Enter radius">
+      <input id="radiusInput" type="number" placeholder="Enter radius (50 to 1000)">
       <button id="applyChanges">Apply</button>
     </div>
 
@@ -42,7 +42,7 @@
     <div class="button-container overlay-button-container">
       <button id="h-view">Horizonal View</button>
       <button id="v-view">Vertical View</button>
-      <button style="display: none;" id="n-view">Normal View</button>
+      <button id="n-view">Normal View</button>
       <button id="close-view">Close</button>
     </div>
     <canvas id="overlay-canvas"></canvas>
