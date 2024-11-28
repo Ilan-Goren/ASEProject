@@ -67,7 +67,7 @@ export function keyboardHandler(event, camera, piecesGroup) {
           movingObject.position.y += (moveAmount + 1);
           break;
         case 'ArrowDown': // Move down
-          movingObject.position.y = Math.max(movingObject.position.y - (moveAmount + 1), 0); // Ensure Y doesn't go below 0
+          movingObject.position.y -= (moveAmount + 1); // Ensure Y doesn't go below 0
           break;
       }
     } else {
@@ -403,8 +403,6 @@ export function insideBoundariesHandler(piecesGroup) {
   updateStatusMessage('none', piecesCorrectlyPlaced.length);
   return piecesCorrectlyPlaced.length > 0 ? piecesInBounds : false;
 }
-
-
 
 
 export function extractDataFromPlane(input, piecesGroup) {

@@ -1,0 +1,23 @@
+{% extends 'polyhex/layout.html' %}
+{% block app_name %} Polyhex {% endblock %}
+{% block title %} Home {% endblock %}
+{% block main %}
+<h1 class="mb-3">Polyhex</h1>
+
+<!-- Section for game instructions, centered on the page -->
+<div class="instructions text-center">
+    <p><strong>Game Instructions:</strong></p>
+    <!-- Instructions for interacting with puzzle pieces -->
+</div>
+
+<!-- Section for game controls, centered on the page -->
+<div class="controls text-center">
+    <p><strong>Game Controls:</strong></p>
+</div>
+
+<p class="text-center">Challenge yourself by arranging pieces in different ways to find a solution!</p>
+
+<a href="{% url 'polyhex_puzzle' %}" class="mt-3 mb-3 btn btn-success">Go to puzzle</a>
+
+
+{% endblock %}
