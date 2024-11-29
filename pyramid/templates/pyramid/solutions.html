@@ -1,58 +1,40 @@
-<!doctype html>
-<html lang="en">
-  {% load static %}
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="{% static '/pyramid/css/styles.css' %}" rel="stylesheet">
-    <title>Pyramid Solutions</title>
-  </head>
+{% extends 'pyramid/layout.html'%}
 
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-      }
-    }
+{% block title %} Solutions {% endblock %}
+{% block body %}
+<body>
+  {% load static %}
+  <div id="statusSection">
+    Solutions: {{ solutions_len }}
+    <div id="statusMessage">Specify the radius of sight:</div> 
+    <input id="radiusInput" type="number" placeholder="Enter radius (50 to 1000)">
+    <button class="btn btn-success" id="applyChanges">Apply</button>
+  </div>
+
+  <div id="texture-url" style="display: none;">{% static 'pyramid/js/snow_texture.webp' %}</div>
+
+  <script id="pyramid-data" type="application/json">
+      {{ solutions|safe }}
   </script>
 
-  <body>
-    <div id="statusSection">
-      Solutions: {{ solutions_len }}
-      <div id="statusMessage">Specify the radius of sight:</div> 
-      <input id="radiusInput" type="number" placeholder="Enter radius (50 to 1000)">
-      <button id="applyChanges">Apply</button>
-    </div>
-
-    <div id="texture-url" style="display: none;">{% static 'pyramid/js/snow_texture.webp' %}</div>
-
-<script id="pyramid-data" type="application/json">
-    {{ solutions|safe }}
-</script>
-
-<div class="button-container">
-  <button id="view-pyramid">View Pyramid</button>
-  <a href="{% url 'pyramid_generator' %}" id="back" class="button">Back</a>
-</div>
-
-<!-- Overlay container -->
-<div id="overlay" class="overlay" style="display: none;">
-  <div class="overlay-content">
-    <div class="button-container overlay-button-container">
-      <button id="h-view">Horizonal View</button>
-      <button id="v-view">Vertical View</button>
-      <button id="n-view">Normal View</button>
-      <button id="close-view">Close</button>
-    </div>
-    <canvas id="overlay-canvas"></canvas>
+  <div class="button-container">
+    <button class="btn btn-success" id="view-pyramid">View Pyramid</button>
+    <a class="btn btn-success" href="{% url 'pyramid_generator' %}" id="back" class="button">Back</a>
   </div>
-</div>
 
-
-<canvas class="threejs"></canvas>
-<script type="module" src="{% static 'pyramid/js/solutions.js' %}">
-    
-</script>
+  <!-- Overlay container -->
+  <div id="overlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <div class="button-container overlay-button-container">
+        <button class="btn btn-success"  id="h-view">Horizonal View</button>
+        <button class="btn btn-success"  id="v-view">Vertical View</button>
+        <button class="btn btn-success" id="n-view">Normal View</button>
+        <button class="btn btn-success" id="close-view">Close</button>
+      </div>
+      <canvas id="overlay-canvas"></canvas>
+    </div>
+  </div>
+  <canvas class="threejs"></canvas>
+  <script type="module" src="{% static 'pyramid/js/solutions.js' %}"></script>
 </body>
-</html>
+{% endblock %}

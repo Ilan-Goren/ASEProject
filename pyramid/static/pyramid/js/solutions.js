@@ -177,7 +177,7 @@ function changeRadius() {
     loadingRadius = inputValue;
 
   } else {
-    alert('Please choose a reasonable radius.');
+    alert('Please choose a valid radius.');
   }
 }
 

@@ -14,8 +14,8 @@ body {
   border-radius: 5px; 
   color: white;
   font-size: 18px; 
-  width: auto;
-  height: 120px;
+  width: 300px;
+  height: 150px;
   display: flex; 
   flex-direction: column; 
   justify-content: space-between;
@@ -23,21 +23,6 @@ body {
 
 canvas {
   display: block;
-}
-
-button {
-  position: relative;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #4CAF50;
-  color: white;
-  margin: 10px;
-}
-
-button:hover {
-  background-color: #45a049;
 }
 
 .button-container {
