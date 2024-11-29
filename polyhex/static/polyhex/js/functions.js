@@ -486,44 +486,6 @@ export function createPyramid(data) {
   return pyramidGroup
 }
 
-export function createTetrahedron(data) {
-  const tetrahedronGroup = new THREE.Group();
-  const layerCount = data.length;
-  
-  // Determine the spacing for the layers and cells
-  const spacing = 2;
-  const height = layerCount * spacing;
-
-  data.forEach((layer, layerIndex) => {
-    const layerHeight = (layerIndex / (layerCount - 1)) * height;
-    
-    layer.forEach((row, rowIndex) => {
-      const rowLength = row.length;
-
-      row.forEach((cellValue, colIndex) => {
-        if (cellValue > 0) {
-          const color = colorMapping[cellValue.toString()];
-          const material = new THREE.MeshStandardMaterial({ color });
-          const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
-          const sphere = new THREE.Mesh(sphereGeometry, material);
-
-          // Distribute the cells in a tetrahedron shape
-          // Position calculation based on a tetrahedron
-          const x = (colIndex - rowLength / 2) * spacing;
-          const y = layerHeight;
-          const z = (rowIndex - (layer.length / 2)) * spacing;
-
-          sphere.position.set(x, y, z);
-
-          // Add the sphere to the tetrahedron group
-          tetrahedronGroup.add(sphere);
-        }
-      });
-    });
-  });
-
-  return tetrahedronGroup;
-}
 
 // Function to adjust spacing between layers in a pyramid group
 export function adjustPyramidSpacing(pyramidGroup, orientation = 'vertical') {

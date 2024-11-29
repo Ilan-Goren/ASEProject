@@ -1,0 +1,41 @@
+{% extends 'polyhex/3dlayout.html'%}
+
+{% block title %} Solutions {% endblock %}
+{% block body %}
+{% load static %}
+<link href="{% static '/pyramid/css/styles.css' %}" rel="stylesheet">
+<body>
+  <div id="statusSection">
+    Solutions: {{ solutions_len }}
+    <div id="statusMessage">Specify the radius of sight:</div> 
+    <input id="radiusInput" type="number" placeholder="Enter radius (50 to 1000)">
+    <button class="btn btn-success" id="applyChanges">Apply</button>
+  </div>
+
+  <div id="texture-url" style="display: none;">{% static 'pyramid/js/snow_texture.webp' %}</div>
+
+  <script id="pyramid-data" type="application/json">
+      {{ solutions|safe }}
+  </script>
+
+  <div class="button-container">
+    <button class="btn btn-success" id="view-pyramid">View Pyramid</button>
+    <a class="btn btn-success" href="{% url 'polyhex_puzzle' %}" id="back" class="button">Back</a>
+  </div>
+
+  <!-- Overlay container -->
+  <div id="overlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <div class="button-container overlay-button-container">
+        <button class="btn btn-success"  id="h-view">Horizonal View</button>
+        <button class="btn btn-success"  id="v-view">Vertical View</button>
+        <button class="btn btn-success" id="n-view">Normal View</button>
+        <button class="btn btn-success" id="close-view">Close</button>
+      </div>
+      <canvas id="overlay-canvas"></canvas>
+    </div>
+  </div>
+  <canvas class="threejs"></canvas>
+  <script type="module" src="{% static 'polyhex/js/solutions.js' %}"></script>
+</body>
+{% endblock %}

@@ -27,7 +27,6 @@ stopButton.addEventListener('click', stopSolver);
 // Start solver function
 function startSolver(event) {
     event.preventDefault();
-    stopButton.style.display = 'inline-block';
     startButton.style.display = 'none';
     wts.style.display = 'none';
     sfs.style.display = 'block';
@@ -37,6 +36,11 @@ function startSolver(event) {
         .then(data => {
             updateSolutions();
         });
+
+    // Delay the display of the stop button by 3 seconds
+    setTimeout(() => {
+        stopButton.style.display = 'inline-block';
+    }, 1000);
 }
 
 // Stop solver function

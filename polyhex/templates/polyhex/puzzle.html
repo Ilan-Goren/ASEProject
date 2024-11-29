@@ -4,137 +4,36 @@
 
 
 {% block main %}
-<style>
-    .container {
-        display: flex;
-        justify-content: center; /* Center the layers horizontally */
-
-    }
-    table {
-        border-collapse: collapse;
-        margin: 20px auto;
-    }
-    td {
-        width: 30px;
-        height: 30px;
-        border: 1px solid black;
-        text-align: center;
-    }
-    .pyramid {
-        margin-top: 20px;
-    }
-    .pyramid tr {
-        display: flex;
-        justify-content: center; /* Centers the cells horizontally */
-    }
-</style>
+{% load custom_filters %}
 
 <h1>Layers</h1>
+<form action="{% url 'polyhex_solutions' %}" method="post">
+    {% csrf_token %}
 <div class="container">
-    <!-- Layer 1 -->
+    {% for layer_num, layer in board|enumerate_filter %}
     <table class="pyramid">
-        <caption style="text-align: center;">Layer 1</caption>
+        <caption style="text-align: center;">Layer {{ layer_num|add:1 }}</caption>
         <tbody>
+            {% for row_num, row in layer|enumerate_filter %}
             <tr>
-                <td></td><td></td><td></td><td></td><td></td><td></td>
+                {% for col_num, cell in row|enumerate_filter %}
+                <td>
+                    <input style="height: 100%; width: 100%; padding: 0%;" 
+                    type="number"
+                    name="cell-{{ layer_num }}-{{ row_num }}-{{ col_num }}"
+                    class="cell-input"
+                    min="1"
+                    max="12" />
+                </td>
+                {% endfor %}
             </tr>
-            <tr>
-                <td></td><td></td><td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
-
-    <!-- Layer 2 -->
-    <table class="pyramid">
-        <caption style="text-align: center;">Layer 2</caption>
-        <tbody>
-            <tr>
-                <td></td><td></td><td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- Layer 3 -->
-    <table class="pyramid">
-        <caption style="text-align: center;">Layer 3</caption>
-        <tbody>
-            <tr>
-                <td></td><td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- Layer 4 -->
-    <table class="pyramid">
-        <caption style="text-align: center;">Layer 4</caption>
-        <tbody>
-            <tr>
-                <td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- Layer 5 -->
-    <table class="pyramid">
-        <caption style="text-align: center;">Layer 5</caption>
-        <tbody>
-            <tr>
-                <td></td><td></td>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- Layer 6 -->
-    <table class="pyramid">
-        <caption style="text-align: center;">Layer 6</caption>
-        <tbody>
-            <tr>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
+    {% endfor %}
 </div>
+
+<button class="mt-3 btn btn-secondary" type="submit"> Solve </button>
+</form>
 
 {% endblock %}

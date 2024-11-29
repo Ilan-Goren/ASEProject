@@ -1,0 +1,28 @@
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center; /* Center the layers horizontally */
+
+}
+table {
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+td {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    text-align: center;
+}
+.pyramid {
+    margin-top: 20px;
+}
+.pyramid tr {
+    display: flex;
+    justify-content: center; /* Centers the cells horizontally */
+}
