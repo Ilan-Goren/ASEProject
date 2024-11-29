@@ -36,3 +36,14 @@ class HexSolverTestCase(TestCase):
 
         s.initialise_packing_matrix_partial_config(b, pieces)
         print(algorithm_x_functions.pretty_print(s.matrix))
+
+
+    def test_solve(self):
+        s = solver.Solver()
+        b = board.Board()
+        pieces = []
+        for p in piece.pieces:
+            pieces.append(piece.Piece(p))
+
+        rows = s.solve(pieces, b)
+        print(s.rows_to_array_sol(rows, b))

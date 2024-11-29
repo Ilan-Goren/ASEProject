@@ -110,8 +110,9 @@ class Solver:
         pieces_placed = False
 
         for p_id in board.cells.values():
-            if(p_id != 0):
+            if p_id != 0:
                 pieces_placed = True
+                break
 
         if pieces_placed:
             self.initialise_packing_matrix_partial_config(board, pieces)

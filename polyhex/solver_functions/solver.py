@@ -105,4 +105,67 @@ class Solver:
 
         return self.matrix
 
+    def solve(self, pieces, hex_board=None):
+        if hex_board is None:
+            hex_board = board.Board()
 
+        pieces_placed = False
+
+        hb = hex_board.board
+
+        for z in range(len(hb)):
+            for y in range(len(hb[z])):
+                for x in range(len(hb[z][y])):
+                    if hb[z][y][x] != 0:
+                        pieces_placed = True
+                        break
+                if pieces_placed:
+                    break
+            if pieces_placed:
+                break
+
+        if pieces_placed:
+            self.initialise_packing_matrix_partial_config(hex_board, pieces)
+        else:
+            self.initialise_packing_matrix(hex_board, pieces)
+
+        # Track how long the solver takes
+        start = time.time()
+        # Get the first solution for the packing problem
+        rows = algorithm_x_functions.solve(self.matrix, [], True)
+        elapsed = time.time() - start
+
+        # If no solution found
+        if not rows:
+            return False
+
+        return rows
+
+    def rows_to_array_sol(self, rows, hex_board):
+        solution_array = [
+                [[0] * (6 - i) for i in range(6)],
+                [[0] * (5 - i) for i in range(5)],
+                [[0] * (4 - i) for i in range(4)],
+                [[0] * (3 - i) for i in range(3)],
+                [[0] * (2 - i) for i in range(2)],
+                [[0] * (1 - i) for i in range(1)]
+            ]
+
+        board_cells_count = hex_board.count_cells()
+
+        # For each row in provided matrix solution
+        for i, row in enumerate(rows):
+
+            # Find id of polyomino from row
+            poly_id = -1
+            for j in range(len(row) - 1, -1, -1):
+                if row[j]:
+                    poly_id = j - board_cells_count + 1
+                    break
+
+            for j in range(len(row)):
+                if row[j] and j+1 != (poly_id + board_cells_count):
+                    x, y, z = self.index_to_cell[j + 1]
+                    solution_array[z][y][x] = self.id_conversions[poly_id]
+
+        return solution_array

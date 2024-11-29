@@ -9,14 +9,15 @@ class PieceTestCase(TestCase):
             piece.visualise_piece(p)
 
     def test_rotate_xy(self):
-        cells = [(0, 0, 0), (0, 1, 0), (1, 0, 0), (1, 1, 0), (2, 0, 0)]
+        cells = [(0, 0, 0), (1, 0, 0), (1, 1, 0), (2, 1, 0)]
         piece.visualise_piece(piece.normalize_transformation(cells))
         for i in range(5):
             cells = [piece.rotate_xy(c) for c in cells]
+            print(cells)
             piece.visualise_piece(piece.normalize_transformation(cells))
 
     def test_reflect(self):
-        cells = [(0, 0, 0), (0, 1, 0), (1, 0, 0), (1, 1, 0), (2, 0, 0)]
+        cells = [(0, 0, 0), (1, 0, 0), (1, 1, 0), (2, 1, 0)]
         piece.visualise_piece(piece.normalize_transformation(cells))
         for i in range(5):
             cells = [piece.rotate_xy(c) for c in cells]
@@ -49,9 +50,10 @@ class PieceTestCase(TestCase):
             piece.visualise_piece(piece.normalize_transformation(transposed_leaning_cells))
 
     def test_build_transformations(self):
-        cells = [(0, 0, 0), (0, 1, 0), (1, 0, 0), (1, 1, 0), (2, 0, 0)]
+        cells = [(0, 0, 0), (1, 0, 0), (1, 1, 0), (2, 1, 0)]
         transformations = piece.build_transformations(cells)
         for t in transformations:
+            print(t)
             piece.visualise_piece(t)
 
     def test_hex_piece_constructor(self):
