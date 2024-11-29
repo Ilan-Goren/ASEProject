@@ -36,77 +36,29 @@ class Piece:
         else:
             self.transformations = build_transformations(custom_shape)
 
-'''
-def build_transformations(cells):
-
-    transformations = []
-    y = 0
-    for i in range(2):
-        for x in range(6):
-            cells = sorted(normalize_transformation([rotate_xy(c) for c in cells]))
-            transformations.append(cells)
-            leaning_cells = sorted(normalize_transformation([lean(c) for c in cells]))
-            transformations.append(leaning_cells)
-            leaning_cells_transposed_1 = sorted(normalize_transformation([transpose_lean_1(c) for c in leaning_cells]))
-            transformations.append(leaning_cells_transposed_1)
-            leaning_cells_transposed_2 = sorted(normalize_transformation([transpose_lean_2(c) for c in leaning_cells]))
-            transformations.append(leaning_cells_transposed_2)
-        cells = sorted(normalize_transformation([reflect(c) for c in cells]))
-
-    # remove duplicates (if any) and return unique transformations
-    unique_symmetries = [list(x) for x in set(tuple(s) for s in transformations)]
-    return unique_symmetries
-'''
-
 def build_transformations(cells):
     transformations = []
     for x in range(6):
         cells = sorted(normalize_transformation([rotate_xy(c) for c in cells]))
         transformations.append(cells)
-        print("base:")
-        print(cells)
         leaning_cells = sorted(normalize_transformation([lean(c) for c in cells]))
         transformations.append(leaning_cells)
-        print("lean:")
-        print(leaning_cells)
         leaning_cells_trans_1 = sorted(normalize_transformation([transpose_lean_1(c) for c in leaning_cells]))
         transformations.append(leaning_cells_trans_1)
-        print("trans1:")
-        print(leaning_cells_trans_1)
         leaning_cells_trans_2 = sorted(normalize_transformation([transpose_lean_2(c) for c in leaning_cells]))
         transformations.append(leaning_cells_trans_2)
-        print("trans2:")
-        print(leaning_cells_trans_2)
 
         flipped_cells = sorted(normalize_transformation([reflect(c) for c in cells]))
         transformations.append(flipped_cells)
-        print("fbase:")
-        print(flipped_cells)
         flipped_leaning_cells = sorted(normalize_transformation([lean(c) for c in flipped_cells]))
         transformations.append(flipped_leaning_cells)
-        print("flean:")
-        print(flipped_leaning_cells)
         flipped_leaning_cells_trans_1 = sorted(normalize_transformation([transpose_lean_1(c) for c in flipped_leaning_cells]))
         transformations.append(flipped_leaning_cells_trans_1)
-        print("ftrans1:")
-        print(flipped_leaning_cells_trans_1)
         flipped_leaning_cells_trans_2 = sorted(normalize_transformation([transpose_lean_2(c) for c in flipped_leaning_cells]))
         transformations.append(flipped_leaning_cells_trans_2)
-        print("ftrans2:")
-        print(flipped_leaning_cells_trans_2)
     # remove duplicates (if any) and return unique transformations
     unique_symmetries = [list(x) for x in set(tuple(s) for s in transformations)]
     return unique_symmetries
-
-'''
-def build_transformations_fixed()
-    (dont rotate reflections), build all base orientations
-    reflect all orientations
-    for all orinetations
-        apply lean
-            apply transpose
-            apply other transpose
-'''
 
 def rotate_xy(cell):
     vec = list(cell)
