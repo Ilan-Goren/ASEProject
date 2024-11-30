@@ -59,13 +59,16 @@ function stopSolver() {
         })
 }
 
-// Update solutions function
 function updateSolutions() {
     intervalID = setInterval(() => {
         fetch('get-solution-count')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('solutions_found').innerText = data.length;
+                if (data.Done === "Generation completed") {
+                    stopSolver();
+                } else {
+                    document.getElementById('solutions_found').innerText = data.length;
+                }
             })
-    }, 50); // Update every 50 ms
+    }, 100);
 }

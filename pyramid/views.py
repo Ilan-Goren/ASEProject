@@ -4,7 +4,10 @@ from django.http import JsonResponse
 from django.contrib import messages
 from multiprocessing import Process, Manager
 import json
-from .Pyramid import pyramid_get_all_solutions, pyramid_get_partial_config_solutions
+from .Pyramid import Pyramid_Solver
+
+
+pyramid_solver = Pyramid_Solver()
 
 # Manager for multiprocessing to store shared data
 manager = Manager()
@@ -24,6 +27,7 @@ def generator(request):
     Displays the generator page for the Polysphere Pyramid application.
     """
     return render(request, 'pyramid/generator.html', {
+        'pieces_placed_len': len(pyramid_solver.pieces_placed),
         'solutions_len': len(solutions)
     })
 
@@ -50,10 +54,13 @@ def pyramid_solutions(request):
         
         elif button_pressed == 'reset':
             solutions = manager.list()
+            pyramid_solver.array_board = []
+            pyramid_solver.pieces_placed = []
             process = None
             return redirect('pyramid_generator')
         
         elif button_pressed == 'partialConfigSolutions':
+            # solutions = manager.list()
             pyramid_json = request.POST.get('pyramid', 0)
             pieces_placed_json = request.POST.get('piecesPlaced', 0)
             if not pyramid_json or not pieces_placed_json:
@@ -71,13 +78,12 @@ def pyramid_solutions(request):
             
             pieces_placed = set(int(p) for p in pieces_placed)
 
-            results = pyramid_get_partial_config_solutions(result, pieces_placed)
-            if not results:
-                return redirect('pyramid_puzzle')
-            solutions = results
+            pyramid_solver.array_board = result
+            pyramid_solver.pieces_placed = pieces_placed
+
             # Render the solutions page
-            return render(request, 'pyramid/solutions.html', {
-                'solutions': solutions,
+            return render(request, 'pyramid/generator.html', {
+                'pieces_placed_len': len(pyramid_solver.pieces_placed),
                 'solutions_len': len(solutions)
             })
         
@@ -90,6 +96,7 @@ def pyramid_solutions(request):
 # Allows requests without CSRF token.
 @csrf_exempt
 def get_solution_count(request):
+    global process
     """
     Returns the current count of generated solutions.
 
@@ -102,7 +109,11 @@ def get_solution_count(request):
         JsonResponse: 
             A JSON response containing the key "length" with the total count of generated solutions.
     """
-    return JsonResponse({"length": len(solutions)})
+    if process and process.is_alive():
+        return JsonResponse({"length": len(solutions)})
+    else:
+        return JsonResponse({"Done": "Generation completed"})
+
 
 # Allows requests without CSRF token.
 @csrf_exempt
@@ -131,7 +142,7 @@ def start_generator(request):
             # Check if Process exists and is running first before starting
             return JsonResponse({"status": "already running"}, status=400)
 
-        process = Process(target=pyramid_get_all_solutions, args=(solutions,))
+        process = Process(target=pyramid_solver.solve, args=(solutions,))
         process.start()
         return JsonResponse({"status": "started"}, status=200)
     
@@ -160,11 +171,11 @@ def stop_generator(request):
     """
     global process
     if request.method == 'POST':
-        if process and process.is_alive():  
+        if process:  
             # Check if Process exists and is running first before terminating
             process.terminate()  # terminate process
             process.join()
-            return redirect("pyramid_generator")
+            return JsonResponse({"Success": "Stopped Successfully"}, status=200)
         
         return JsonResponse({"error": "Solver not running"}, status=400)
     return JsonResponse({"error": "Invalid request"}, status=400)
