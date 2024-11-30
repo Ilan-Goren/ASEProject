@@ -1,3 +1,5 @@
+from . import piece
+
 class Board:
     def __init__(self, board=None):
         if board is None:
@@ -38,3 +40,27 @@ class Board:
                     if self.is_region_free(translated_region):
                         matching_empty_regions.append(translated_region)
         return matching_empty_regions
+
+    def get_piece_locations(self):
+        placed_pieces = {}
+
+        for z in range(len(self.board)):
+            for y in range(len(self.board[z])):
+                for x in range(len(self.board[z][y])):
+                    cell_val = self.board[z][y][x]
+                    if cell_val != 0:
+                        if cell_val not in placed_pieces:
+                            placed_pieces[cell_val] = []
+                        placed_pieces[cell_val].append((x,y,z))
+
+        return placed_pieces
+
+    def verify_board(self):
+        piece_locations = self.get_piece_locations()
+        valid = True
+        for id in piece_locations:
+            cells = piece_locations[id]
+            p = piece.Piece(id)
+            if not piece.verify_placement(p, cells):
+                valid = False
+        return valid

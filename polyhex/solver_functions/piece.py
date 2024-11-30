@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from numpy.ma.core import transpose
 
 #hard-coded pieces for 3D board
 '''
@@ -128,3 +127,13 @@ def visualise_piece(coords):
 
     # Show the plot
     plt.show()
+
+def verify_placement(piece, coords):
+    coords = sorted(normalize_transformation(coords))
+    options = piece.transformations
+    valid = False
+    for option in options:
+        if option == coords:
+            valid = True
+            break
+    return valid

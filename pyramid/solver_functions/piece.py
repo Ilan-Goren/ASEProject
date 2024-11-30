@@ -106,6 +106,7 @@ def visualise_piece(coords):
     # Set fixed limits for x and y axes
     ax.set_xlim(0, 6)
     ax.set_ylim(0, 6)
+    ax.set_zlim(0, 6)
 
     # Set labels for clarity
     ax.set_xlabel('X')

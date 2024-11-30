@@ -15,3 +15,8 @@ class BoardTestCase(TestCase):
     def test_get_matching_empty_regions(self):
         b = board.Board()
         print(b.get_matching_empty_regions([(0,0,0),(1,0,0)]))
+
+    def test_verify_board(self):
+        b = board.Board()
+        b.board = [[[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [7, 7, 7, 0], [7, 0, 7], [0, 0], [0]], [[0, 0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0], [0, 0], [0]], [[0, 0], [0]], [[0]]]
+        print(b.verify_board())

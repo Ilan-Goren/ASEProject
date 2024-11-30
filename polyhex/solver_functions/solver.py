@@ -169,3 +169,29 @@ class Solver:
                     solution_array[z][y][x] = self.id_conversions[poly_id]
 
         return solution_array
+
+    def generate_solutions(self, pieces, hex_board=None):
+        if hex_board is None:
+            hex_board = board.Board()
+
+        pieces_placed = False
+
+        hb = hex_board.board
+
+        for z in range(len(hb)):
+            for y in range(len(hb[z])):
+                for x in range(len(hb[z][y])):
+                    if hb[z][y][x] != 0:
+                        pieces_placed = True
+                        break
+                if pieces_placed:
+                    break
+            if pieces_placed:
+                break
+
+        if pieces_placed:
+            self.initialise_packing_matrix_partial_config(hex_board, pieces)
+        else:
+            self.initialise_packing_matrix(hex_board, pieces)
+
+        yield from algorithm_x_functions.generate_solutions(self.matrix)

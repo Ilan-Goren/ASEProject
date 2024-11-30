@@ -166,7 +166,7 @@ class Solver:
         pieces_placed = False
 
         for p_id in board.cells.values():
-            if(p_id != 0):
+            if p_id != 0:
                 pieces_placed = True
 
         if pieces_placed:

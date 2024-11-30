@@ -47,3 +47,15 @@ class HexSolverTestCase(TestCase):
 
         rows = s.solve(pieces, b)
         print(s.rows_to_array_sol(rows, b))
+
+    def test_generate_solutions(self):
+        s = solver.Solver()
+        b = board.Board()
+        pieces = []
+        for p in piece.pieces:
+            pieces.append(piece.Piece(p))
+
+        count = 1
+        for rows in s.generate_solutions(pieces, b):
+            print(count)
+            count += 1

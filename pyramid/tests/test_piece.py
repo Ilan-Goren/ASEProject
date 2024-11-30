@@ -11,3 +11,9 @@ class PieceTestCase(TestCase):
     def test_visulaise_piece(self):
         for p in piece.pieces.values():
             piece.visualise_piece(p)
+
+    def test_build_transformations(self):
+        p = piece.Piece(6)
+        for t in p.transformations:
+            piece.visualise_piece(t)
+
