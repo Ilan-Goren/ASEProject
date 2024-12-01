@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
-import { createTetrahedron, adjustPyramidSpacing, removeAllGroupsFromScene } from './functions.js';
-import { setEmissiveForSelected } from './helpers.js';
+import { 
+  createTetrahedron, 
+  adjustPyramidSpacing, 
+  removeAllGroupsFromScene, 
+  setEmissiveForSelected 
+} from './functions.js';
 
 const allPyramids = []
 var selected = null;
@@ -20,7 +24,7 @@ scene.add(directionalLight);
 
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 400 );
-camera.position.set(7, 20, 60);  // Initial camera position
+camera.position.set(10, 30, -20);  // Initial camera position
 camera.lookAt(0,0,0)
 
 // Mouse and Raycaster setup
@@ -122,7 +126,7 @@ const numRows = Math.ceil(numPyramids / numColumns);
 const spacingX = forestWidth / numColumns;
 const spacingZ = forestDepth / numRows;
 
-var loadingRadius = 100;
+var loadingRadius = 150;
 const loadedPyramids = new Map();
 
 function updatePyramids() {

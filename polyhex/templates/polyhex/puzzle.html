@@ -2,8 +2,9 @@
 {% block app_name %} Polyhex {% endblock %}
 {% block title %} Puzzle {% endblock %}
 
-
 {% block main %}
+{% load static %}
+
 {% load custom_filters %}
 
 <h1>Layers</h1>
@@ -33,7 +34,7 @@
     {% endfor %}
 </div>
 
-<button class="mt-3 btn btn-secondary" type="submit"> Solve </button>
+<button name="button" value="save_puzzle" id="startButton" class="mt-3 btn btn-secondary" type="submit"> Save and Go to Generator </button>
 </form>
 
 {% endblock %}

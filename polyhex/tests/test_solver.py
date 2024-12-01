@@ -38,7 +38,7 @@ class HexSolverTestCase(TestCase):
         print(algorithm_x_functions.pretty_print(s.matrix))
 
 
-    def test_solve(self):
+    def test_solve(self): 
         s = solver.Solver()
         b = board.Board()
         pieces = []
