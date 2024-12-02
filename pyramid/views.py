@@ -27,7 +27,7 @@ def generator(request):
     """
     Displays the generator page for the Polysphere Pyramid application.
     """
-    return render(request, 'pyramid/generator.html', {
+    return render(request, 'generator.html', {
         'solutions_len': len(solutions)
     })
 
@@ -36,7 +36,7 @@ def puzzle(request):
     """
     Displays the puzzle page for the Polysphere Pyramid application.
     """
-    return render(request, 'pyramid/puzzle.html')
+    return render(request, 'puzzle.html')
 
 def pyramid_solutions(request):
     """
@@ -47,7 +47,7 @@ def pyramid_solutions(request):
     if request.method == 'POST':
         button_pressed = request.POST.get('button')
         if button_pressed == 'generatorSolutions':
-            return render(request, 'pyramid/solutions.html', {
+            return render(request, 'solutions.html', {
                 'solutions': solutions,
                 'solutions_len': len(solutions)
             })
@@ -55,7 +55,7 @@ def pyramid_solutions(request):
         elif button_pressed == 'reset':
             solutions = manager.list()
             process = None
-            return redirect('pyramid_generator')
+            return redirect('generator')
 
 def index(request):
     """

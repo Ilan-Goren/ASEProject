@@ -33,11 +33,11 @@ class PyramidBoardTests(TestCase):
 
     def test_convert_board_coords_to_array_coords(self):
         # Test that board coordinates are correctly converted to array coordinates
-        self.assertEqual(self.board.convert_board_coords_to_array_coords((2, 2, 1)), (0.5, 0.5, 1))
+        self.assertEqual(self.board.convert_board_coords_to_array_coords((2, 2, 0)), (1, 1, 0))
 
     def test_convert_array_coords_to_board_coords(self):
         # Test that array coordinates are correctly converted to board coordinates
-        self.assertEqual(self.board.convert_array_coords_to_board_coords((0.5, 0.5, 1)), (2, 2, 1))
+        self.assertEqual(self.board.convert_array_coords_to_board_coords((1, 1, 0)), (2, 2, 0))
 
     def test_is_region_free(self):
         # Test that the is_region_free method correctly identifies free regions
