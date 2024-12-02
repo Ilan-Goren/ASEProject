@@ -46,7 +46,7 @@ jobs:
       - name: Build HTML documentation
         run: |
           cd docs
-          make html
+          sphinx-build -b html source build
 
       - name: Commit and push updated docs
         run: |

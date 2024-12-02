@@ -6,11 +6,13 @@ from multiprocessing import Process, Manager
 import json
 from .Pyramid import Pyramid_Solver
 
-
+# Initialize the Pyramid_Solver instance
 pyramid_solver = Pyramid_Solver()
 
 # Manager for multiprocessing to store shared data
 manager = Manager()
+
+# Shared list for storing generated solutions
 solutions = manager.list()
 
 # Initial process set to None for generator handling
@@ -18,29 +20,60 @@ process = None
 
 def home(request):
     """
-    Displays the homepage for the Polysphere Pyramid application.
+    Render the homepage for the Polysphere Pyramid application.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered homepage template.
     """
     return render(request, 'pyramid/home.html')
 
+
 def generator(request):
     """
-    Displays the generator page for the Polysphere Pyramid application.
+    Render the generator page for the Polysphere Pyramid application.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered generator page template with the number of placed pieces
+        and solutions.
     """
     return render(request, 'pyramid/generator.html', {
         'pieces_placed_len': len(pyramid_solver.pieces_placed),
         'solutions_len': len(solutions)
     })
 
-
 def puzzle(request):
     """
-    Displays the puzzle page for the Polysphere Pyramid application.
+    Render the puzzle page for the Polysphere Pyramid application.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered puzzle page template.
     """
     return render(request, 'pyramid/puzzle.html')
 
 def pyramid_solutions(request):
     """
-    Displays the pyramid solutions page.
+    Handle the pyramid solutions page, including displaying solutions, resetting the state,
+    and processing partial configuration solutions based on the POST data.
+
+    Args:
+        request (HttpRequest): The HTTP request object containing the action to perform.
+
+    Returns:
+        HttpResponse: Renders a solutions page, resets the board state, or redirects as needed.
+        
+    Process:
+        - 'generatorSolutions': Displays the list of solutions.
+        - 'reset': Clears solutions and resets the board state.
+        - 'partialConfigSolutions': Processes partial configuration from the request and updates the board.
     """
     global solutions, process
 
@@ -96,19 +129,19 @@ def pyramid_solutions(request):
 # Allows requests without CSRF token.
 @csrf_exempt
 def get_solution_count(request):
-    global process
     """
     Returns the current count of generated solutions.
 
-    This function processes the HTTP request and responds with the number of solutions that have been generated.
+    This function checks if the solution generation process is active and, if so, returns the count of generated solutions.
 
-    :param request: The HTTP request object.
-    :type request: HttpRequest
+    Args:
+        request (HttpRequest): The HTTP request object.
 
-    :returns: 
-        JsonResponse: 
-            A JSON response containing the key "length" with the total count of generated solutions.
+    Returns:
+        JsonResponse: A JSON response with the key "length" representing the total count of generated solutions,
+                      or a message indicating the generation process is complete if the process is not running.
     """
+    global process
     if process and process.is_alive():
         return JsonResponse({"length": len(solutions)})
     else:
@@ -119,22 +152,22 @@ def get_solution_count(request):
 @csrf_exempt
 def start_generator(request):
     """
-    Handles the HTTP request to initiate the solution generation process.
+    Starts the solution generation process.
 
-    This function checks if the solution generation process is active and, if not, starts a new process. 
-    It manages incoming requests and ensures only one process is active at a time.
+    This function checks if the solution generation process is active. If not, it starts a new process to generate solutions.
 
-    :param request: The HTTP request object.
-    :type request: HttpRequest
+    Args:
+        request (HttpRequest): The HTTP request object.
 
-    :global process: The multiprocessing.Process instance that handles solution generation.
-    :global solutions: A list for storing generated solutions.
+    Globals:
+        process (multiprocessing.Process): The process handling solution generation.
+        solutions (list): The list of generated solutions.
 
-    :returns: 
-        JsonResponse:
-            - A JSON response with {"status": "started"} and a 200 status code if the process starts successfully.
-            - A JSON response with {"status": "already running"} if the process is already active.
-            - A JSON response with {"error": "Invalid request"} and a 400 status code for invalid requests.
+    Returns:
+        JsonResponse: 
+            - A JSON response with {"status": "started"} if the process starts successfully.
+            - A JSON response with {"status": "already running"} if a process is already running.
+            - A JSON response with {"error": "Invalid request"} for invalid requests.
     """
     global process, solutions # Declare process and solutions as global
     if request.method == 'POST':
@@ -152,22 +185,21 @@ def start_generator(request):
 @csrf_exempt
 def stop_generator(request):
     """
-    Stops the solution generation process if it is currently running.
+    Stops the solution generation process.
 
-    This function handles a POST request to terminate the ongoing solution generation process. 
-    It checks the state of the process and responds accordingly.
+    This function terminates the ongoing solution generation process if it is running.
 
-    :param request: The HTTP request object, expected to be a POST request.
-    :type request: HttpRequest
+    Args:
+        request (HttpRequest): The HTTP request object, expected to be a POST request.
 
-    :globals: 
-        process: The process responsible for handling solution generation.
+    Globals:
+        process (multiprocessing.Process): The process responsible for solution generation.
 
-    :returns: 
+    Returns:
         JsonResponse:
-            - Redirects to "pyramid_solutions" if the process terminates successfully.
-            - Returns a JSON response with a 400 status if the process isn't running.
-            - Returns a JSON response with a 400 status for invalid requests.
+            - A JSON response with {"Success": "Stopped Successfully"} if the process is stopped successfully.
+            - A JSON response with {"error": "Solver not running"} if the process is not running.
+            - A JSON response with {"error": "Invalid request"} for invalid requests.
     """
     global process
     if request.method == 'POST':

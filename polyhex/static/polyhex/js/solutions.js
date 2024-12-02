@@ -2,8 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // Import OrbitControls
 import { 
   createTetrahedron, 
-  adjustPyramidSpacing, 
-  removeAllGroupsFromScene, 
+  buttonHandler,
   setEmissiveForSelected 
 } from './functions.js';
 
@@ -73,11 +72,8 @@ scene.add(planeMain);
                                      SELECTING PYRAMIDS
 ******************************************************************************************/
 
-// Get the bounding rectangle of the canvas or main block
-const rect = canvas.getBoundingClientRect();
-
 function onClickHandler(event) {
-
+  
   // Get mouse position relative to the canvas
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
@@ -102,10 +98,6 @@ function onClickHandler(event) {
     setEmissiveForSelected(selected, false);
     selected = null;
     console.log('nothing selected');
-    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0); // Horizontal plane at y = 0
-    const point = new THREE.Vector3();
-    raycaster.ray.intersectPlane(plane, point);
-    console.log('Click position on plane:', point);
   }
 }
 
@@ -181,7 +173,7 @@ function changeRadius() {
     loadingRadius = inputValue;
 
   } else {
-    alert('Please choose a valid radius.');
+    alert('Please choose a valid radius. (50 to 1000)');
   }
 }
 
@@ -189,33 +181,6 @@ function changeRadius() {
                                      DISPLAY A PYRAMID
 ******************************************************************************************/
 var overlayOpened = false;
-
-function buttonHandler (camera, scene, pyramidClone, pyramidGroup, view){
-  var pyramidClone = pyramidGroup.clone();
-  
-  switch (view){
-    case 'h':
-      removeAllGroupsFromScene(scene);
-      adjustPyramidSpacing(pyramidClone, 'horizontal');
-      scene.add(pyramidClone)
-      view = 'h';
-      break;
-    case 'v':
-      removeAllGroupsFromScene(scene);
-      adjustPyramidSpacing(pyramidClone, 'vertical');
-      scene.add(pyramidClone)
-      view = 'h';
-      break;
-    case 'n':
-      removeAllGroupsFromScene(scene);
-      scene.add(pyramidClone);
-      view = 'n';
-      break;
-  }
-    
-    pyramidClone.position.set(0, 0, 0);
-    camera.lookAt(0, 0, 0);
-}
 
 const viewPyramidButton = document.getElementById('view-pyramid');
 // Horizontal view

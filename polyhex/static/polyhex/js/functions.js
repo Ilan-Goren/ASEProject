@@ -4,10 +4,6 @@ import { colorMapping } from './defs.js';
 export var selected = null;
 export var overlapExists = false;
 
-/******************************************************************************************
-                                  HANDLER FUNCTIONS
-******************************************************************************************/
-
 export function createTetrahedron(data) {
   const tetrahedronGroup = new THREE.Group();
   const layerCount = data.length;
@@ -74,20 +70,6 @@ export function removeAllGroupsFromScene(scene) {
   });
 }
 
-export function updateStatusMessage(message1='none', message2='none') {
-  if (message1 != 'none'){
-    let temp_message = document.getElementById('statusMessage1')
-    temp_message.textContent = `${message1}`;
-    setTimeout(() => {
-      temp_message.textContent = '';
-    }, 3000);
-  }
-
-  if (message2 != 'none'){
-    document.getElementById('statusMessage2').textContent = `Number of pieces within bounds ${message2}`;
-  }
-}
-
 export function setEmissiveForSelected(selected, state){
   if (selected) {
     if (state){
@@ -104,4 +86,31 @@ export function setEmissiveForSelected(selected, state){
       })
     }
   }
+}
+
+export function buttonHandler (camera, scene, pyramidClone, pyramidGroup, view){
+  var pyramidClone = pyramidGroup.clone();
+  
+  switch (view){
+    case 'h':
+      removeAllGroupsFromScene(scene);
+      adjustPyramidSpacing(pyramidClone, 'horizontal');
+      scene.add(pyramidClone)
+      view = 'h';
+      break;
+    case 'v':
+      removeAllGroupsFromScene(scene);
+      adjustPyramidSpacing(pyramidClone, 'vertical');
+      scene.add(pyramidClone)
+      view = 'h';
+      break;
+    case 'n':
+      removeAllGroupsFromScene(scene);
+      scene.add(pyramidClone);
+      view = 'n';
+      break;
+  }
+    
+    pyramidClone.position.set(0, 0, 0);
+    camera.lookAt(0, 0, 0);
 }

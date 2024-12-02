@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>polyhex.solver_functions package &#8212; ASE Project  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="polyhex.templatetags package" href="polyhex.templatetags.html" />
+    <link rel="prev" title="polyhex.migrations package" href="polyhex.migrations.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="polyhex-solver-functions-package">
+<h1>polyhex.solver_functions package<a class="headerlink" href="#polyhex-solver-functions-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-polyhex.solver_functions.algorithm_x_functions">
+<span id="polyhex-solver-functions-algorithm-x-functions-module"></span><h2>polyhex.solver_functions.algorithm_x_functions module<a class="headerlink" href="#module-polyhex.solver_functions.algorithm_x_functions" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.Column">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">Column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#Column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.Column" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.Matrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">Matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#Matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.Matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.Node">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#Node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.Node" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.add_row">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">add_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#add_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.add_row" title="Link to this definition">¶</a></dt>
+<dd><p>Appends the sparse row indices to the matrix.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.cover">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">cover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#cover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.cover" title="Link to this definition">¶</a></dt>
+<dd><p>Removes <cite>c</cite> from the selection and removes all colliding rows.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.find_all">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.find_all" title="Link to this definition">¶</a></dt>
+<dd><p>Find all solutions to the exact cover problem.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.find_first">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">find_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#find_first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.find_first" title="Link to this definition">¶</a></dt>
+<dd><p>Find one solution to the exact cover problem.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.find_rows">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">find_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#find_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.find_rows" title="Link to this definition">¶</a></dt>
+<dd><p>Find one solution and return the options represented by their row id and content.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.force_option">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">force_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#force_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.force_option" title="Link to this definition">¶</a></dt>
+<dd><p>Ensure a specific option (row) is included in all solutions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.generate_solutions">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">generate_solutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#generate_solutions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.generate_solutions" title="Link to this definition">¶</a></dt>
+<dd><p>A generator function version of the ‘solve’ function
+Generator-based backtracking search using the matrix data structure with MRV heuristic.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.hide">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">hide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#hide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.hide" title="Link to this definition">¶</a></dt>
+<dd><p>Hide the row from the matrix.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.mrv">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">mrv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#mrv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.mrv" title="Link to this definition">¶</a></dt>
+<dd><p>Uses Knuth’s MRV heuristic to choose the column with the fewest rows.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.pretty_print">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">pretty_print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#pretty_print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.pretty_print" title="Link to this definition">¶</a></dt>
+<dd><p>Print a non-sparse table representation of the matrix for debugging.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.solve">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.solve" title="Link to this definition">¶</a></dt>
+<dd><p>Backtracking search using the matrix data structure with MRV heuristic.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.uncover">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">uncover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#uncover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.uncover" title="Link to this definition">¶</a></dt>
+<dd><p>Undoes the deletion done by <cite>cover(c)</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.algorithm_x_functions.unhide">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.algorithm_x_functions.</span></span><span class="sig-name descname"><span class="pre">unhide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/algorithm_x_functions.html#unhide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.algorithm_x_functions.unhide" title="Link to this definition">¶</a></dt>
+<dd><p>Unhide the row in the matrix.</p>
+</dd></dl>
+
+</section>
+<section id="module-polyhex.solver_functions.board">
+<span id="polyhex-solver-functions-board-module"></span><h2>polyhex.solver_functions.board module<a class="headerlink" href="#module-polyhex.solver_functions.board" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.board.</span></span><span class="sig-name descname"><span class="pre">Board</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.count_cells">
+<span class="sig-name descname"><span class="pre">count_cells</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.count_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.count_cells" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.get_matching_empty_regions">
+<span class="sig-name descname"><span class="pre">get_matching_empty_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.get_matching_empty_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.get_matching_empty_regions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.get_piece_locations">
+<span class="sig-name descname"><span class="pre">get_piece_locations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.get_piece_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.get_piece_locations" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.is_region_free">
+<span class="sig-name descname"><span class="pre">is_region_free</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.is_region_free"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.is_region_free" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.verify_board">
+<span class="sig-name descname"><span class="pre">verify_board</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.verify_board"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.verify_board" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-polyhex.solver_functions.piece">
+<span id="polyhex-solver-functions-piece-module"></span><h2>polyhex.solver_functions.piece module<a class="headerlink" href="#module-polyhex.solver_functions.piece" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.Piece">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">Piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">piece_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#Piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.Piece" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.build_transformations">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">build_transformations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#build_transformations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.build_transformations" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.lean">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">lean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#lean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.lean" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.normalize_transformation">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">normalize_transformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#normalize_transformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.normalize_transformation" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.reflect">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">reflect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#reflect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.reflect" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.rotate_xy">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">rotate_xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#rotate_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.rotate_xy" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.transpose_lean_1">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">transpose_lean_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#transpose_lean_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.transpose_lean_1" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.transpose_lean_2">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">transpose_lean_2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#transpose_lean_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.transpose_lean_2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.verify_placement">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">verify_placement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">piece</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#verify_placement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.verify_placement" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.visualise_piece">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">visualise_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#visualise_piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.visualise_piece" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-polyhex.solver_functions.solver">
+<span id="polyhex-solver-functions-solver-module"></span><h2>polyhex.solver_functions.solver module<a class="headerlink" href="#module-polyhex.solver_functions.solver" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.solver.</span></span><span class="sig-name descname"><span class="pre">Solver</span></span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.cell_to_index">
+<span class="sig-name descname"><span class="pre">cell_to_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.cell_to_index" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.generate_board_cell_indexes">
+<span class="sig-name descname"><span class="pre">generate_board_cell_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_board</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.generate_board_cell_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.generate_board_cell_indexes" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.generate_solutions">
+<span class="sig-name descname"><span class="pre">generate_solutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_board</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.generate_solutions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.generate_solutions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.id_conversions">
+<span class="sig-name descname"><span class="pre">id_conversions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.id_conversions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.index_to_cell">
+<span class="sig-name descname"><span class="pre">index_to_cell</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.index_to_cell" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.initialise_packing_matrix">
+<span class="sig-name descname"><span class="pre">initialise_packing_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_board</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.initialise_packing_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.initialise_packing_matrix" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.initialise_packing_matrix_partial_config">
+<span class="sig-name descname"><span class="pre">initialise_packing_matrix_partial_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_board</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remaining_pieces</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.initialise_packing_matrix_partial_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.initialise_packing_matrix_partial_config" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.matrix">
+<span class="sig-name descname"><span class="pre">matrix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.matrix" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.rows_to_array_sol">
+<span class="sig-name descname"><span class="pre">rows_to_array_sol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_board</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.rows_to_array_sol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.rows_to_array_sol" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_board</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.solve" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-polyhex.solver_functions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-polyhex.solver_functions" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ASE Project</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pyramid.html">Pyramid App</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="polyhex.html">polyhex package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="polyhex.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polyhex.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polyhex.html#module-polyhex.admin">polyhex.admin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polyhex.html#module-polyhex.apps">polyhex.apps module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polyhex.html#module-polyhex.models">polyhex.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polyhex.html#module-polyhex.polyhex">polyhex.polyhex module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polyhex.html#module-polyhex.urls">polyhex.urls module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polyhex.html#module-polyhex.views">polyhex.views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polyhex.html#module-polyhex">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="polyhex.html">polyhex package</a><ul>
+      <li>Previous: <a href="polyhex.migrations.html" title="previous chapter">polyhex.migrations package</a></li>
+      <li>Next: <a href="polyhex.templatetags.html" title="next chapter">polyhex.templatetags package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Ahmed, Charlie, Ilan, Lyes, Rahul, Yann.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/polyhex.solver_functions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
