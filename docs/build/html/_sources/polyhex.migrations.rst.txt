@@ -1,0 +1,10 @@
+polyhex.migrations package
+==========================
+
+Module contents
+---------------
+
+.. automodule:: polyhex.migrations
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -26,4 +26,5 @@ urlpatterns = [
     path('nqueens/', include('nqueens.urls')),
     path('polysphere/', include('polysphere.urls')),
     path('pyramid/', include('pyramid.urls')),
+    path('polyhex/', include('polyhex.urls')),
 ]

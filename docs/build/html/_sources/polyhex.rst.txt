@@ -1,0 +1,35 @@
+Polyhex App
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+Submodules
+----------
+
+polyhex.polyhex module
+----------------------
+
+.. automodule:: polyhex.polyhex
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+polyhex.views module
+--------------------
+
+.. automodule:: polyhex.views
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: polyhex
+   :members:
+   :undoc-members:
+   :show-inheritance:

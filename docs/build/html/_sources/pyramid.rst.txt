@@ -1,0 +1,45 @@
+Pyramid App
+===============
+
+Submodules
+----------
+
+pyramid.Pyramid module
+----------------------
+
+.. automodule:: pyramid.Pyramid
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyramid.apps module
+-------------------
+
+.. automodule:: pyramid.apps
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyramid.pyramid\_solver module
+------------------------------
+
+.. automodule:: pyramid.pyramid_solver
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyramid.views module
+--------------------
+
+.. automodule:: pyramid.views
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyramid
+   :members:
+   :undoc-members:
+   :show-inheritance:

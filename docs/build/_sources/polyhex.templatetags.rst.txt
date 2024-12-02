@@ -1,0 +1,21 @@
+polyhex.templatetags package
+============================
+
+Submodules
+----------
+
+polyhex.templatetags.custom\_filters module
+-------------------------------------------
+
+.. automodule:: polyhex.templatetags.custom_filters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: polyhex.templatetags
+   :members:
+   :undoc-members:
+   :show-inheritance:

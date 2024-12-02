@@ -1,0 +1,40 @@
+{% extends 'polyhex/layout.html' %}
+{% block app_name %} Polyhex {% endblock %}
+{% block title %} Puzzle {% endblock %}
+
+{% block main %}
+{% load static %}
+
+{% load custom_filters %}
+
+<h1>Layers</h1>
+<form action="{% url 'polyhex_solutions' %}" method="post">
+    {% csrf_token %}
+<div class="container">
+    {% for layer_num, layer in board|enumerate_filter %}
+    <table class="pyramid">
+        <caption style="text-align: center;">Layer {{ layer_num|add:1 }}</caption>
+        <tbody>
+            {% for row_num, row in layer|enumerate_filter %}
+            <tr>
+                {% for col_num, cell in row|enumerate_filter %}
+                <td>
+                    <input style="height: 100%; width: 100%; padding: 0%;" 
+                    type="number"
+                    name="cell-{{ layer_num }}-{{ row_num }}-{{ col_num }}"
+                    class="cell-input"
+                    min="1"
+                    max="12" />
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+</div>
+
+<button name="button" value="save_puzzle" id="startButton" class="mt-3 btn btn-secondary" type="submit"> Save and Go to Generator </button>
+</form>
+
+{% endblock %}

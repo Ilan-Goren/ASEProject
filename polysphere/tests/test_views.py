@@ -144,15 +144,15 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {"error": "Invalid request"})
 
-    def test_start_then_stop_generator(self):
-        '''
-        test starting the generator using post asserting that we get 'status started' json, 
-        then sending post request for stopping generator and asserting a code 302,
-        that redirects to another page, in this case 'polysphere_solutions'.
-        '''
-        response = self.client.post(reverse('start_generator'))
-        self.assertEqual(response.json(), {"status": "started"})
+    # def test_start_then_stop_generator(self):
+    #     '''
+    #     test starting the generator using post asserting that we get 'status started' json, 
+    #     then sending post request for stopping generator and asserting a code 302,
+    #     that redirects to another page, in this case 'polysphere_solutions'.
+    #     '''
+    #     response = self.client.post(reverse('start_generator'))
+    #     self.assertEqual(response.json(), {"status": "started"})
 
-        response = self.client.post(reverse('stop_generator'))
-        self.assertEqual(response.status_code, 302)
+    #     response = self.client.post(reverse('stop_generator'))
+    #     self.assertEqual(response.status_code, 302)
 

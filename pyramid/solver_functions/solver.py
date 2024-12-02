@@ -1,7 +1,5 @@
 import time
 
-from numpy.f2py.auxfuncs import throw_error
-
 from . import algorithm_x_functions, piece, pyramid_board
 
 class Solver:
@@ -72,7 +70,7 @@ class Solver:
         for i, p in enumerate(remaining_pieces):
             for placed_id in placed_pieces.keys():
                 if placed_id == p.id:
-                    throw_error("Placed pieces cannot have same ID as remaining pieces")
+                    raise Exception("Placed pieces cannot have same ID as remaining pieces")
             # Keep track of original id's compared to enumerated ones
             self.id_conversions[i + 1] = p.id
             p.id = i + 1
@@ -112,8 +110,9 @@ class Solver:
         pieces_placed = False
 
         for p_id in board.cells.values():
-            if(p_id != 0):
+            if p_id != 0:
                 pieces_placed = True
+                break
 
         if pieces_placed:
             self.initialise_packing_matrix_partial_config(board, pieces)
@@ -167,7 +166,7 @@ class Solver:
         pieces_placed = False
 
         for p_id in board.cells.values():
-            if(p_id != 0):
+            if p_id != 0:
                 pieces_placed = True
 
         if pieces_placed:

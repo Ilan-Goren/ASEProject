@@ -1,0 +1,9 @@
+Welcome to ase_project's documentation!
+========================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   pyramid
+   polyhex

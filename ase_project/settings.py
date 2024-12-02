@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'polyhex',
     'polysphere',
     'nqueens',
     'pyramid',

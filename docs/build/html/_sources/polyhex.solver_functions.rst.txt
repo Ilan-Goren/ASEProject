@@ -1,0 +1,45 @@
+polyhex.solver\_functions package
+=================================
+
+Submodules
+----------
+
+polyhex.solver\_functions.algorithm\_x\_functions module
+--------------------------------------------------------
+
+.. automodule:: polyhex.solver_functions.algorithm_x_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+polyhex.solver\_functions.board module
+--------------------------------------
+
+.. automodule:: polyhex.solver_functions.board
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+polyhex.solver\_functions.piece module
+--------------------------------------
+
+.. automodule:: polyhex.solver_functions.piece
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+polyhex.solver\_functions.solver module
+---------------------------------------
+
+.. automodule:: polyhex.solver_functions.solver
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: polyhex.solver_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
