@@ -1,22 +1,35 @@
-# from django.test import TestCase
+from django.test import TestCase
 
-# from ..solver_functions import board
+from ..solver_functions import board
 
-# class BoardTestCase(TestCase):
-#     def test_board(self):
-#         b = board.Board()
-#         print(b.board)
-#         print(b.count_cells())
+class BoardTestCase(TestCase):
+    def test_board(self):
+        b = board.Board()
+        expected_board = [[[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0], [0, 0], [0]], [[0, 0], [0]], [[0]]]
+        self.assertEqual(b.board, expected_board)
+        self.assertEqual(b.count_cells(), 56)
 
-#     def test_is_region_free(self):
-#         b = board.Board()
-#         print(b.is_region_free([(0,0,0),(1,0,0),(0,0,5)]))
+    def test_is_region_free(self):
+        b = board.Board()
+        self.assertTrue(b.is_region_free([(0,0,0),(1,0,0),(0,0,5)]))
+        b.board[0][0][0] = 1
+        self.assertFalse(b.is_region_free([(0,0,0)]))
+        self.assertFalse(b.is_region_free([(6,6,6)]))
 
-#     def test_get_matching_empty_regions(self):
-#         b = board.Board()
-#         print(b.get_matching_empty_regions([(0,0,0),(1,0,0)]))
+    def test_get_matching_empty_regions(self):
+        b = board.Board()
+        expected_matching_regions = [[(0, 0, 0), (1, 0, 0)], [(1, 0, 0), (2, 0, 0)], [(2, 0, 0), (3, 0, 0)], [(3, 0, 0), (4, 0, 0)], [(4, 0, 0), (5, 0, 0)], [(0, 1, 0), (1, 1, 0)], [(1, 1, 0), (2, 1, 0)], [(2, 1, 0), (3, 1, 0)], [(3, 1, 0), (4, 1, 0)], [(0, 2, 0), (1, 2, 0)], [(1, 2, 0), (2, 2, 0)], [(2, 2, 0), (3, 2, 0)], [(0, 3, 0), (1, 3, 0)], [(1, 3, 0), (2, 3, 0)], [(0, 4, 0), (1, 4, 0)], [(0, 0, 1), (1, 0, 1)], [(1, 0, 1), (2, 0, 1)], [(2, 0, 1), (3, 0, 1)], [(3, 0, 1), (4, 0, 1)], [(0, 1, 1), (1, 1, 1)], [(1, 1, 1), (2, 1, 1)], [(2, 1, 1), (3, 1, 1)], [(0, 2, 1), (1, 2, 1)], [(1, 2, 1), (2, 2, 1)], [(0, 3, 1), (1, 3, 1)], [(0, 0, 2), (1, 0, 2)], [(1, 0, 2), (2, 0, 2)], [(2, 0, 2), (3, 0, 2)], [(0, 1, 2), (1, 1, 2)], [(1, 1, 2), (2, 1, 2)], [(0, 2, 2), (1, 2, 2)], [(0, 0, 3), (1, 0, 3)], [(1, 0, 3), (2, 0, 3)], [(0, 1, 3), (1, 1, 3)], [(0, 0, 4), (1, 0, 4)]]
+        self.assertEqual(b.get_matching_empty_regions([(0,0,0),(1,0,0)]), expected_matching_regions)
+        self.assertFalse(b.get_matching_empty_regions([(0,0,0),(6,6,6)]))
 
-#     def test_verify_board(self):
-#         b = board.Board()
-#         b.board = [[[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [7, 7, 7, 0], [7, 0, 7], [0, 0], [0]], [[0, 0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0], [0, 0], [0]], [[0, 0], [0]], [[0]]]
-#         print(b.verify_board())
+    def test_verify_board(self):
+        b = board.Board()
+        b.board = [[[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [7, 7, 7, 0], [7, 0, 7], [0, 0], [0]],
+                   [[0, 0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0, 0], [0, 0, 0], [0, 0], [0]],
+                   [[0, 0, 0], [0, 0], [0]], [[0, 0], [0]], [[0]]]
+
+        self.assertTrue(b.verify_board())
+        b.board = [[[0, 0, 0, 0, 0, 0], [0, 7, 0, 0, 0], [7, 0, 7, 0], [7, 0, 7], [0, 0], [0]],
+                   [[0, 0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0], [0]], [[0, 0, 0, 0], [0, 0, 0], [0, 0], [0]],
+                   [[0, 0, 0], [0, 0], [0]], [[0, 0], [0]], [[0]]]
+        self.assertFalse(b.verify_board())
