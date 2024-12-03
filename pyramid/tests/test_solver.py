@@ -10,7 +10,6 @@ class SolverTestCase(TestCase):
         self.solver = Solver()
         self.board = pyramid_board(5)
         self.pieces = [Piece(i) for i in range(1, 13)]  
-        self.solver.id_conversions = {i: i for i in range(1, 13)}  
 
     def test_generate_board_cell_indexes(self):
         # Test if the board cell indexes are generated correctly
@@ -51,10 +50,14 @@ class SolverTestCase(TestCase):
             rows = solutions[0]  # Use the first generated solution
             solution_array = self.solver.rows_to_array_sol(rows, self.board)
             self.assertEqual(len(solution_array), self.board.layers)
-            # Additional checks for correctness of the solution array
-            #self.assertTrue(all(isinstance(layer, list) for layer in solution_array))  
+           
+            self.assertTrue(all(isinstance(layer, list) for layer in solution_array))  
 
     def test_generate_solutions(self):
         # Ensure the solver generates solutions
-        solutions = list(self.solver.generate_solutions(self.pieces, self.board))
-        self.assertTrue(solutions) 
+        solutions = []
+        for i, solution in enumerate(self.solver.generate_solutions(self.pieces, self.board)):
+            if i >= 5:
+                break
+            solutions.append(solution)
+        self.assertEqual(len(solutions), 5)
