@@ -1,6 +1,4 @@
 from .solver_functions import solver, pyramid_board, piece
-from .solver_functions.piece import pieces
-
 
 class Pyramid_Solver:
     """
@@ -12,7 +10,7 @@ class Pyramid_Solver:
     array_board : list
         A 3D array representing the current state of the pyramid board.
     pieces_placed : list
-        A list of pieces that are already placed on the board.
+        A list of pieces that are placed on the board.
 
     Methods
     -------

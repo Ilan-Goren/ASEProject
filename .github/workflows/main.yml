@@ -54,7 +54,7 @@ jobs:
         run: |
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
-          git add docs/build/html/index.html
+          git add .
           git commit -m "Update Sphinx documentation"
           git push
         continue-on-error: true

@@ -84,7 +84,7 @@ def pyramid_solutions(request):
                 'solutions': solutions,
                 'solutions_len': len(solutions)
             })
-        
+
         elif button_pressed == 'reset':
             solutions = manager.list()
             pyramid_solver.array_board = []
@@ -93,7 +93,11 @@ def pyramid_solutions(request):
             return redirect('pyramid_generator')
         
         elif button_pressed == 'partialConfigSolutions':
-            # solutions = manager.list()
+            solutions = manager.list()
+            pyramid_solver.array_board = []
+            pyramid_solver.pieces_placed = []
+            process = None
+
             pyramid_json = request.POST.get('pyramid', 0)
             pieces_placed_json = request.POST.get('piecesPlaced', 0)
 
@@ -113,11 +117,7 @@ def pyramid_solutions(request):
                 pyramid_solver.array_board = result
                 pyramid_solver.pieces_placed = pieces_placed
 
-            # Render the solutions page
-            return render(request, 'pyramid/generator.html', {
-                'pieces_placed_len': len(pyramid_solver.pieces_placed),
-                'solutions_len': len(solutions)
-            })
+            return redirect('pyramid_generator')
         
     return redirect('pyramid_home')
 

@@ -9,7 +9,7 @@ export function createTetrahedron(data) {
   const layerCount = data.length;
   
   const spacing = 2;
-  const height = layerCount * (spacing - 0.8);
+  const height = layerCount * (spacing - 0.5);
 
   data.forEach((layer, layerIndex) => {
     const layerHeight = (layerIndex / (layerCount - 1)) * height;
@@ -31,9 +31,9 @@ export function createTetrahedron(data) {
           const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
           const sphere = new THREE.Mesh(sphereGeometry, material);
 
-          const x = (colIndex - rowLength / 2) * spacing;
+          const x = (colIndex - rowLength / 2) * (spacing);
           const y = layerHeight;
-          const z = (rowIndex - (layer.length / 2)) * spacing;
+          const z = (rowIndex - (layer.length / 2)) * (spacing - 0.4);
 
           sphere.position.set(x, y, z);
           tetrahedronGroup.add(sphere);
