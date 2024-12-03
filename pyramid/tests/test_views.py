@@ -53,8 +53,8 @@ class ViewsTestCase(TestCase):
         Test the pyramid_solutions view with POST request for 'reset' button.
         """
         response = self.client.post(reverse('pyramid_solutions'), {'button': 'reset'})
-        self.assertEqual(response.status_code, 302)  # Redirect status code
-        self.assertRedirects(response, reverse('pyramid_generator'))
+        self.assertEqual(response.status_code, 302) 
+        self.assertRedirects(response, reverse('generator')) 
 
     def test_get_solution_count_view(self):
         """
@@ -98,8 +98,8 @@ class ViewsTestCase(TestCase):
         mock_process.is_alive.return_value = True
 
         response = self.client.post(reverse('stop_generator'))
-        self.assertEqual(response.status_code, 302)  # Redirect status code
-        self.assertRedirects(response, reverse('pyramid_generator'))
+        self.assertEqual(response.status_code, 302)  
+        self.assertRedirects(response, reverse('generator'))  
 
     @patch('pyramid.views.Process')
     def test_stop_generator_view_not_running(self, MockProcess):

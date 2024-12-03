@@ -4,8 +4,8 @@ import numpy as np
 from numpy.f2py.auxfuncs import throw_error
 
 from . import algorithm_x_functions
-from . import pyramid_board  # Ensure pyramid_board is imported correctly
-from . import piece  # Ensure piece is imported correctly
+from . import pyramid_board  
+from . import piece  
 
 class Solver:
     cell_to_index = {}

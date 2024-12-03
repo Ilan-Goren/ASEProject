@@ -27,7 +27,7 @@ def generator(request):
     """
     Displays the generator page for the Polysphere Pyramid application.
     """
-    return render(request, 'generator.html', {
+    return render(request, 'pyramid/generator.html', {
         'solutions_len': len(solutions)
     })
 
@@ -36,7 +36,7 @@ def puzzle(request):
     """
     Displays the puzzle page for the Polysphere Pyramid application.
     """
-    return render(request, 'puzzle.html')
+    return render(request, 'pyramid/puzzle.html')  # Ensure correct template path
 
 def pyramid_solutions(request):
     """
@@ -47,7 +47,7 @@ def pyramid_solutions(request):
     if request.method == 'POST':
         button_pressed = request.POST.get('button')
         if button_pressed == 'generatorSolutions':
-            return render(request, 'solutions.html', {
+            return render(request, 'pyramid/solutions.html', {  # Ensure correct template path
                 'solutions': solutions,
                 'solutions_len': len(solutions)
             })
@@ -135,7 +135,7 @@ def stop_generator(request):
 
     :returns: 
         JsonResponse:
-            - Redirects to "pyramid_solutions" if the process terminates successfully.
+            - Redirects to "generator" if the process terminates successfully.
             - Returns a JSON response with a 400 status if the process isn't running.
             - Returns a JSON response with a 400 status for invalid requests.
     """
@@ -145,7 +145,7 @@ def stop_generator(request):
             # Check if Process exists and is running first before terminating
             process.terminate()  # terminate process
             process.join()
-            return redirect("pyramid_generator")
+            return redirect("generator")
         
         return JsonResponse({"error": "Solver not running"}, status=400)
     return JsonResponse({"error": "Invalid request"}, status=400)
