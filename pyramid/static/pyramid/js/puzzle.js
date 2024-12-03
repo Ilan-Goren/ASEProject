@@ -99,7 +99,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
  * - Limits vertical rotation to avoid viewing below the plane.
  */
 const controls = new OrbitControls(camera, renderer.domElement);
-
 controls.enableDamping = true;  // Smooth movement
 controls.dampingFactor = 0.25;
 controls.screenSpacePanning = false;
@@ -185,8 +184,6 @@ const piecesGroup = createPieces();
 piecesGroup.forEach(piece  => {
   scene.add(piece);
 });
-const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-frame.position.set(0, 0.1, 0); // Position slightly above the plane
 
 
 /******************************************************************************************
