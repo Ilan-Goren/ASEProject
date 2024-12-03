@@ -3,7 +3,20 @@ from django.test import TestCase
 from ..solver_functions import solver, board, piece, algorithm_x_functions
 
 class HexSolverTestCase(TestCase):
+    """
+    Test cases for the Solver class and helper functions functionality.
+    """
     def test_generate_board_cell_indexes(self):
+        """
+        Test the `generate_board_cell_indexes` function.
+
+        This function verifies the board cell indexing, ensuring that:
+        - The generated board matches the expected board structure.
+        - The `index_to_cell` and `cell_to_index` mappings are accurate.
+        - Mappings are bidirectional and consistent.
+
+        :return: None
+        """
         s = solver.Solver()
         b = board.Board()
         s.generate_board_cell_indexes(b.board)
@@ -18,6 +31,15 @@ class HexSolverTestCase(TestCase):
             self.assertTrue(s.cell_to_index[value] in  s.index_to_cell.keys())
 
     def test_packing_matrix(self):
+        """
+        Test the initialization of the packing matrix.
+
+        This function ensures that:
+        - The packing matrix has the correct number of columns and rows in the default case of an empty board.
+        - The matrix configuration aligns with the board's cell count and the number of pieces.
+
+        :return: None
+        """
         s = solver.Solver()
         b = board.Board()
         pieces = []
@@ -29,6 +51,15 @@ class HexSolverTestCase(TestCase):
         self.assertEqual(s.matrix.num_rows, 4224)
 
     def test_packing_matrix_partial_config(self):
+        """
+        Test the initialization of the packing matrix with a partial board configuration.
+
+        This function verifies:
+        - The handling of pre-filled board cells.
+        - The packing matrix correctly accounts for pieces excluded from the initial configuration.
+
+        :return: None
+        """
         s = solver.Solver()
         b = board.Board()
         pieces = []
@@ -46,7 +77,16 @@ class HexSolverTestCase(TestCase):
         self.assertEqual(s.matrix.num_rows, 3375)
 
 
-    def test_solve(self): 
+    def test_solve(self):
+        """
+        Test the solving functionality of the solver.
+
+        This function ensures:
+        - Pieces are correctly placed on the board.
+        - The generated solution is valid and verified against the board constraints.
+
+        :return: None
+        """
         s = solver.Solver()
         b = board.Board()
         pieces = []
@@ -60,6 +100,16 @@ class HexSolverTestCase(TestCase):
         self.assertTrue(b.verify_board()) # use verify board to check all pieces are placed in valid placements
 
     def test_generate_solutions(self):
+        """
+        Test the generation of multiple solutions.
+
+        This function verifies:
+        - The solver can generate multiple valid solutions.
+        - Each solution satisfies board constraints and piece placements.
+        - The process stops after 10 solutions have been generated to save on runtime of the test.
+
+        :return: None
+        """
         s = solver.Solver()
         b = board.Board()
         pieces = []
