@@ -1,7 +1,16 @@
 from . import piece
 
 class Board:
+    """
+    Represents a 3D board with layers and cells for placing polyhex pieces.
+    """
     def __init__(self, board=None):
+        """
+        Initializes the Board object. If no board is provided, creates a default 6 layer board.
+
+        :param board: A nested list representing the initial state of the board, or None for a default board.
+        :type board: list[list[list[int]]], optional
+        """
         if board is None:
             self.board = [
                 [[0] * (6 - i) for i in range(6)],
@@ -14,10 +23,24 @@ class Board:
         else:
             self.board = board
 
-    def count_cells(self):#
+    def count_cells(self):
+        """
+        Counts the total number of cells in the board.
+
+        :return: The total number of cells.
+        :rtype: int
+        """
         return sum(len(row) for layer in self.board for row in layer)
 
     def is_region_free(self, region):
+        """
+        Checks if a given region of cells is free on the board.
+
+        :param region: A list of tuples representing cell coordinates (x, y, z).
+        :type region: list[tuple[int, int, int]]
+        :return: True if the region is free, False otherwise.
+        :rtype: bool
+        """
         for cell in region:
             if cell[2] > len(self.board) - 1:
                 return False
@@ -30,6 +53,14 @@ class Board:
         return True
 
     def get_matching_empty_regions(self, region):
+        """
+        Finds all regions on the board that match the given region and are free.
+
+        :param region: A list of tuples representing cell coordinates (x, y, z).
+        :type region: list[tuple[int, int, int]]
+        :return: A list of matching empty regions.
+        :rtype: list[list[tuple[int, int, int]]]
+        """
         matching_empty_regions = []
         for z in range(len(self.board)):
             for y in range(len(self.board[z])):
@@ -42,6 +73,12 @@ class Board:
         return matching_empty_regions
 
     def get_piece_locations(self):
+        """
+        Retrieves the locations of all placed pieces on the board.
+
+        :return: A dictionary where keys are piece IDs and values are lists of their cell coordinates.
+        :rtype: dict[int, list[tuple[int, int, int]]]
+        """
         placed_pieces = {}
 
         for z in range(len(self.board)):
@@ -56,6 +93,12 @@ class Board:
         return placed_pieces
 
     def verify_board(self):
+        """
+        Verifies the validity of the board by checking the placement of all pieces.
+
+        :return: True if the board is valid, False otherwise.
+        :rtype: bool
+        """
         piece_locations = self.get_piece_locations()
         valid = True
         for id in piece_locations:
