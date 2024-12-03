@@ -96,23 +96,22 @@ def pyramid_solutions(request):
             # solutions = manager.list()
             pyramid_json = request.POST.get('pyramid', 0)
             pieces_placed_json = request.POST.get('piecesPlaced', 0)
-            if not pyramid_json or not pieces_placed_json:
-                return redirect('pyramid_puzzle')
-            
-            pyramid = json.loads(pyramid_json)
-            pieces_placed = json.loads(pieces_placed_json)
-            result = [
-                [[int(item) if isinstance(item, str) and item.isdigit() else item for item in sublist] for sublist in group]
-                for group in pyramid
-            ]
 
-            if not pyramid_json or not pieces_placed_json:
-                return redirect('pyramid_home')
-            
-            pieces_placed = set(int(p) for p in pieces_placed)
+            if pyramid_json and pieces_placed_json:
+                pyramid = json.loads(pyramid_json)
+                pieces_placed = json.loads(pieces_placed_json)
+                result = [
+                    [[int(item) if isinstance(item, str) and item.isdigit() else item for item in sublist] for sublist in group]
+                    for group in pyramid
+                ]
 
-            pyramid_solver.array_board = result
-            pyramid_solver.pieces_placed = pieces_placed
+                if not pyramid_json or not pieces_placed_json:
+                    return redirect('pyramid_home')
+                
+                pieces_placed = set(int(p) for p in pieces_placed)
+
+                pyramid_solver.array_board = result
+                pyramid_solver.pieces_placed = pieces_placed
 
             # Render the solutions page
             return render(request, 'pyramid/generator.html', {

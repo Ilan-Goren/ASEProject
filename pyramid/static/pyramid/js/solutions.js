@@ -6,6 +6,11 @@ import { setEmissiveForSelected } from './helpers.js';
 const allPyramids = []
 var selected = null;
 
+
+/******************************************************************************************
+                                    ENVIROMENT SETUP  
+******************************************************************************************/
+
 // Scene setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xefefef);
@@ -69,9 +74,6 @@ scene.add(planeMain);
                                      SELECTING PYRAMIDS
 ******************************************************************************************/
 
-// Get the bounding rectangle of the canvas or main block
-const rect = canvas.getBoundingClientRect();
-
 function onClickHandler(event) {
 
   // Get mouse position relative to the canvas
@@ -98,10 +100,6 @@ function onClickHandler(event) {
     setEmissiveForSelected(selected, false);
     selected = null;
     console.log('nothing selected');
-    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0); // Horizontal plane at y = 0
-    const point = new THREE.Vector3();
-    raycaster.ray.intersectPlane(plane, point);
-    console.log('Click position on plane:', point);
   }
 }
 
@@ -185,7 +183,31 @@ function changeRadius() {
                                      DISPLAY A PYRAMID
 ******************************************************************************************/
 var overlayOpened = false;
-
+/*
+ * Handles button interactions for changing the pyramid view in the overlay.
+ *
+ * Args:
+ *   camera (THREE.Camera): The camera used for rendering the overlay scene.
+ *   scene (THREE.Scene): The overlay scene where the pyramid is rendered.
+ *   pyramidClone (THREE.Group): A clone of the pyramid group in the overlay scene.
+ *   pyramidGroup (THREE.Group): The original pyramid group used for cloning.
+ *   view (string): Determines the desired view ('h' for horizontal, 'v' for vertical, 'n' for normal).
+ *
+ * Functionality:
+ * - Clones the original pyramid group to ensure the original structure remains unchanged.
+ * - Removes all existing groups from the scene using `removeAllGroupsFromScene`.
+ * - Adjusts pyramid spacing based on the specified view:
+ *   - 'h': Adjust spacing for horizontal display.
+ *   - 'v': Adjust spacing for vertical display.
+ *   - 'n': Default view with no spacing adjustments.
+ * - Adds the adjusted or cloned pyramid group back to the scene.
+ * - Resets the pyramid's position to the origin (0, 0, 0).
+ * - Sets the camera to look at the center of the pyramid for a proper view.
+ *
+ * Notes:
+ * - The `adjustPyramidSpacing` function is invoked to modify the clone's layout for specific views.
+ * - The `removeAllGroupsFromScene` ensures only the current view is displayed in the overlay.
+ */
 function buttonHandler (camera, scene, pyramidClone, pyramidGroup, view){
   var pyramidClone = pyramidGroup.clone();
   
@@ -245,11 +267,42 @@ function showOverlay(selected) {
     renderPyramidInOverlay(pyramidGroup);
   }
 }
-
+/**
+ * Closes the overlay and updates the state to indicate it is no longer open.
+ *
+ * Functionality:
+ * - Sets the overlay element's display style to 'none', effectively hiding it.
+ * - Updates the `overlayOpened` flag to `false` to reflect the closed state.
+ *
+ * Notes:
+ * - Ensure this function is called when the overlay needs to be dismissed, such as when a close button is clicked.
+ */
 function closeOverlay(){
   overlay.style.display = 'none';
   overlayOpened = false;
 }
+
+/*
+ * Renders a pyramid structure in an overlay canvas with interactive controls.
+ *
+ * Args:
+ *   pyramidGroup (THREE.Group): The group containing the pyramid structure to be rendered.
+ *
+ * Features:
+ * - Creates an independent `THREE.Scene` for the overlay.
+ * - Sets up a new camera and renderer for the overlay display.
+ * - Adds lighting, including ambient and directional lights, to enhance visibility.
+ * - Utilizes `OrbitControls` for user interaction with the 3D overlay (rotation, zooming, etc.).
+ * - Clones the provided `pyramidGroup` to avoid modifying the original group.
+ * - Adds event listeners for button interactions (`hbutton`, `nbutton`, `vbutton`) to trigger specific handlers.
+ * - Ensures smooth rendering via `requestAnimationFrame` when the overlay is open.
+ *
+ * Notes:
+ * - The overlay has a light gray background for better contrast (`0xefefef`).
+ * - The cloned pyramid group is centered at the origin (0, 0, 0) for consistent visualization.
+ * - Camera position and orientation are set to provide a clear view of the pyramid.
+ * - Stops rendering when `overlayOpened` is false, optimizing performance.
+ */
 
 function renderPyramidInOverlay(pyramidGroup) {
   const overlayScene = new THREE.Scene();
