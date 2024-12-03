@@ -25,11 +25,11 @@ class SolverTestCase(TestCase):
         self.assertEqual(matrix.num_cols, expected_cols)
 
     def test_initialise_packing_matrix_partial_config(self):
-        # Adjust the expected number of columns
-        self.board.cells[(0, 0, 0)] = 1  
-        matrix = self.solver.initialise_packing_matrix_partial_config(self.board, self.pieces)
-        expected_cols = self.board.count_cells() + len(self.pieces) + 1  
-        self.assertEqual(matrix.num_cols, expected_cols)
+         # Adjust the expected number of columns
+         self.board.cells[(0, 0, 0)] = 1  
+         matrix = self.solver.initialise_packing_matrix_partial_config(self.board, self.pieces)
+         expected_cols = self.board.count_cells() + len(self.pieces) + 1  
+         self.assertEqual(matrix.num_cols, expected_cols)
 
     def test_solve_no_solution(self):
         # Test if the solver correctly identifies no solution
@@ -39,25 +39,28 @@ class SolverTestCase(TestCase):
         self.assertFalse(result)
 
     def test_solve_with_solution(self):
-        # Ensure the solver finds a solution
-        result = self.solver.solve(self.pieces, self.board)
-        self.assertTrue(result)  
+         # Ensure the solver finds a solution
+         result = self.solver.solve(self.pieces, self.board)
+         self.assertTrue(result)  
 
     def test_rows_to_array_sol(self):
-        # Use a real solution generation
-        solutions = list(self.solver.generate_solutions(self.pieces, self.board))
-        if solutions:
-            rows = solutions[0]  # Use the first generated solution
-            solution_array = self.solver.rows_to_array_sol(rows, self.board)
-            self.assertEqual(len(solution_array), self.board.layers)
-           
-            self.assertTrue(all(isinstance(layer, list) for layer in solution_array))  
+         # Use a real solution generation
+         solutions = []
+         for i, solution in enumerate(self.solver.generate_solutions(self.pieces, self.board)):
+             if i >= 5:
+                 break
+             solutions.append(solution)
+         if solutions:
+             rows = solutions[0]  # Use the first generated solution
+             solution_array = self.solver.rows_to_array_sol(rows, self.board)
+             self.assertEqual(len(solution_array), self.board.layers)
+             self.assertTrue(all(isinstance(layer, list) for layer in solution_array))  
 
     def test_generate_solutions(self):
-        # Ensure the solver generates solutions
-        solutions = []
-        for i, solution in enumerate(self.solver.generate_solutions(self.pieces, self.board)):
-            if i >= 5:
-                break
-            solutions.append(solution)
-        self.assertEqual(len(solutions), 5)
+         # Ensure the solver generates solutions
+         solutions = []
+         for i, solution in enumerate(self.solver.generate_solutions(self.pieces, self.board)):
+             if i >= 5:
+                 break
+             solutions.append(solution)
+         self.assertEqual(len(solutions), 5)
