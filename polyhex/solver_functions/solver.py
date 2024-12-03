@@ -4,12 +4,21 @@ from . import  algorithm_x_functions, piece, board
 
 
 class Solver:
+    """
+    Handles solving polyhex packing problems on the equilateral pyramid board.
+    """
     cell_to_index = {}
     index_to_cell = {}
     id_conversions = {}
     matrix = None
 
     def generate_board_cell_indexes(self, hex_board):
+        """
+        Generates mappings between board cell coordinates and their matrix column indices.
+
+        :param hex_board: The hexagonal board to index.
+        :type hex_board: Board
+        """
         i = 1
         for z in range(len(hex_board)):
             for y in range(len(hex_board[z])):
@@ -19,6 +28,16 @@ class Solver:
                     i += 1
 
     def initialise_packing_matrix(self, hex_board, pieces):
+        """
+        Initializes the matrix for Algorithm X with all possible piece placements.
+
+        :param hex_board: The board to solve. Assumed to be empty.
+        :type hex_board: Board
+        :param pieces: A list of polyomino pieces for the board.
+        :type pieces: list[Piece]
+        :return: The initialized matrix for Algorithm X.
+        :rtype: algorithm_x_functions.Matrix
+        """
         self.cell_to_index = {}
         self.index_to_cell = {}
         self.id_conversions = {}
@@ -45,6 +64,16 @@ class Solver:
         return self.matrix
 
     def initialise_packing_matrix_partial_config(self, hex_board, remaining_pieces):
+        """
+        Initializes the matrix for Algorithm X with a partially configured board.
+
+        :param hex_board: The partially configured board. Assumed to have pieces already placed.
+        :type hex_board: Board
+        :param remaining_pieces: The pieces left for the board.
+        :type remaining_pieces: list[Piece]
+        :return: The initialized matrix for Algorithm X.
+        :rtype: algorithm_x_functions.Matrix
+        """
         self.cell_to_index = {}
         self.index_to_cell = {}
         self.id_conversions = {}
@@ -106,6 +135,16 @@ class Solver:
         return self.matrix
 
     def solve(self, pieces, hex_board=None):
+        """
+        Solves the polyomino packing problem using Algorithm X.
+
+        :param pieces: The pieces to place on the board.
+        :type pieces: list[Piece]
+        :param hex_board: The board to solve, defaults to an empty board.
+        :type hex_board: Board, optional
+        :return: A list of rows representing a solution matrix, or False if no solution exists.
+        :rtype: list[list[int]] | bool
+        """
         if hex_board is None:
             hex_board = board.Board()
 
@@ -142,6 +181,16 @@ class Solver:
         return rows
 
     def rows_to_array_sol(self, rows, hex_board):
+        """
+        Converts a solution matrix to a 3D array representation of the solved board.
+
+        :param rows: The rows from the solution matrix.
+        :type rows: list[list[int]]
+        :param hex_board: The board used in the solver.
+        :type hex_board: Board
+        :return: A 3D array representation of the solved board.
+        :rtype: list[list[list[int]]]
+        """
         solution_array = [
                 [[0] * (6 - i) for i in range(6)],
                 [[0] * (5 - i) for i in range(5)],
@@ -171,6 +220,16 @@ class Solver:
         return solution_array
 
     def generate_solutions(self, pieces, hex_board=None):
+        """
+        Generates all solutions for the polyhex packing problem.
+
+        :param pieces: The pieces to place on the board.
+        :type pieces: list[Piece]
+        :param hex_board: The board to solve, defaults to an empty board.
+        :type hex_board: Board, optional
+        :yield: A list of rows representing a solution matrix
+        :rtype: generator[list[list[int]]]
+        """
         if hex_board is None:
             hex_board = board.Board()
 
