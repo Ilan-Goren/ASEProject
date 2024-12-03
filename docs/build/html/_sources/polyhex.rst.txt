@@ -1,35 +1,30 @@
-Polyhex App
-===============
+Polyhex Application Documentation
+==================================
 
-Subpackages
------------
+This documentation provides an overview of the Polyhex application, its class structure, and views.
 
-.. toctree::
-   :maxdepth: 1
+Content
+-------
 
-Submodules
-----------
+1. Polyhex Class
+2. Polyhex Views
 
-polyhex.polyhex module
-----------------------
+Polyhex Class
+--------------
 
-.. automodule:: polyhex.polyhex
+The `Polyhex` class handles the core functionality of the application. It includes the logic for solving the Polyhex puzzle and managing the state of the puzzle board.
+
+.. autoclass:: polyhex.polyhex.Polyhex_Solver
    :members:
    :undoc-members:
    :show-inheritance:
 
-polyhex.views module
---------------------
+Polyhex Views
+-------------
+
+The views in this module handle the HTTP requests for rendering different parts of the Polyhex application, such as the puzzle board and solution generator.
 
 .. automodule:: polyhex.views
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: polyhex
    :members:
    :undoc-members:
    :show-inheritance:

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Polyhex App &#8212; ASE Project  documentation</title>
+    <title>Polyhex Application Documentation &#8212; ASE Project  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -14,7 +14,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Pyramid App" href="pyramid.html" />
+    <link rel="prev" title="Pyramid Application Documentation" href="pyramid.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -32,84 +32,142 @@
 
           <div class="body" role="main">
             
-  <section id="polyhex-app">
-<h1>Polyhex App<a class="headerlink" href="#polyhex-app" title="Link to this heading">¶</a></h1>
-<section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
-<div class="toctree-wrapper compound">
-</div>
+  <section id="polyhex-application-documentation">
+<h1>Polyhex Application Documentation<a class="headerlink" href="#polyhex-application-documentation" title="Link to this heading">¶</a></h1>
+<p>This documentation provides an overview of the Polyhex application, its class structure, and views.</p>
+<section id="content">
+<h2>Content<a class="headerlink" href="#content" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Polyhex Class</p></li>
+<li><p>Polyhex Views</p></li>
+</ol>
 </section>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
-</section>
-<section id="module-polyhex.polyhex">
-<span id="polyhex-polyhex-module"></span><h2>polyhex.polyhex module<a class="headerlink" href="#module-polyhex.polyhex" title="Link to this heading">¶</a></h2>
+<section id="polyhex-class">
+<h2>Polyhex Class<a class="headerlink" href="#polyhex-class" title="Link to this heading">¶</a></h2>
+<p>The <cite>Polyhex</cite> class handles the core functionality of the application. It includes the logic for solving the Polyhex puzzle and managing the state of the puzzle board.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="polyhex.polyhex.Polyhex_Solver">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.polyhex.</span></span><span class="sig-name descname"><span class="pre">Polyhex_Solver</span></span><a class="reference internal" href="_modules/polyhex/polyhex.html#Polyhex_Solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.polyhex.Polyhex_Solver" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Solver class for the Polyhex puzzle.</p>
+<p>This class is responsible for solving the Polyhex puzzle by verifying the board and generating solutions based on the available pieces.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>board (list): The current state of the Polyhex puzzle board.
+pieces_placed (list): A list of pieces that have already been placed on the board.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="polyhex.polyhex.Polyhex_Solver.solve">
 <span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solutions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/polyhex.html#Polyhex_Solver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.polyhex.Polyhex_Solver.solve" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Solves the Polyhex puzzle by generating all possible solutions for the current board state.</p>
+<p>This method uses the <cite>solver.Solver</cite> to generate solutions based on the available pieces and board state. 
+It validates the board before generating the solutions and appends them to the provided <cite>solutions</cite> list.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>solutions (multiprocessing.Manager.list): A shared list to store generated solutions.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True if the solutions were successfully generated, False if the board is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 </section>
-<section id="module-polyhex.views">
-<span id="polyhex-views-module"></span><h2>polyhex.views module<a class="headerlink" href="#module-polyhex.views" title="Link to this heading">¶</a></h2>
-<dl class="py function">
+<section id="polyhex-views">
+<h2>Polyhex Views<a class="headerlink" href="#polyhex-views" title="Link to this heading">¶</a></h2>
+<p>The views in this module handle the HTTP requests for rendering different parts of the Polyhex application, such as the puzzle board and solution generator.</p>
+<dl class="py function" id="module-polyhex.views">
 <dt class="sig sig-object py" id="polyhex.views.get_solution_count">
 <span class="sig-prename descclassname"><span class="pre">polyhex.views.</span></span><span class="sig-name descname"><span class="pre">get_solution_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/views.html#get_solution_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.views.get_solution_count" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the current count of generated solutions.</p>
+<p>This view returns the current number of generated solutions, checking if the solution generation process is still active. 
+If the process is complete, a message indicating that the generation is finished is returned.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>JsonResponse: A JSON response containing:</dt><dd><ul class="simple">
+<li><p>{“length”: &lt;count&gt;} if the process is active.</p></li>
+<li><p>{“Done”: “Generation completed”} if the process is not running.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="polyhex.views.home">
 <span class="sig-prename descclassname"><span class="pre">polyhex.views.</span></span><span class="sig-name descname"><span class="pre">home</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/views.html#home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.views.home" title="Link to this definition">¶</a></dt>
 <dd><p>Displays the homepage for the Polysphere Pyramid application.</p>
+<p>This view renders the homepage, where users can start interacting with the Polyhex puzzle.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object.</p>
+</dd>
+<dt>Returns:</dt><dd><p>HttpResponse: The rendered homepage template.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="polyhex.views.polyhex_generator">
 <span class="sig-prename descclassname"><span class="pre">polyhex.views.</span></span><span class="sig-name descname"><span class="pre">polyhex_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/views.html#polyhex_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.views.polyhex_generator" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Displays the generator page for the Polysphere Pyramid application.</p>
+<p>This view renders the generator page where users can generate solutions for the Polyhex puzzle. 
+It also provides the current number of solutions and the number of pieces placed.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object.</p>
+</dd>
+<dt>Returns:</dt><dd><p>HttpResponse: The rendered generator page template.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="polyhex.views.polyhex_solutions">
 <span class="sig-prename descclassname"><span class="pre">polyhex.views.</span></span><span class="sig-name descname"><span class="pre">polyhex_solutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/views.html#polyhex_solutions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.views.polyhex_solutions" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handles the solution generation and reset actions for the Polyhex puzzle.</p>
+<p>This view processes POST requests for generating solutions, resetting the puzzle state, and saving a new puzzle configuration.
+Depending on the button pressed, it either renders the solutions page, resets the puzzle, or saves the new puzzle state.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object containing form data.</p>
+</dd>
+<dt>Returns:</dt><dd><p>HttpResponseRedirect: A redirect response to another view, either the solutions page or the puzzle generator.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="polyhex.views.puzzle">
 <span class="sig-prename descclassname"><span class="pre">polyhex.views.</span></span><span class="sig-name descname"><span class="pre">puzzle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/views.html#puzzle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.views.puzzle" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Displays the puzzle page for the Polysphere Pyramid application.</p>
+<p>This view renders the puzzle page where users can interact with the current puzzle, 
+viewing the current board state and the number of solutions generated.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object.</p>
+</dd>
+<dt>Returns:</dt><dd><p>HttpResponse: The rendered puzzle page template.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="polyhex.views.start_generator">
 <span class="sig-prename descclassname"><span class="pre">polyhex.views.</span></span><span class="sig-name descname"><span class="pre">start_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/views.html#start_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.views.start_generator" title="Link to this definition">¶</a></dt>
-<dd><p>Handles the HTTP request to initiate the solution generation process.</p>
-<p>This function checks if the solution generation process is active and, if not, starts a new process. 
-It manages incoming requests and ensures only one process is active at a time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request object.</p>
+<dd><p>Starts the solution generation process.</p>
+<p>This view initiates the solution generation process by starting a new process, if one is not already running. 
+It ensures that only one process can be active at a time.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object.</p>
 </dd>
-<dt class="field-even">Global process<span class="colon">:</span></dt>
-<dd class="field-even"><p>The multiprocessing.Process instance that handles solution generation.</p>
-</dd>
-<dt class="field-odd">Global solutions<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list for storing generated solutions.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>JsonResponse:</dt><dd><ul class="simple">
-<li><p>A JSON response with {“status”: “started”} and a 200 status code if the process starts successfully.</p></li>
-<li><p>A JSON response with {“status”: “already running”} if the process is already active.</p></li>
-<li><p>A JSON response with {“error”: “Invalid request”} and a 400 status code for invalid requests.</p></li>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>JsonResponse: A JSON response indicating the status of the process:</dt><dd><ul class="simple">
+<li><p>{“status”: “started”} if the process starts successfully.</p></li>
+<li><p>{“status”: “already running”} if the process is already active.</p></li>
+<li><p>{“error”: “Invalid request”} for invalid requests.</p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd>
 </dl>
 </dd></dl>
@@ -118,32 +176,22 @@ It manages incoming requests and ensures only one process is active at a time.</
 <dt class="sig sig-object py" id="polyhex.views.stop_generator">
 <span class="sig-prename descclassname"><span class="pre">polyhex.views.</span></span><span class="sig-name descname"><span class="pre">stop_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/views.html#stop_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.views.stop_generator" title="Link to this definition">¶</a></dt>
 <dd><p>Stops the solution generation process if it is currently running.</p>
-<p>This function handles a POST request to terminate the ongoing solution generation process. 
-It checks the state of the process and responds accordingly.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The HTTP request object, expected to be a POST request.</p>
+<p>This view terminates the ongoing solution generation process upon a POST request and ensures the process is stopped properly.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>request (HttpRequest): The HTTP request object, expected to be a POST request.</p>
 </dd>
-<dt class="field-even">Globals<span class="colon">:</span></dt>
-<dd class="field-even"><p>process: The process responsible for handling solution generation.</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>JsonResponse:</dt><dd><ul class="simple">
-<li><p>Redirects to “pyramid_solutions” if the process terminates successfully.</p></li>
-<li><p>Returns a JSON response with a 400 status if the process isn’t running.</p></li>
-<li><p>Returns a JSON response with a 400 status for invalid requests.</p></li>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>JsonResponse: A JSON response indicating the result of the stop action:</dt><dd><ul class="simple">
+<li><p>{“Success”: “Stopped Successfully”} if the process is terminated successfully.</p></li>
+<li><p>{“error”: “Solver not running”} if no process is active.</p></li>
+<li><p>{“error”: “Invalid request”} for invalid requests.</p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd>
 </dl>
 </dd></dl>
 
-</section>
-<section id="module-polyhex">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-polyhex" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -175,13 +223,11 @@ It checks the state of the process and responds accordingly.</p>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="pyramid.html">Pyramid App</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Polyhex App</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-polyhex.polyhex">polyhex.polyhex module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-polyhex.views">polyhex.views module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-polyhex">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyramid.html">Pyramid Application Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Polyhex Application Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#content">Content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#polyhex-class">Polyhex Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#polyhex-views">Polyhex Views</a></li>
 </ul>
 </li>
 </ul>
@@ -190,7 +236,7 @@ It checks the state of the process and responds accordingly.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="pyramid.html" title="previous chapter">Pyramid App</a></li>
+      <li>Previous: <a href="pyramid.html" title="previous chapter">Pyramid Application Documentation</a></li>
   </ul></li>
 </ul>
 </div>

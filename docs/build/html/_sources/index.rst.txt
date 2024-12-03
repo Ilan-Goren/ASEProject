@@ -1,4 +1,4 @@
-Welcome to ase_project's documentation!
+Welcome to the documentation!
 ========================================
 
 .. toctree::

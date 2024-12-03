@@ -33,11 +33,24 @@
   <h1>Source code for polyhex.polyhex</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">.solver_functions</span> <span class="kn">import</span> <span class="n">solver</span><span class="p">,</span> <span class="n">piece</span><span class="p">,</span> <span class="n">board</span>
 
-
 <div class="viewcode-block" id="Polyhex_Solver">
 <a class="viewcode-back" href="../../polyhex.html#polyhex.polyhex.Polyhex_Solver">[docs]</a>
 <span class="k">class</span> <span class="nc">Polyhex_Solver</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solver class for the Polyhex puzzle.</span>
+
+<span class="sd">    This class is responsible for solving the Polyhex puzzle by verifying the board and generating solutions based on the available pieces.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        board (list): The current state of the Polyhex puzzle board.</span>
+<span class="sd">        pieces_placed (list): A list of pieces that have already been placed on the board.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Polyhex_Solver instance.</span>
+
+<span class="sd">        This constructor sets up the initial empty board and an empty list for the pieces placed on the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pieces_placed</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -45,9 +58,22 @@
 <div class="viewcode-block" id="Polyhex_Solver.solve">
 <a class="viewcode-back" href="../../polyhex.html#polyhex.polyhex.Polyhex_Solver.solve">[docs]</a>
     <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solutions</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Solves the Polyhex puzzle by generating all possible solutions for the current board state.</span>
+
+<span class="sd">        This method uses the `solver.Solver` to generate solutions based on the available pieces and board state. </span>
+<span class="sd">        It validates the board before generating the solutions and appends them to the provided `solutions` list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            solutions (multiprocessing.Manager.list): A shared list to store generated solutions.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the solutions were successfully generated, False if the board is invalid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Solver</span><span class="p">()</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="p">)</span>
 
+         <span class="c1"># Verify board validity</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">b</span><span class="o">.</span><span class="n">verify_board</span><span class="p">():</span>
                 <span class="n">b</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">()</span>
@@ -55,6 +81,7 @@
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="n">b</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">board</span>
 
+        <span class="c1"># Prepare pieces to place on the board</span>
         <span class="n">pieces_to_place</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">piece</span><span class="o">.</span><span class="n">pieces</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pieces_placed</span><span class="p">)</span>
@@ -62,6 +89,7 @@
                 <span class="k">continue</span>
             <span class="n">pieces_to_place</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">piece</span><span class="o">.</span><span class="n">Piece</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
+        <span class="c1"># Generate solutions</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">rows</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">generate_solutions</span><span class="p">(</span><span class="n">pieces_to_place</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
             <span class="n">solutions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">rows_to_array_sol</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
@@ -99,8 +127,8 @@
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../pyramid.html">Pyramid App</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../polyhex.html">polyhex package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pyramid.html">Pyramid Application Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../polyhex.html">Polyhex Application Documentation</a></li>
 </ul>
 
 <div class="relations">

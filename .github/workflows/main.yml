@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'docs/build/**'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -46,15 +48,16 @@ jobs:
       - name: Build HTML documentation
         run: |
           cd docs
-          sphinx-build -b html source build
+          make html
 
       - name: Commit and push updated docs
         run: |
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
-          git add static/docs/_build/index.html
+          git add docs/build/html/index.html
           git commit -m "Update Sphinx documentation"
           git push
+        continue-on-error: true
 
   build_and_push:
     runs-on: ubuntu-latest

@@ -39,11 +39,13 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">.Pyramid</span> <span class="kn">import</span> <span class="n">Pyramid_Solver</span>
 
-
+<span class="c1"># Initialize the Pyramid_Solver instance</span>
 <span class="n">pyramid_solver</span> <span class="o">=</span> <span class="n">Pyramid_Solver</span><span class="p">()</span>
 
 <span class="c1"># Manager for multiprocessing to store shared data</span>
 <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">()</span>
+
+<span class="c1"># Shared list for storing generated solutions</span>
 <span class="n">solutions</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 
 <span class="c1"># Initial process set to None for generator handling</span>
@@ -53,16 +55,30 @@
 <a class="viewcode-back" href="../../pyramid.html#pyramid.views.home">[docs]</a>
 <span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Displays the homepage for the Polysphere Pyramid application.</span>
+<span class="sd">    Render the homepage for the Polysphere Pyramid application.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: The rendered homepage template.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;pyramid/home.html&#39;</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="generator">
 <a class="viewcode-back" href="../../pyramid.html#pyramid.views.generator">[docs]</a>
 <span class="k">def</span> <span class="nf">generator</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Displays the generator page for the Polysphere Pyramid application.</span>
+<span class="sd">    Render the generator page for the Polysphere Pyramid application.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: The rendered generator page template with the number of placed pieces</span>
+<span class="sd">        and solutions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;pyramid/generator.html&#39;</span><span class="p">,</span> <span class="p">{</span>
         <span class="s1">&#39;pieces_placed_len&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyramid_solver</span><span class="o">.</span><span class="n">pieces_placed</span><span class="p">),</span>
@@ -70,12 +86,17 @@
     <span class="p">})</span></div>
 
 
-
 <div class="viewcode-block" id="puzzle">
 <a class="viewcode-back" href="../../pyramid.html#pyramid.views.puzzle">[docs]</a>
 <span class="k">def</span> <span class="nf">puzzle</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Displays the puzzle page for the Polysphere Pyramid application.</span>
+<span class="sd">    Render the puzzle page for the Polysphere Pyramid application.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: The rendered puzzle page template.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;pyramid/puzzle.html&#39;</span><span class="p">)</span></div>
 
@@ -84,7 +105,19 @@
 <a class="viewcode-back" href="../../pyramid.html#pyramid.views.pyramid_solutions">[docs]</a>
 <span class="k">def</span> <span class="nf">pyramid_solutions</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Displays the pyramid solutions page.</span>
+<span class="sd">    Handle the pyramid solutions page, including displaying solutions, resetting the state,</span>
+<span class="sd">    and processing partial configuration solutions based on the POST data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object containing the action to perform.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: Renders a solutions page, resets the board state, or redirects as needed.</span>
+<span class="sd">        </span>
+<span class="sd">    Process:</span>
+<span class="sd">        - &#39;generatorSolutions&#39;: Displays the list of solutions.</span>
+<span class="sd">        - &#39;reset&#39;: Clears solutions and resets the board state.</span>
+<span class="sd">        - &#39;partialConfigSolutions&#39;: Processes partial configuration from the request and updates the board.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">solutions</span><span class="p">,</span> <span class="n">process</span>
 
@@ -143,19 +176,19 @@
 <a class="viewcode-back" href="../../pyramid.html#pyramid.views.get_solution_count">[docs]</a>
 <span class="nd">@csrf_exempt</span>
 <span class="k">def</span> <span class="nf">get_solution_count</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">global</span> <span class="n">process</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the current count of generated solutions.</span>
 
-<span class="sd">    This function processes the HTTP request and responds with the number of solutions that have been generated.</span>
+<span class="sd">    This function checks if the solution generation process is active and, if so, returns the count of generated solutions.</span>
 
-<span class="sd">    :param request: The HTTP request object.</span>
-<span class="sd">    :type request: HttpRequest</span>
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
 
-<span class="sd">    :returns: </span>
-<span class="sd">        JsonResponse: </span>
-<span class="sd">            A JSON response containing the key &quot;length&quot; with the total count of generated solutions.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        JsonResponse: A JSON response with the key &quot;length&quot; representing the total count of generated solutions,</span>
+<span class="sd">                      or a message indicating the generation process is complete if the process is not running.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">process</span>
     <span class="k">if</span> <span class="n">process</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">solutions</span><span class="p">)})</span>
     <span class="k">else</span><span class="p">:</span>
@@ -169,22 +202,22 @@
 <span class="nd">@csrf_exempt</span>
 <span class="k">def</span> <span class="nf">start_generator</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Handles the HTTP request to initiate the solution generation process.</span>
+<span class="sd">    Starts the solution generation process.</span>
 
-<span class="sd">    This function checks if the solution generation process is active and, if not, starts a new process. </span>
-<span class="sd">    It manages incoming requests and ensures only one process is active at a time.</span>
+<span class="sd">    This function checks if the solution generation process is active. If not, it starts a new process to generate solutions.</span>
 
-<span class="sd">    :param request: The HTTP request object.</span>
-<span class="sd">    :type request: HttpRequest</span>
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
 
-<span class="sd">    :global process: The multiprocessing.Process instance that handles solution generation.</span>
-<span class="sd">    :global solutions: A list for storing generated solutions.</span>
+<span class="sd">    Globals:</span>
+<span class="sd">        process (multiprocessing.Process): The process handling solution generation.</span>
+<span class="sd">        solutions (list): The list of generated solutions.</span>
 
-<span class="sd">    :returns: </span>
-<span class="sd">        JsonResponse:</span>
-<span class="sd">            - A JSON response with {&quot;status&quot;: &quot;started&quot;} and a 200 status code if the process starts successfully.</span>
-<span class="sd">            - A JSON response with {&quot;status&quot;: &quot;already running&quot;} if the process is already active.</span>
-<span class="sd">            - A JSON response with {&quot;error&quot;: &quot;Invalid request&quot;} and a 400 status code for invalid requests.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        JsonResponse: </span>
+<span class="sd">            - A JSON response with {&quot;status&quot;: &quot;started&quot;} if the process starts successfully.</span>
+<span class="sd">            - A JSON response with {&quot;status&quot;: &quot;already running&quot;} if a process is already running.</span>
+<span class="sd">            - A JSON response with {&quot;error&quot;: &quot;Invalid request&quot;} for invalid requests.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">process</span><span class="p">,</span> <span class="n">solutions</span> <span class="c1"># Declare process and solutions as global</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
@@ -205,22 +238,21 @@
 <span class="nd">@csrf_exempt</span>
 <span class="k">def</span> <span class="nf">stop_generator</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Stops the solution generation process if it is currently running.</span>
+<span class="sd">    Stops the solution generation process.</span>
 
-<span class="sd">    This function handles a POST request to terminate the ongoing solution generation process. </span>
-<span class="sd">    It checks the state of the process and responds accordingly.</span>
+<span class="sd">    This function terminates the ongoing solution generation process if it is running.</span>
 
-<span class="sd">    :param request: The HTTP request object, expected to be a POST request.</span>
-<span class="sd">    :type request: HttpRequest</span>
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object, expected to be a POST request.</span>
 
-<span class="sd">    :globals: </span>
-<span class="sd">        process: The process responsible for handling solution generation.</span>
+<span class="sd">    Globals:</span>
+<span class="sd">        process (multiprocessing.Process): The process responsible for solution generation.</span>
 
-<span class="sd">    :returns: </span>
+<span class="sd">    Returns:</span>
 <span class="sd">        JsonResponse:</span>
-<span class="sd">            - Redirects to &quot;pyramid_solutions&quot; if the process terminates successfully.</span>
-<span class="sd">            - Returns a JSON response with a 400 status if the process isn&#39;t running.</span>
-<span class="sd">            - Returns a JSON response with a 400 status for invalid requests.</span>
+<span class="sd">            - A JSON response with {&quot;Success&quot;: &quot;Stopped Successfully&quot;} if the process is stopped successfully.</span>
+<span class="sd">            - A JSON response with {&quot;error&quot;: &quot;Solver not running&quot;} if the process is not running.</span>
+<span class="sd">            - A JSON response with {&quot;error&quot;: &quot;Invalid request&quot;} for invalid requests.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">process</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
@@ -264,8 +296,8 @@
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../pyramid.html">Pyramid App</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../polyhex.html">polyhex package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pyramid.html">Pyramid Application Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../polyhex.html">Polyhex Application Documentation</a></li>
 </ul>
 
 <div class="relations">
