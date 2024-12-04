@@ -577,6 +577,29 @@ function updatePageSizeMessage() {
 // Add event listener for page size apply button
 document.getElementById('page-size-apply').addEventListener('click', updatePageSize);
 
+
+function debounce(func, delay) {
+  let timeoutId;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
+
+// Apply to resize event
+const debouncedResize = debounce(() => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}, 250);
+
+window.addEventListener('resize', debouncedResize);
+
+
 // Initial page load
 displayCurrentPage();
 

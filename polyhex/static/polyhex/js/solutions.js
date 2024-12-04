@@ -329,31 +329,6 @@ const renderLoop = () => {
 
 renderLoop();
 
-function createBoundingBox() {
-  // Calculate grid dimensions as a square
-  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
-  const gridRows = gridColumns;
-
-  const gridWidth = spacingX * gridColumns;
-  const gridDepth = spacingZ * gridRows;
-
-  const edges = new THREE.EdgesGeometry(
-    new THREE.BoxGeometry(gridWidth, 10, gridDepth)
-  );
-
-  const boundingBoxLines = new THREE.LineSegments(
-    edges,
-    new THREE.LineBasicMaterial({
-      color: 0x00ff00,
-      linewidth: 2
-    })
-  );
-
-  boundingBoxLines.position.set(0, 0.5, 0);  // Center of the grid
-  scene.add(boundingBoxLines);
-  return boundingBoxLines;
-}
-
 function updatePageInfo() {
   const pageInfoElement = document.getElementById('page-info');
   const totalPages = Math.ceil(totalSolutions / solutionsPerPage);
@@ -497,3 +472,24 @@ document.getElementById('page-size-apply').addEventListener('click', updatePageS
 displayCurrentPage();
 
 updatePageSizeMessage();
+
+function debounce(func, delay) {
+  let timeoutId;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
+
+// Apply to resize event
+const debouncedResize = debounce(() => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}, 250);
+
+window.addEventListener('resize', debouncedResize);
