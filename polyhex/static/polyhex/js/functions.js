@@ -33,7 +33,7 @@ export function createTetrahedron(data) {
 
           const x = (colIndex - rowLength / 2) * (spacing);
           const y = layerHeight;
-          const z = (rowIndex - (layer.length / 2)) * (spacing - 0.4);
+          const z = (rowIndex - (layer.length / 2)) * (spacing - 0.4) - (layerHeight/8);
 
           sphere.position.set(x, y, z);
           tetrahedronGroup.add(sphere);
