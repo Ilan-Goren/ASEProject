@@ -3,17 +3,36 @@ import time
 from . import algorithm_x_functions, piece, pyramid_board
 
 class Solver:
+    """
+    Solver class for packing polyomino pieces onto a pyramid board using Algorithm X.
+    """
     cell_to_index = {}
     index_to_cell = {}
     id_conversions = {}
     matrix = None
 
     def generate_board_cell_indexes(self, board):
+        """
+        Generates a mapping between board cell coordinates and column indexes in the matrix.
+
+        :param board: The pyramid board object.
+        :type board: pyramid_board
+        """
         for i, cell in enumerate(board.cells, start=1):
             self.cell_to_index[cell] = i
             self.index_to_cell[i] = cell
 
     def initialise_packing_matrix(self, board, pieces):
+        """
+        Initializes the exact cover matrix for the packing problem.
+
+        :param board: The pyramid board object.
+        :type board: pyramid_board
+        :param pieces: A list of pieces to pack onto the board.
+        :type pieces: list[Piece]
+        :return: The initialized matrix for the packing problem.
+        :rtype: algorithm_x_functions.Matrix
+        """
         self.cell_to_index = {}
         self.index_to_cell = {}
         self.id_conversions = {}
@@ -44,6 +63,16 @@ class Solver:
         return self.matrix
 
     def initialise_packing_matrix_partial_config(self, board, remaining_pieces):
+        """
+        Initializes the exact cover matrix for a partially filled board configuration.
+
+        :param board: The pyramid board, assumed to have some pieces placed.
+        :type board: pyramid_board
+        :param remaining_pieces: A list of pieces yet to be placed on the board.
+        :type remaining_pieces: list[Piece]
+        :return: The initialized matrix for the packing problem.
+        :rtype: algorithm_x_functions.Matrix
+        """
         self.cell_to_index = {}
         self.index_to_cell = {}
         self.id_conversions = {}
@@ -104,6 +133,16 @@ class Solver:
 
 
     def solve(self, pieces, board=None):
+        """
+        Solves the packing problem for the given board and pieces.
+
+        :param pieces: A list of pieces to place onto the board.
+        :type pieces: list[Piece]
+        :param board: The pyramid board object. If None, a default board is used.
+        :type board: pyramid_board, optional
+        :return: A list of rows of a solution matrix, or False if no solution exists.
+        :rtype: list[list[int]] | bool
+        """
         if board is None:
             board = pyramid_board.pyramid_board(5)
 
@@ -132,6 +171,16 @@ class Solver:
         return rows
 
     def rows_to_array_sol(self, rows, board):
+        """
+        Converts a solution in matrix row format into a 3D array representation.
+
+        :param rows: A list of rows representing the solution.
+        :type rows: list[list[int]]
+        :param board: The pyramid board object.
+        :type board: pyramid_board
+        :return: A 3D array representing the solution on the board.
+        :rtype: list[list[list[int]]]
+        """
         # build empty array to populate
         solution_array = [
             [[0 for x in range(z + 1)] for y in range(z + 1)]
@@ -160,6 +209,16 @@ class Solver:
         return solution_array
 
     def generate_solutions(self, pieces, board=None):
+        """
+        Generates all possible solutions for the given board and pieces.
+
+        :param pieces: A list of pieces to place onto the board.
+        :type pieces: list[Piece]
+        :param board: The pyramid board object. If None, a default board is used.
+        :type board: pyramid_board, optional
+        :yield: Rows representing individual solution matrices.
+        :rtype: generator[list[list[int]]]
+        """
         if board is None:
             board = pyramid_board.pyramid_board(5)
 
