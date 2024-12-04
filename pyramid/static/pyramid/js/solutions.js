@@ -80,12 +80,6 @@ const planeMain = new THREE.Mesh(planeGeometryMain, planeMaterialMain);
 planeMain.rotation.x = -Math.PI / 2; // Rotate to lay flat
 scene.add(planeMain);
 
-// Global variables to track pagination
-let currentPageIndex = 0;
-let solutionsPerPage = 9;
-const maxSolutionsPerPage = 25;
-const minSolutionsPerPage = 1;
-
 /******************************************************************************************
                                      SELECTING PYRAMIDS
 ******************************************************************************************/
@@ -140,6 +134,12 @@ var loadingRadius = 100;
 const loadedPyramids = new Map();
 
 const totalSolutions = dataFromBackend.length;
+
+// Global variables to track pagination
+let currentPageIndex = 0;
+let solutionsPerPage = 9;
+const maxSolutionsPerPage = totalSolutions;
+const minSolutionsPerPage = 1;
 
 function updatePyramids() {
   const startIndex = currentPageIndex * solutionsPerPage;
@@ -445,20 +445,12 @@ function updatePageInfo() {
 }
 
 function displayCurrentPage() {
-  // Clear existing pyramids
+// Clear existing pyramids
   loadedPyramids.forEach((pyramidGroup) => {
     scene.remove(pyramidGroup);
   });
   loadedPyramids.clear();
   allPyramids.length = 0;
-
-  // Remove and dispose of existing bounding box if it exists
-  if (window.existingBoundingBox) {
-    scene.remove(window.existingBoundingBox);
-    window.existingBoundingBox.geometry.dispose();
-    window.existingBoundingBox.material.dispose();
-    window.existingBoundingBox = null;
-  }
 
   // Calculate grid dimensions as a square
   const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
@@ -490,8 +482,8 @@ function displayCurrentPage() {
   updatePaginationButtons();
   updatePageInfo();
 
-  // Recreate bounding box
-  window.existingBoundingBox = createBoundingBox();
+  // Update or create bounding box
+  updateBoundingBox();
 }
 
 function updatePaginationButtons() {
@@ -525,13 +517,60 @@ function updatePageSize() {
     solutionsPerPage = newPageSize;
     currentPageIndex = 0;  // Reset to first page
 
-    // Recalculate grid and bounding box
-    createBoundingBox();
-
     // Reload current page with new size
     displayCurrentPage();
+
+    // Update the page size message
+    updatePageSizeMessage();
+
   } else {
     alert(`Please enter a page size between ${minSolutionsPerPage} and ${maxSolutionsPerPage}.`);
+  }
+
+
+}
+
+function updateBoundingBox() {
+  // Calculate grid dimensions as a square
+  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
+  const gridRows = gridColumns;
+
+  const gridWidth = spacingX * gridColumns;
+  const gridDepth = spacingZ * gridRows;
+
+  // If bounding box doesn't exist, create it
+  if (!window.existingBoundingBox) {
+    const edges = new THREE.EdgesGeometry(
+      new THREE.BoxGeometry(gridWidth, 10, gridDepth)
+    );
+
+    window.existingBoundingBox = new THREE.LineSegments(
+      edges,
+      new THREE.LineBasicMaterial({
+        color: 0x00ff00,
+        linewidth: 2
+      })
+    );
+    window.existingBoundingBox.position.set(0, 0.5, 0);  // Center of the grid
+    scene.add(window.existingBoundingBox);
+  } else {
+    // Resize existing bounding box
+    const newGeometry = new THREE.EdgesGeometry(
+      new THREE.BoxGeometry(gridWidth, 10, gridDepth)
+    );
+
+    // Dispose of old geometry
+    window.existingBoundingBox.geometry.dispose();
+
+    // Replace with new geometry
+    window.existingBoundingBox.geometry = newGeometry;
+  }
+}
+
+function updatePageSizeMessage() {
+  const pageSizeMessage = document.getElementById('pageStatusMessage');
+  if (pageSizeMessage) {
+    pageSizeMessage.textContent = `Specify page size (1-${totalSolutions}):`;
   }
 }
 
@@ -540,3 +579,5 @@ document.getElementById('page-size-apply').addEventListener('click', updatePageS
 
 // Initial page load
 displayCurrentPage();
+
+updatePageSizeMessage();

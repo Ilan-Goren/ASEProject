@@ -6,9 +6,9 @@
   {% load static %}
   <div id="statusSection">
     Solutions: {{ solutions_len }}
-    <div id="statusMessage">Specify page size (1-25):</div>
+    <div id="pageStatusMessage">Specify page size (1-25):</div>
     <input type="number" id="page-size-input" value="9" min="1" max="25">
-    <button id="page-size-apply">Apply</button>
+    <button class="btn btn-success" id="page-size-apply">Apply</button>
     <div id="statusMessage">Specify the radius of sight:</div>
     <input id="radiusInput" type="number" placeholder="Enter radius (50 to 1000)">
     <button class="btn btn-success" id="applyChanges">Apply</button>
