@@ -7,7 +7,10 @@
 <body>
   <div id="statusSection">
     Solutions: {{ solutions_len }}
-    <div id="statusMessage">Specify the radius of sight:</div> 
+    <div id="pageStatusMessageHex">Specify page size (1-25):</div>
+    <input type="number" id="page-size-input" value="9" min="1" max="25">
+    <button class="btn btn-success" id="page-size-apply">Apply</button>
+    <div id="statusMessage">Specify the radius of sight:</div>
     <input id="radiusInput" type="number" placeholder="Enter radius (50 to 1000)">
     <button class="btn btn-success" id="applyChanges">Apply</button>
   </div>
@@ -20,6 +23,10 @@
 
   <div class="button-container">
     <button class="btn btn-success" id="view-pyramid">View Pyramid</button>
+    <button class="btn btn-success" id="reset-camera">Reset Camera</button>
+    <span id="page-info">Page 1 of X</span>
+    <button class="btn btn-success" id="prev-page">Previous</button>
+    <button class="btn btn-success" id="next-page">Next</button>
     <a class="btn btn-success" href="{% url 'polyhex_puzzle' %}" id="back" class="button">Back</a>
   </div>
 

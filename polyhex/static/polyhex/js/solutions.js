@@ -26,13 +26,23 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(10, 30, -20);  // Initial camera position
 camera.lookAt(0,0,0)
 
+function resetCamera() {
+  camera.position.set(7, 20, 60);
+  camera.lookAt(0, 0, 0);
+  controls.reset();
+}
+
+// Add a reset button in the HTML and attach event listener
+const resetCameraButton = document.getElementById('reset-camera');
+resetCameraButton.addEventListener('click', resetCamera);
+
 // Mouse and Raycaster setup
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
 // Renderer setup
 const canvas = document.querySelector('canvas.threejs');
-const renderer = new THREE.WebGLRenderer({ 
+const renderer = new THREE.WebGLRenderer({
   antialias: true,
   canvas: canvas
  });
@@ -73,7 +83,7 @@ scene.add(planeMain);
 ******************************************************************************************/
 
 function onClickHandler(event) {
-  
+
   // Get mouse position relative to the canvas
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
@@ -121,21 +131,36 @@ const spacingZ = forestDepth / numRows;
 var loadingRadius = 150;
 const loadedPyramids = new Map();
 
+const totalSolutions = dataFromBackend.length;
+
+// Global variables to track pagination
+let currentPageIndex = 0;
+let solutionsPerPage = 9;
+const maxSolutionsPerPage = totalSolutions;
+const minSolutionsPerPage = 1;
+
 function updatePyramids() {
+  const startIndex = currentPageIndex * solutionsPerPage;
+  const endIndex = Math.min(startIndex + solutionsPerPage, dataFromBackend.length);
+  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
+
   const cameraFrustum = new THREE.Frustum();
   const cameraMatrix = new THREE.Matrix4();
-  
+
   cameraMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
   cameraFrustum.setFromProjectionMatrix(cameraMatrix);
 
   const cameraPosition = camera.position;
 
-  dataFromBackend.forEach((solution, index) => {
-      const columnIndex = index % numColumns;
-      const rowIndex = Math.floor(index / numColumns);
+  dataFromBackend.slice(startIndex, endIndex).forEach((solution, localIndex) => {
+      const index = startIndex + localIndex;
+      const columnIndex = localIndex % gridColumns;
+      const rowIndex = Math.floor(localIndex / gridColumns);
 
-      const x = (columnIndex * spacingX) - (forestWidth / 2);
-      const z = (rowIndex * spacingZ) - (forestDepth / 2);
+      // Use same grid calculation as displayCurrentPage
+      const x = (columnIndex - (gridColumns - 1) / 2) * spacingX;
+      const z = (rowIndex - (gridColumns - 1) / 2) * spacingZ;
+
       const pyramidPosition = new THREE.Vector3(x, 1, z);
 
       const distance = pyramidPosition.distanceTo(cameraPosition);
@@ -207,7 +232,7 @@ function showOverlay(selected) {
         child.material.emissiveIntensity = 0;
       }
     });
-    
+
     let pyramidGroup = selected.parent
     overlay.style.display = 'block';
     overlayOpened = true;
@@ -223,9 +248,9 @@ function closeOverlay(){
 function renderPyramidInOverlay(pyramidGroup) {
   const overlayScene = new THREE.Scene();
   overlayScene.background = new THREE.Color(0xefefef);
-  
+
   const overlayCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  
+
   const overlayRenderer = new THREE.WebGLRenderer({
     canvas: overlayCanvas,
     antialias: true
@@ -236,7 +261,7 @@ function renderPyramidInOverlay(pyramidGroup) {
   // Set up lighting
   const overlayLight = new THREE.AmbientLight(0x404040, 5);
   overlayScene.add(overlayLight);
-  
+
   const overlayDirectionalLight = new THREE.DirectionalLight(0xffffff, 2);
   overlayScene.add(overlayDirectionalLight);
 
@@ -264,7 +289,7 @@ function renderPyramidInOverlay(pyramidGroup) {
   nbutton.addEventListener('click', () => {
     buttonHandler(overlayCamera, overlayScene, pyramidClone, pyramidGroup, 'n')
     })
-  
+
   vbutton.addEventListener('click', () => {
     buttonHandler(overlayCamera, overlayScene, pyramidClone, pyramidGroup, 'v')
   })
@@ -293,7 +318,7 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
-  
+
 // Render loop
 const renderLoop = () => {
   controls.update();
@@ -303,3 +328,172 @@ const renderLoop = () => {
 };
 
 renderLoop();
+
+function createBoundingBox() {
+  // Calculate grid dimensions as a square
+  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
+  const gridRows = gridColumns;
+
+  const gridWidth = spacingX * gridColumns;
+  const gridDepth = spacingZ * gridRows;
+
+  const edges = new THREE.EdgesGeometry(
+    new THREE.BoxGeometry(gridWidth, 10, gridDepth)
+  );
+
+  const boundingBoxLines = new THREE.LineSegments(
+    edges,
+    new THREE.LineBasicMaterial({
+      color: 0x00ff00,
+      linewidth: 2
+    })
+  );
+
+  boundingBoxLines.position.set(0, 0.5, 0);  // Center of the grid
+  scene.add(boundingBoxLines);
+  return boundingBoxLines;
+}
+
+function updatePageInfo() {
+  const pageInfoElement = document.getElementById('page-info');
+  const totalPages = Math.ceil(totalSolutions / solutionsPerPage);
+  pageInfoElement.textContent = `Page ${currentPageIndex + 1} of ${totalPages}`;
+}
+
+function displayCurrentPage() {
+// Clear existing pyramids
+  loadedPyramids.forEach((pyramidGroup) => {
+    scene.remove(pyramidGroup);
+  });
+  loadedPyramids.clear();
+  allPyramids.length = 0;
+
+  // Calculate grid dimensions as a square
+  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
+  const gridRows = gridColumns;
+
+  // Calculate start and end indices
+  const startIndex = currentPageIndex * solutionsPerPage;
+  const endIndex = Math.min(startIndex + solutionsPerPage, totalSolutions);
+
+  for (let i = startIndex; i < endIndex; i++) {
+    const solution = dataFromBackend[i];
+    const localIndex = i - startIndex;
+
+    const columnIndex = localIndex % gridColumns;
+    const rowIndex = Math.floor(localIndex / gridColumns);
+
+    // Adjust spacing to create a square grid
+    const x = (columnIndex - (gridColumns - 1) / 2) * spacingX;
+    const z = (rowIndex - (gridRows - 1) / 2) * spacingZ;
+
+    const pyramidGroup = createTetrahedron(solution);
+    allPyramids.push(pyramidGroup);
+    pyramidGroup.position.set(x, 1, z);
+    scene.add(pyramidGroup);
+    loadedPyramids.set(i, pyramidGroup);
+  }
+
+  // Update pagination and page info
+  updatePaginationButtons();
+  updatePageInfo();
+
+  // Update or create bounding box
+  updateBoundingBox();
+}
+
+function updatePaginationButtons() {
+  const prevPageButton = document.getElementById('prev-page');
+  const nextPageButton = document.getElementById('next-page');
+
+  prevPageButton.disabled = (currentPageIndex === 0);
+  nextPageButton.disabled = ((currentPageIndex + 1) * solutionsPerPage >= totalSolutions);
+}
+
+// Add event listeners for pagination
+document.getElementById('prev-page').addEventListener('click', () => {
+  if (currentPageIndex > 0) {
+    currentPageIndex--;
+    displayCurrentPage();
+  }
+});
+
+document.getElementById('next-page').addEventListener('click', () => {
+  if ((currentPageIndex + 1) * solutionsPerPage < totalSolutions) {
+    currentPageIndex++;
+    displayCurrentPage();
+  }
+});
+
+function updatePageSize() {
+  const pageSizeInput = document.getElementById('page-size-input');
+  const newPageSize = parseInt(pageSizeInput.value, 10);
+
+  if (newPageSize >= minSolutionsPerPage && newPageSize <= maxSolutionsPerPage) {
+    solutionsPerPage = newPageSize;
+    currentPageIndex = 0;  // Reset to first page
+
+    // Reload current page with new size
+    displayCurrentPage();
+
+    // Update the page size message
+    updatePageSizeMessage();
+
+  } else {
+    alert(`Please enter a page size between ${minSolutionsPerPage} and ${maxSolutionsPerPage}.`);
+  }
+
+
+}
+
+function updateBoundingBox() {
+  // Calculate grid dimensions as a square
+  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
+  const gridRows = gridColumns;
+
+  const gridWidth = spacingX * gridColumns;
+  const gridDepth = spacingZ * gridRows;
+
+  // If bounding box doesn't exist, create it
+  if (!window.existingBoundingBox) {
+    const edges = new THREE.EdgesGeometry(
+      new THREE.BoxGeometry(gridWidth, 10, gridDepth)
+    );
+
+    window.existingBoundingBox = new THREE.LineSegments(
+      edges,
+      new THREE.LineBasicMaterial({
+        color: 0x00ff00,
+        linewidth: 2
+      })
+    );
+    window.existingBoundingBox.position.set(0, 0.5, 0);  // Center of the grid
+    scene.add(window.existingBoundingBox);
+  } else {
+    // Resize existing bounding box
+    const newGeometry = new THREE.EdgesGeometry(
+      new THREE.BoxGeometry(gridWidth, 10, gridDepth)
+    );
+
+    // Dispose of old geometry
+    window.existingBoundingBox.geometry.dispose();
+
+    // Replace with new geometry
+    window.existingBoundingBox.geometry = newGeometry;
+  }
+}
+
+function updatePageSizeMessage() {
+  const pageSizeMessage = document.getElementById('pageStatusMessageHex');
+  if (pageSizeMessage) {
+    pageSizeMessage.textContent = `Specify page size (1-${totalSolutions}):`;
+  }
+}
+
+// Add event listener for page size apply button
+document.getElementById('page-size-apply').addEventListener('click', updatePageSize);
+
+// Initial page load
+displayCurrentPage();
+
+updatePageSizeMessage();
