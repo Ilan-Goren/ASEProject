@@ -133,21 +133,30 @@ const spacingZ = forestDepth / numRows;
 var loadingRadius = 100;
 const loadedPyramids = new Map();
 
+// Global variables to track pagination
+let currentPageIndex = 0;
+const solutionsPerPage = 9;
+const totalSolutions = dataFromBackend.length;
+
 function updatePyramids() {
+  const startIndex = currentPageIndex * solutionsPerPage;
+  const endIndex = Math.min(startIndex + solutionsPerPage, dataFromBackend.length);
+
   const cameraFrustum = new THREE.Frustum();
   const cameraMatrix = new THREE.Matrix4();
-  
+
   cameraMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
   cameraFrustum.setFromProjectionMatrix(cameraMatrix);
 
   const cameraPosition = camera.position;
 
-  dataFromBackend.forEach((solution, index) => {
-      const columnIndex = index % numColumns;
-      const rowIndex = Math.floor(index / numColumns);
+  dataFromBackend.slice(startIndex, endIndex).forEach((solution, localIndex) => {
+      const index = startIndex + localIndex;
+      const columnIndex = localIndex % 3;
+      const rowIndex = Math.floor(localIndex / 3);
 
-      const x = (columnIndex * spacingX) - (forestWidth / 2);
-      const z = (rowIndex * spacingZ) - (forestDepth / 2);
+      const x = (columnIndex - 1) * spacingX;
+      const z = (rowIndex - 1) * spacingZ;
       const pyramidPosition = new THREE.Vector3(x, 1, z);
 
       const distance = pyramidPosition.distanceTo(cameraPosition);
@@ -399,28 +408,97 @@ const renderLoop = () => {
 renderLoop();
 
 function createBoundingBox() {
-  const boundingBoxGeometry = new THREE.BoxGeometry(
-    forestWidth + 10,
-    20,  // Height
-    forestDepth + 10
+  // Calculate grid dimensions for 3x3 layout
+  const gridWidth = spacingX * 3;  // 3 columns
+  const gridDepth = spacingZ * 3;  // 3 rows
+
+  const edges = new THREE.EdgesGeometry(
+    new THREE.BoxGeometry(gridWidth, 10, gridDepth)
   );
 
-  // Create edges geometry
-  const edges = new THREE.EdgesGeometry(boundingBoxGeometry);
-
-  // Create line segments with a visible color and thickness
   const boundingBoxLines = new THREE.LineSegments(
     edges,
     new THREE.LineBasicMaterial({
-      color: 0x00ff00,  // Bright green
-      linewidth: 2      // Thicker line
+      color: 0x00ff00,
+      linewidth: 2
     })
   );
 
-  boundingBoxLines.position.set(0, 0.5, 0);  // Slightly above ground
+  boundingBoxLines.position.set(0, 0.5, 0);  // Center of the grid
   scene.add(boundingBoxLines);
   return boundingBoxLines;
 }
 
 // Add this call after scene setup
 const boundingBoxMesh = createBoundingBox();
+
+function updatePageInfo() {
+  const pageInfoElement = document.getElementById('page-info');
+  const totalPages = Math.ceil(totalSolutions / solutionsPerPage);
+  pageInfoElement.textContent = `Page ${currentPageIndex + 1} of ${totalPages}`;
+}
+
+function displayCurrentPage() {
+  // Clear existing pyramids
+  loadedPyramids.forEach((pyramidGroup) => {
+    scene.remove(pyramidGroup);
+  });
+  loadedPyramids.clear();
+  allPyramids.length = 0;
+
+  // Calculate start and end indices
+  const startIndex = currentPageIndex * solutionsPerPage;
+  const endIndex = Math.min(startIndex + solutionsPerPage, totalSolutions);
+
+  // Grid layout for 9 solutions (3x3)
+  const gridColumns = 3;
+  const gridRows = 3;
+
+  for (let i = startIndex; i < endIndex; i++) {
+    const solution = dataFromBackend[i];
+    const localIndex = i - startIndex;
+
+    const columnIndex = localIndex % gridColumns;
+    const rowIndex = Math.floor(localIndex / gridColumns);
+
+    // Adjust spacing to create a 3x3 grid
+    const x = (columnIndex - 1) * spacingX;
+    const z = (rowIndex - 1) * spacingZ;
+
+    const pyramidGroup = createPyramid(solution);
+    allPyramids.push(pyramidGroup);
+    pyramidGroup.position.set(x, 1, z);
+    scene.add(pyramidGroup);
+    loadedPyramids.set(i, pyramidGroup);
+  }
+
+  // Update pagination button states
+  updatePaginationButtons();
+  updatePageInfo();
+}
+
+function updatePaginationButtons() {
+  const prevPageButton = document.getElementById('prev-page');
+  const nextPageButton = document.getElementById('next-page');
+
+  prevPageButton.disabled = (currentPageIndex === 0);
+  nextPageButton.disabled = ((currentPageIndex + 1) * solutionsPerPage >= totalSolutions);
+}
+
+// Add event listeners for pagination
+document.getElementById('prev-page').addEventListener('click', () => {
+  if (currentPageIndex > 0) {
+    currentPageIndex--;
+    displayCurrentPage();
+  }
+});
+
+document.getElementById('next-page').addEventListener('click', () => {
+  if ((currentPageIndex + 1) * solutionsPerPage < totalSolutions) {
+    currentPageIndex++;
+    displayCurrentPage();
+  }
+});
+
+// Initial page load
+displayCurrentPage();
