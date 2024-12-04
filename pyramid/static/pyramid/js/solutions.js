@@ -80,6 +80,12 @@ const planeMain = new THREE.Mesh(planeGeometryMain, planeMaterialMain);
 planeMain.rotation.x = -Math.PI / 2; // Rotate to lay flat
 scene.add(planeMain);
 
+// Global variables to track pagination
+let currentPageIndex = 0;
+let solutionsPerPage = 9;
+const maxSolutionsPerPage = 25;
+const minSolutionsPerPage = 1;
+
 /******************************************************************************************
                                      SELECTING PYRAMIDS
 ******************************************************************************************/
@@ -133,14 +139,12 @@ const spacingZ = forestDepth / numRows;
 var loadingRadius = 100;
 const loadedPyramids = new Map();
 
-// Global variables to track pagination
-let currentPageIndex = 0;
-const solutionsPerPage = 9;
 const totalSolutions = dataFromBackend.length;
 
 function updatePyramids() {
   const startIndex = currentPageIndex * solutionsPerPage;
   const endIndex = Math.min(startIndex + solutionsPerPage, dataFromBackend.length);
+  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
 
   const cameraFrustum = new THREE.Frustum();
   const cameraMatrix = new THREE.Matrix4();
@@ -152,11 +156,13 @@ function updatePyramids() {
 
   dataFromBackend.slice(startIndex, endIndex).forEach((solution, localIndex) => {
       const index = startIndex + localIndex;
-      const columnIndex = localIndex % 3;
-      const rowIndex = Math.floor(localIndex / 3);
+      const columnIndex = localIndex % gridColumns;
+      const rowIndex = Math.floor(localIndex / gridColumns);
 
-      const x = (columnIndex - 1) * spacingX;
-      const z = (rowIndex - 1) * spacingZ;
+      // Use same grid calculation as displayCurrentPage
+      const x = (columnIndex - (gridColumns - 1) / 2) * spacingX;
+      const z = (rowIndex - (gridColumns - 1) / 2) * spacingZ;
+
       const pyramidPosition = new THREE.Vector3(x, 1, z);
 
       const distance = pyramidPosition.distanceTo(cameraPosition);
@@ -408,9 +414,12 @@ const renderLoop = () => {
 renderLoop();
 
 function createBoundingBox() {
-  // Calculate grid dimensions for 3x3 layout
-  const gridWidth = spacingX * 3;  // 3 columns
-  const gridDepth = spacingZ * 3;  // 3 rows
+  // Calculate grid dimensions as a square
+  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
+  const gridRows = gridColumns;
+
+  const gridWidth = spacingX * gridColumns;
+  const gridDepth = spacingZ * gridRows;
 
   const edges = new THREE.EdgesGeometry(
     new THREE.BoxGeometry(gridWidth, 10, gridDepth)
@@ -429,9 +438,6 @@ function createBoundingBox() {
   return boundingBoxLines;
 }
 
-// Add this call after scene setup
-const boundingBoxMesh = createBoundingBox();
-
 function updatePageInfo() {
   const pageInfoElement = document.getElementById('page-info');
   const totalPages = Math.ceil(totalSolutions / solutionsPerPage);
@@ -446,13 +452,21 @@ function displayCurrentPage() {
   loadedPyramids.clear();
   allPyramids.length = 0;
 
+  // Remove and dispose of existing bounding box if it exists
+  if (window.existingBoundingBox) {
+    scene.remove(window.existingBoundingBox);
+    window.existingBoundingBox.geometry.dispose();
+    window.existingBoundingBox.material.dispose();
+    window.existingBoundingBox = null;
+  }
+
+  // Calculate grid dimensions as a square
+  const gridColumns = Math.ceil(Math.sqrt(solutionsPerPage));
+  const gridRows = gridColumns;
+
   // Calculate start and end indices
   const startIndex = currentPageIndex * solutionsPerPage;
   const endIndex = Math.min(startIndex + solutionsPerPage, totalSolutions);
-
-  // Grid layout for 9 solutions (3x3)
-  const gridColumns = 3;
-  const gridRows = 3;
 
   for (let i = startIndex; i < endIndex; i++) {
     const solution = dataFromBackend[i];
@@ -461,9 +475,9 @@ function displayCurrentPage() {
     const columnIndex = localIndex % gridColumns;
     const rowIndex = Math.floor(localIndex / gridColumns);
 
-    // Adjust spacing to create a 3x3 grid
-    const x = (columnIndex - 1) * spacingX;
-    const z = (rowIndex - 1) * spacingZ;
+    // Adjust spacing to create a square grid
+    const x = (columnIndex - (gridColumns - 1) / 2) * spacingX;
+    const z = (rowIndex - (gridRows - 1) / 2) * spacingZ;
 
     const pyramidGroup = createPyramid(solution);
     allPyramids.push(pyramidGroup);
@@ -472,9 +486,12 @@ function displayCurrentPage() {
     loadedPyramids.set(i, pyramidGroup);
   }
 
-  // Update pagination button states
+  // Update pagination and page info
   updatePaginationButtons();
   updatePageInfo();
+
+  // Recreate bounding box
+  window.existingBoundingBox = createBoundingBox();
 }
 
 function updatePaginationButtons() {
@@ -499,6 +516,27 @@ document.getElementById('next-page').addEventListener('click', () => {
     displayCurrentPage();
   }
 });
+
+function updatePageSize() {
+  const pageSizeInput = document.getElementById('page-size-input');
+  const newPageSize = parseInt(pageSizeInput.value, 10);
+
+  if (newPageSize >= minSolutionsPerPage && newPageSize <= maxSolutionsPerPage) {
+    solutionsPerPage = newPageSize;
+    currentPageIndex = 0;  // Reset to first page
+
+    // Recalculate grid and bounding box
+    createBoundingBox();
+
+    // Reload current page with new size
+    displayCurrentPage();
+  } else {
+    alert(`Please enter a page size between ${minSolutionsPerPage} and ${maxSolutionsPerPage}.`);
+  }
+}
+
+// Add event listener for page size apply button
+document.getElementById('page-size-apply').addEventListener('click', updatePageSize);
 
 // Initial page load
 displayCurrentPage();
