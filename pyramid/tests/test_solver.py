@@ -1,144 +1,67 @@
-# from django.test import TestCase
+from django.test import TestCase
+from pyramid.solver_functions.solver import Solver
+from pyramid.solver_functions.pyramid_board import pyramid_board
+from pyramid.solver_functions.piece import Piece
+from pyramid.solver_functions.algorithm_x_functions import Matrix
 
-# from ..solver_functions import solver, pyramid_board, piece, algorithm_x_functions
+class SolverTestCase(TestCase):
+    def setUp(self):
+        # Initialize the solver, board, and pieces for each test
+        self.solver = Solver()
+        self.board = pyramid_board(5)
+        self.pieces = [Piece(i) for i in range(1, 13)]  
 
-# class SolverTestCase(TestCase):
-#     def test_generate_board_cell_indexes(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(2)
-#         s.generate_board_cell_indexes(b)
-#         print(b.cells)
-#         print(s.index_to_cell)
-#         print(s.cell_to_index)
+    def test_generate_board_cell_indexes(self):
+        # Test if the board cell indexes are generated correctly
+        self.solver.generate_board_cell_indexes(self.board)
+        self.assertEqual(len(self.solver.cell_to_index), self.board.count_cells())
+        self.assertEqual(len(self.solver.index_to_cell), self.board.count_cells())
 
-#     def test_packing_matrix(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(2)
-#         pieces = []
-#         for p in piece.pieces:
-#             pieces.append(piece.Piece(p))
+    def test_initialise_packing_matrix(self):
+        # Adjust the expected number of columns
+        matrix = self.solver.initialise_packing_matrix(self.board, self.pieces)
+        expected_cols = self.board.count_cells() + len(self.pieces)
+        self.assertIsInstance(matrix, Matrix)
+        self.assertEqual(matrix.num_cols, expected_cols)
 
-#         s.initialise_packing_matrix(b, pieces)
-#         # num cols in matrix should be num of board cells + num of pieces
-#         #print(b.count_cells())
-#         #print(len(pieces))
-#         #print(s.matrix.num_cols)
-#         #print(algorithm_x_functions.pretty_print(s.matrix))
+    def test_initialise_packing_matrix_partial_config(self):
+         # Adjust the expected number of columns
+         self.board.cells[(0, 0, 0)] = 1
+         pieces_to_place = [Piece(i) for i in range(2, 13)]
+         matrix = self.solver.initialise_packing_matrix_partial_config(self.board, pieces_to_place)
+         expected_cols = self.board.count_cells() + len(pieces_to_place) + 1  
+         self.assertEqual(matrix.num_cols, expected_cols)
 
-#     def test_solve(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(2)
-#         pieces = []
+    def test_solve_no_solution(self):
+        # Test if the solver correctly identifies no solution
+        self.board.cells[(0, 0, 0)] = 1  
+        self.pieces = []  
+        result = self.solver.solve(self.pieces, self.board)
+        self.assertFalse(result)
 
-#         pieces.append(piece.Piece(11, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]))
-#         pieces.append(piece.Piece(12, [(0, 0, 0)]))
-#         pieces.append(piece.Piece(13, [(0, 0, 0)]))
+    def test_solve_with_solution(self):
+         # Ensure the solver finds a solution
+         result = self.solver.solve(self.pieces, self.board)
+         self.assertTrue(result)  
 
-#         print(s.solve(pieces, b))
+    def test_rows_to_array_sol(self):
+         # Use a real solution generation
+         solutions = []
+         for i, solution in enumerate(self.solver.generate_solutions(self.pieces, self.board)):
+             if i >= 5:
+                 break
+             solutions.append(solution)
+         if solutions:
+             rows = solutions[0]  # Use the first generated solution
+             solution_array = self.solver.rows_to_array_sol(rows, self.board)
+             self.assertEqual(len(solution_array), self.board.layers)
+             self.assertTrue(all(isinstance(layer, list) for layer in solution_array))  
 
-#     def test_rows_to_array_sol(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(2)
-#         pieces = []
-
-#         pieces.append(piece.Piece(11, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]))
-#         pieces.append(piece.Piece(12, [(0, 0, 0)]))
-#         pieces.append(piece.Piece(13, [(0, 0, 0)]))
-
-#         rows = s.solve(pieces, b)
-#         print(s.rows_to_array_sol(rows,b))
-
-#     def test_rows_to_array_sol_5_layer(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(5)
-
-#         pieces = []
-#         for p in piece.pieces:
-#             pieces.append(piece.Piece(p))
-
-#         rows = s.solve(pieces, b)
-#         print(s.rows_to_array_sol(rows, b))
-
-
-#     def test_packing_matrix_partial_config(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(0)
-
-#         array_board = [
-#             [[1, 0],
-#              [0, 2]],
-#             [[0]]
-#         ]
-
-#         b.convert_from_3D_array(array_board)
-
-#         pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)])]
-
-#         matrix = s.initialise_packing_matrix_partial_config(b, pieces)
-
-#     def test_solve_partial_config(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(0)
-
-#         array_board = [
-#             [[1, 0],
-#              [0, 2]],
-#             [[0]]
-#         ]
-
-#         b.convert_from_3D_array(array_board)
-
-#         pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)])]
-
-#         rows = s.solve(pieces, b)
-#         print(s.rows_to_array_sol(rows, b))
-
-#     def test_generate_solutions(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(0)
-
-#         array_board = [
-#             [[0, 0],
-#              [0, 0]],
-#             [[0]]
-#         ]
-
-#         b.convert_from_3D_array(array_board)
-#         pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]),
-#                   piece.Piece(1, [(0, 0, 0)]),
-#                   piece.Piece(2, [(0, 0, 0)])]
-
-#         for rows in s.generate_solutions(pieces, b):
-#             print(s.rows_to_array_sol(rows, b))
-
-#     def test_generate_solutions_with_input(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(0)
-
-#         array_board = [
-#             [[0, 0],
-#              [0, 0]],
-#             [[0]]
-#         ]
-
-#         b.convert_from_3D_array(array_board)
-#         pieces = [piece.Piece(3, [(0, 0, 0), (0, 2, 0), (2, 0, 0)]),
-#                   piece.Piece(1, [(0, 0, 0)]),
-#                   piece.Piece(2, [(0, 0, 0)])]
-
-#         for rows in s.generate_solutions(pieces, b):
-#             print(s.rows_to_array_sol(rows, b))
-#             input("Press Enter to continue...")
-
-#     def test_generate_solutions_full(self):
-#         s = solver.Solver()
-#         b = pyramid_board.pyramid_board(5)
-
-#         pieces = []
-#         for p in piece.pieces:
-#             pieces.append(piece.Piece(p))
-
-#         i = 0
-#         for rows in s.generate_solutions(pieces, b):
-#             i += 1
-#             print(i)
+    def test_generate_solutions(self):
+         # Ensure the solver generates solutions
+         solutions = []
+         for i, solution in enumerate(self.solver.generate_solutions(self.pieces, self.board)):
+             if i >= 5:
+                 break
+             solutions.append(solution)
+         self.assertEqual(len(solutions), 5)

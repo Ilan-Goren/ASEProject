@@ -205,7 +205,7 @@ def stop_generator(request):
     """
     global process
     if request.method == 'POST':
-        if process:
+        if process and process.is_alive():
             # Check if Process exists and is running first before terminating
             process.terminate()  # terminate process
             process.join()

@@ -38,12 +38,15 @@
 <section id="content">
 <h2>Content<a class="headerlink" href="#content" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>Polyhex Class</p></li>
 <li><p>Polyhex Views</p></li>
+<li><p>Polyhex Main</p></li>
+<li><p>Polyhex Board</p></li>
+<li><p>Polyhex Piece</p></li>
+<li><p>Polyhex Solver</p></li>
 </ol>
 </section>
-<section id="polyhex-class">
-<h2>Polyhex Class<a class="headerlink" href="#polyhex-class" title="Link to this heading">¶</a></h2>
+<section id="polyhex-main">
+<h2>Polyhex Main<a class="headerlink" href="#polyhex-main" title="Link to this heading">¶</a></h2>
 <p>The <cite>Polyhex</cite> class handles the core functionality of the application. It includes the logic for solving the Polyhex puzzle and managing the state of the puzzle board.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="polyhex.polyhex.Polyhex_Solver">
@@ -193,6 +196,400 @@ It ensures that only one process can be active at a time.</p>
 </dd></dl>
 
 </section>
+<section id="polyhex-board">
+<h2>Polyhex Board<a class="headerlink" href="#polyhex-board" title="Link to this heading">¶</a></h2>
+<p>This module is responsible for managing the puzzle board structure, including the initialization and manipulation of the board grid. It contains logic for positioning pieces and verifying the validity of piece placements within the puzzle.</p>
+<dl class="py class" id="module-polyhex.solver_functions.board">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.board.</span></span><span class="sig-name descname"><span class="pre">Board</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a 3D board with layers and cells for placing polyhex pieces.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.count_cells">
+<span class="sig-name descname"><span class="pre">count_cells</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.count_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.count_cells" title="Link to this definition">¶</a></dt>
+<dd><p>Counts the total number of cells in the board.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The total number of cells.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.get_matching_empty_regions">
+<span class="sig-name descname"><span class="pre">get_matching_empty_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.get_matching_empty_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.get_matching_empty_regions" title="Link to this definition">¶</a></dt>
+<dd><p>Finds all regions on the board that match the given region and are free.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>region</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – A list of tuples representing cell coordinates (x, y, z).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of matching empty regions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[tuple[int, int, int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.get_piece_locations">
+<span class="sig-name descname"><span class="pre">get_piece_locations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.get_piece_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.get_piece_locations" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the locations of all placed pieces on the board.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary where keys are piece IDs and values are lists of their cell coordinates.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[int, list[tuple[int, int, int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.is_region_free">
+<span class="sig-name descname"><span class="pre">is_region_free</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.is_region_free"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.is_region_free" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if a given region of cells is free on the board.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>region</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – A list of tuples representing cell coordinates (x, y, z).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the region is free, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.board.Board.verify_board">
+<span class="sig-name descname"><span class="pre">verify_board</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/board.html#Board.verify_board"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.board.Board.verify_board" title="Link to this definition">¶</a></dt>
+<dd><p>Verifies the validity of the board by checking the placement of all pieces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the board is valid, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="polyhex-piece">
+<h2>Polyhex Piece<a class="headerlink" href="#polyhex-piece" title="Link to this heading">¶</a></h2>
+<p>The module handles the properties and behaviors of individual puzzle pieces. It includes logic for defining piece shapes, positioning, and interactions with the board.</p>
+<dl class="py class" id="module-polyhex.solver_functions.piece">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.Piece">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">Piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">piece_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#Piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.Piece" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a polyhex piece with all possible transformations.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.build_transformations">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">build_transformations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#build_transformations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.build_transformations" title="Link to this definition">¶</a></dt>
+<dd><p>Generates all unique transformations (rotations, reflections, leans, transposes) of a piece.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cells</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – The initial list of cell coordinates for the piece.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of unique transformations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[tuple[int, int, int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.lean">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">lean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#lean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.lean" title="Link to this definition">¶</a></dt>
+<dd><p>Transforms a cell to its leaning position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The cell coordinates to transform.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transformed cell coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.normalize_transformation">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">normalize_transformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#normalize_transformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.normalize_transformation" title="Link to this definition">¶</a></dt>
+<dd><p>Normalizes a set of cell coordinates to their minimum values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cells</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – A list of cell coordinates.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Normalized cell coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple[int, int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.reflect">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">reflect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#reflect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.reflect" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Reflects a cell across the xy-plane.</dt><dd><p>note: our representation of the board is slanted to align layers on x,y 0,0 instead of the center of the pyramid.
+to account for this, ‘reflecting’ a cell also means shifting it in the -x direction by its y value.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The cell coordinates to reflect.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reflected cell coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.rotate_xy">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">rotate_xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#rotate_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.rotate_xy" title="Link to this definition">¶</a></dt>
+<dd><p>Rotates a cell around the xy-plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The cell coordinates to rotate.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rotated cell coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.transpose_lean_1">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">transpose_lean_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#transpose_lean_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.transpose_lean_1" title="Link to this definition">¶</a></dt>
+<dd><p>Applies the first transposition to a leaned cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The cell coordinates to transpose.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transposed cell coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.transpose_lean_2">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">transpose_lean_2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#transpose_lean_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.transpose_lean_2" title="Link to this definition">¶</a></dt>
+<dd><p>Applies the second transposition to a leaned cell (not to be used on an already transposed cell).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The cell coordinates to transpose.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transposed cell coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.verify_placement">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">verify_placement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">piece</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#verify_placement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.verify_placement" title="Link to this definition">¶</a></dt>
+<dd><p>Verifies whether a given set of coordinates match any transformation of a piece when normalised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>piece</strong> (<a class="reference internal" href="#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a>) – The Piece object to verify.</p></li>
+<li><p><strong>coords</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – The cell coordinates to verify.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the placement is valid, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="polyhex.solver_functions.piece.visualise_piece">
+<span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">visualise_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/piece.html#visualise_piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.piece.visualise_piece" title="Link to this definition">¶</a></dt>
+<dd><p>Visualises a polyomino piece in 3D space using pyplot. For debugging and testing purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coords</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – The cell coordinates to visualise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="polyhex-solver">
+<h2>Polyhex Solver<a class="headerlink" href="#polyhex-solver" title="Link to this heading">¶</a></h2>
+<p>The solver module includes the core algorithm for solving the Polyhex puzzle. It utilizes the board and piece modules to generate valid solutions by testing different piece placements and configurations.</p>
+<dl class="py class" id="module-polyhex.solver_functions.solver">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">polyhex.solver_functions.solver.</span></span><span class="sig-name descname"><span class="pre">Solver</span></span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Handles solving polyhex packing problems on the equilateral pyramid board.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.cell_to_index">
+<span class="sig-name descname"><span class="pre">cell_to_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.cell_to_index" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.generate_board_cell_indexes">
+<span class="sig-name descname"><span class="pre">generate_board_cell_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_board</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.generate_board_cell_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.generate_board_cell_indexes" title="Link to this definition">¶</a></dt>
+<dd><p>Generates mappings between board cell coordinates and their matrix column indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_board</strong> (<a class="reference internal" href="#polyhex.solver_functions.board.Board" title="polyhex.solver_functions.board.Board"><em>Board</em></a>) – The hexagonal board to index.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.generate_solutions">
+<span class="sig-name descname"><span class="pre">generate_solutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_board</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.generate_solutions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.generate_solutions" title="Link to this definition">¶</a></dt>
+<dd><p>Generates all solutions for the polyhex packing problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pieces</strong> (<em>list</em><em>[</em><a class="reference internal" href="#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a><em>]</em>) – The pieces to place on the board.</p></li>
+<li><p><strong>hex_board</strong> (<a class="reference internal" href="#polyhex.solver_functions.board.Board" title="polyhex.solver_functions.board.Board"><em>Board</em></a><em>, </em><em>optional</em>) – The board to solve, defaults to an empty board.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yield<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of rows representing a solution matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>generator[list[list[int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.id_conversions">
+<span class="sig-name descname"><span class="pre">id_conversions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.id_conversions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.index_to_cell">
+<span class="sig-name descname"><span class="pre">index_to_cell</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.index_to_cell" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.initialise_packing_matrix">
+<span class="sig-name descname"><span class="pre">initialise_packing_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_board</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.initialise_packing_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.initialise_packing_matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Initializes the matrix for Algorithm X with all possible piece placements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hex_board</strong> (<a class="reference internal" href="#polyhex.solver_functions.board.Board" title="polyhex.solver_functions.board.Board"><em>Board</em></a>) – The board to solve. Assumed to be empty.</p></li>
+<li><p><strong>pieces</strong> (<em>list</em><em>[</em><a class="reference internal" href="#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a><em>]</em>) – A list of polyomino pieces for the board.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized matrix for Algorithm X.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>algorithm_x_functions.Matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.initialise_packing_matrix_partial_config">
+<span class="sig-name descname"><span class="pre">initialise_packing_matrix_partial_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_board</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remaining_pieces</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.initialise_packing_matrix_partial_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.initialise_packing_matrix_partial_config" title="Link to this definition">¶</a></dt>
+<dd><p>Initializes the matrix for Algorithm X with a partially configured board.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hex_board</strong> (<a class="reference internal" href="#polyhex.solver_functions.board.Board" title="polyhex.solver_functions.board.Board"><em>Board</em></a>) – The partially configured board. Assumed to have pieces already placed.</p></li>
+<li><p><strong>remaining_pieces</strong> (<em>list</em><em>[</em><a class="reference internal" href="#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a><em>]</em>) – The pieces left for the board.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized matrix for Algorithm X.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>algorithm_x_functions.Matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.matrix">
+<span class="sig-name descname"><span class="pre">matrix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.matrix" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.rows_to_array_sol">
+<span class="sig-name descname"><span class="pre">rows_to_array_sol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_board</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.rows_to_array_sol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.rows_to_array_sol" title="Link to this definition">¶</a></dt>
+<dd><p>Converts a solution matrix to a 3D array representation of the solved board.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rows</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em>) – The rows from the solution matrix.</p></li>
+<li><p><strong>hex_board</strong> (<a class="reference internal" href="#polyhex.solver_functions.board.Board" title="polyhex.solver_functions.board.Board"><em>Board</em></a>) – The board used in the solver.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 3D array representation of the solved board.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[list[int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="polyhex.solver_functions.solver.Solver.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_board</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/polyhex/solver_functions/solver.html#Solver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polyhex.solver_functions.solver.Solver.solve" title="Link to this definition">¶</a></dt>
+<dd><p>Solves the polyomino packing problem using Algorithm X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pieces</strong> (<em>list</em><em>[</em><a class="reference internal" href="#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a><em>]</em>) – The pieces to place on the board.</p></li>
+<li><p><strong>hex_board</strong> (<a class="reference internal" href="#polyhex.solver_functions.board.Board" title="polyhex.solver_functions.board.Board"><em>Board</em></a><em>, </em><em>optional</em>) – The board to solve, defaults to an empty board.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of rows representing a solution matrix, or False if no solution exists.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[int]] | bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -226,8 +623,11 @@ It ensures that only one process can be active at a time.</p>
 <li class="toctree-l1"><a class="reference internal" href="pyramid.html">Pyramid Application Documentation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Polyhex Application Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#content">Content</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#polyhex-class">Polyhex Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#polyhex-main">Polyhex Main</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polyhex-views">Polyhex Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#polyhex-board">Polyhex Board</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#polyhex-piece">Polyhex Piece</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#polyhex-solver">Polyhex Solver</a></li>
 </ul>
 </li>
 </ul>

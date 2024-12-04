@@ -22,18 +22,10 @@ stopButton.addEventListener('click', stopSolver);
 ******************************************************************************************/
 
 /* 
- * Starts the solver by initiating a POST request to start the generation process, hiding the start button, 
- * showing the "working" status message, and displaying the stop button after a delay.
+ * Starts the solver by initiating a POST request to start the generation process, hiding the start button
  * 
  * Args:
  *   event (Event): The event triggered by clicking the start button.
- *
- * Notes:
- * - Prevents the default behavior of the button click event.
- * - Hides the start button and welcome status (wts), then shows the status for the solver (sfs).
- * - Sends a POST request to the backend ('start_generator') to begin the generation process.
- * - Updates the solutions upon receiving a response from the backend.
- * - Shows the stop button after a delay of 1 second.
  */
 function startSolver(event) {
     event.preventDefault();
@@ -59,12 +51,6 @@ function startSolver(event) {
  *
  * Args: 
  *   None
- *
- * Notes:
- * - Clears the interval identified by `intervalID` to stop the periodic updates.
- * - Makes the start button visible again and hides the stop button.
- * - Sends a POST request to the backend ('stop_generator') to halt the generation process.
- * - Reloads the page if the server responds with a 200 status, or logs an error if the response status is 400.
  */
 function stopSolver() {
     clearInterval(intervalID); // Stop the interval
@@ -72,13 +58,9 @@ function stopSolver() {
     stopButton.style.display = 'none'; // Hide stop button
 
     fetch('stop_generator', { method: 'POST' })
-        .then(response => {
-            if (response.status === 200) {
-                window.location.reload(); // Reload the page if response is 200
-            } else if (response.status === 400) {
-                console.log('Error: js248'); // Alert the user if the response status is 400
-            }
-        })
+        .finally(() => {
+            window.location.reload(); // Reload the page
+        });
 }
 
 /* 
@@ -87,11 +69,6 @@ function stopSolver() {
  *
  * Args: 
  *   None
- *
- * Notes:
- * - Uses `setInterval` to make periodic requests to the server for the solution count.
- * - If the server responds that the generation is completed, it stops the solver by calling `stopSolver()`.
- * - Otherwise, it updates the number of solutions found in the UI by modifying the text content of the element with ID 'solutions_found'.
  */
 function updateSolutions() {
     intervalID = setInterval(() => {

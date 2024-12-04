@@ -28,3 +28,33 @@ The views in this module handle the HTTP requests for rendering different parts 
    :members:
    :undoc-members:
    :show-inheritance:
+
+Pyramid Board
+--------------
+
+The `Board` module is responsible for the representation and management of the Pyramid puzzle board. It handles the structure and state of the board, including rendering and interacting with the pieces during the puzzle-solving process.
+
+.. automodule:: pyramid.solver_functions.board  
+   :members:  
+   :undoc-members:  
+   :show-inheritance:  
+
+Pyramid Piece
+--------------
+
+The `Piece` module manages the individual pieces used to solve the Pyramid puzzle. It includes logic for piece manipulation, checking valid placements, and interacting with the board.
+
+.. automodule:: pyramid.solver_functions.piece  
+   :members:  
+   :undoc-members:  
+   :show-inheritance:  
+
+Pyramid Solver
+--------------
+
+The `Solver` module contains the core algorithm for solving the Pyramid puzzle. It includes the logic for finding solutions, optimizing placements, and handling the puzzle-solving process.
+
+.. automodule:: pyramid.solver_functions.solver  
+   :members:  
+   :undoc-members:  
+   :show-inheritance:
