@@ -28,6 +28,16 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(7, 20, 60);  // Initial camera position
 camera.lookAt(0,0,0)
 
+function resetCamera() {
+  camera.position.set(7, 20, 60);
+  camera.lookAt(0, 0, 0);
+  controls.reset();
+}
+
+// Add a reset button in the HTML and attach event listener
+const resetCameraButton = document.getElementById('reset-camera');
+resetCameraButton.addEventListener('click', resetCamera);
+
 // Mouse and Raycaster setup
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
@@ -387,3 +397,30 @@ const renderLoop = () => {
 };
 
 renderLoop();
+
+function createBoundingBox() {
+  const boundingBoxGeometry = new THREE.BoxGeometry(
+    forestWidth + 10,
+    20,  // Height
+    forestDepth + 10
+  );
+
+  // Create edges geometry
+  const edges = new THREE.EdgesGeometry(boundingBoxGeometry);
+
+  // Create line segments with a visible color and thickness
+  const boundingBoxLines = new THREE.LineSegments(
+    edges,
+    new THREE.LineBasicMaterial({
+      color: 0x00ff00,  // Bright green
+      linewidth: 2      // Thicker line
+    })
+  );
+
+  boundingBoxLines.position.set(0, 0.5, 0);  // Slightly above ground
+  scene.add(boundingBoxLines);
+  return boundingBoxLines;
+}
+
+// Add this call after scene setup
+const boundingBoxMesh = createBoundingBox();

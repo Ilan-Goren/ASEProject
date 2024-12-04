@@ -6,7 +6,7 @@
   {% load static %}
   <div id="statusSection">
     Solutions: {{ solutions_len }}
-    <div id="statusMessage">Specify the radius of sight:</div> 
+    <div id="statusMessage">Specify the radius of sight:</div>
     <input id="radiusInput" type="number" placeholder="Enter radius (50 to 1000)">
     <button class="btn btn-success" id="applyChanges">Apply</button>
   </div>
@@ -19,6 +19,7 @@
 
   <div class="button-container">
     <button class="btn btn-success" id="view-pyramid">View Pyramid</button>
+    <button class="btn btn-success" id="reset-camera">Reset Camera</button>
     <a class="btn btn-success" href="{% url 'pyramid_generator' %}" id="back" class="button">Back</a>
   </div>
 
