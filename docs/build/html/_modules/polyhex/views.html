@@ -143,7 +143,7 @@
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;polyhex_generator&#39;</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">button_pressed</span> <span class="o">==</span> <span class="s1">&#39;save_puzzle&#39;</span><span class="p">:</span>
-            <span class="n">board</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">new_board</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">pieces_placed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">layer_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
@@ -158,14 +158,23 @@
                             <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                             <span class="n">pieces_placed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                     <span class="n">layer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-                <span class="n">board</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">pieces_placed</span><span class="p">)</span>
+                <span class="n">new_board</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
 
-            <span class="n">polyhex_solver</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="n">board</span>
-            <span class="n">polyhex_solver</span><span class="o">.</span><span class="n">pieces_placed</span> <span class="o">=</span> <span class="n">pieces_placed</span>
-            <span class="n">solutions</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;polyhex_generator&#39;</span><span class="p">)</span>
+            <span class="c1"># Create a temporary Board object to verify board validity</span>
+            <span class="n">temp_board</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">new_board</span><span class="p">)</span>
+
+            <span class="c1"># Check if the board is valid before saving</span>
+            <span class="k">if</span> <span class="n">temp_board</span><span class="o">.</span><span class="n">verify_board</span><span class="p">():</span>
+                <span class="n">polyhex_solver</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="n">new_board</span>
+                <span class="n">polyhex_solver</span><span class="o">.</span><span class="n">pieces_placed</span> <span class="o">=</span> <span class="n">pieces_placed</span>
+                <span class="n">solutions</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;polyhex_generator&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># If the board is not valid, re-render the puzzle page with an error message</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;polyhex/puzzle.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s1">&#39;board&#39;</span><span class="p">:</span> <span class="n">new_board</span><span class="p">,</span>
+                    <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Invalid board configuration. Please check your piece placements.&#39;</span><span class="p">,</span>
+                <span class="p">})</span>
 
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;polyhex_puzzle&#39;</span><span class="p">)</span></div>
 
