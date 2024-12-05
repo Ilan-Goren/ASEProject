@@ -234,10 +234,6 @@ var overlayOpened = false;
  * - Adds the adjusted or cloned pyramid group back to the scene.
  * - Resets the pyramid's position to the origin (0, 0, 0).
  * - Sets the camera to look at the center of the pyramid for a proper view.
- *
- * Notes:
- * - The `adjustPyramidSpacing` function is invoked to modify the clone's layout for specific views.
- * - The `removeAllGroupsFromScene` ensures only the current view is displayed in the overlay.
  */
 function buttonHandler (camera, scene, pyramidClone, pyramidGroup, view){
   var pyramidClone = pyramidGroup.clone();
@@ -304,9 +300,6 @@ function showOverlay(selected) {
  * Functionality:
  * - Sets the overlay element's display style to 'none', effectively hiding it.
  * - Updates the `overlayOpened` flag to `false` to reflect the closed state.
- *
- * Notes:
- * - Ensure this function is called when the overlay needs to be dismissed, such as when a close button is clicked.
  */
 function closeOverlay(){
   overlay.style.display = 'none';
@@ -327,12 +320,6 @@ function closeOverlay(){
  * - Clones the provided `pyramidGroup` to avoid modifying the original group.
  * - Adds event listeners for button interactions (`hbutton`, `nbutton`, `vbutton`) to trigger specific handlers.
  * - Ensures smooth rendering via `requestAnimationFrame` when the overlay is open.
- *
- * Notes:
- * - The overlay has a light gray background for better contrast (`0xefefef`).
- * - The cloned pyramid group is centered at the origin (0, 0, 0) for consistent visualization.
- * - Camera position and orientation are set to provide a clear view of the pyramid.
- * - Stops rendering when `overlayOpened` is false, optimizing performance.
  */
 
 function renderPyramidInOverlay(pyramidGroup) {

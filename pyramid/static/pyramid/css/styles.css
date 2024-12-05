@@ -14,11 +14,17 @@ body {
   border-radius: 5px; 
   color: white;
   font-size: 18px; 
-  width: 300px;
-  height: 300px;
+  width: 300px; 
   display: flex; 
   flex-direction: column; 
   justify-content: space-between;
+}
+
+.statusSection-puzzle {
+  height: 100px;
+}
+.statusSection-solutions {
+  height: 300px;
 }
 
 canvas {
