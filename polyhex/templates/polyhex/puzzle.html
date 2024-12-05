@@ -7,6 +7,12 @@
 
 {% load custom_filters %}
 
+{% if error %}
+<div style="color: red; text-align: center; margin-top: 20px;">
+    {{ error }}
+</div>
+{% endif %}
+
 <h1>Layers</h1>
 <form action="{% url 'polyhex_solutions' %}" method="post">
     {% csrf_token %}
