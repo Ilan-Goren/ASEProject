@@ -7,26 +7,32 @@
 {% block title %}3D Pyramid Puzzle{% endblock %}
 
 {% block main %}
-<h1 class="mb-3">3D Polysphere Pyramid</h1>
+
+<h1 class="mb-3 text-center">3D Polysphere Pyramid</h1>
 
 <!-- Section for game instructions, centered on the page -->
 <div class="instructions text-center">
     <p><strong>Game Instructions:</strong></p>
-    <p><strong>Move Pieces:</strong> Drag a piece to a position in the 3D pyramid to move it.</p>
-</div>
-
-<div class="controls text-center">
-    <p><strong>Game Controls:</strong></p>
-    <p><strong>Reset Board:</strong> Clears the pyramid and all pieces for a fresh start.</p>
-    <p><strong>Solve Pyramid:</strong> Automatically arranges the pieces to complete the pyramid.</p>
-    <p><strong>Show All Possible Solutions:</strong> View all possible ways to complete the pyramid with the available pieces.</p>
+    <p><strong>Place Pieces:</strong> Use the available controls or keyboard keys to position and orient the pieces in the 3D pyramid.</p>
+    <p><strong>Keyboard Controls:</strong></p>
+    <ul class="list-unstyled">
+        <li><strong>Arrow Keys:</strong> Move the piece in the respective direction (left, right, forward, backward).</li>
+        <li><strong>Shift + Arrow Up:</strong> Move the piece up.</li>
+        <li><strong>Shift + Arrow Down:</strong> Move the piece down.</li>
+    </ul>
+    <p><strong>Available Controls:</strong></p>
+    <ul class="list-unstyled">
+        <li><strong>Rotate:</strong> Rotate the selected piece to change its orientation.</li>
+        <li><strong>Flip:</strong> Flip the selected piece along its axis for a mirrored placement.</li>
+        <li><strong>Change Orientation:</strong> Adjust the piece to align it differently in the pyramid.</li>
+        <li><strong>Reset:</strong> Reset the selected piece to its original position and orientation.</li>
+        <li><strong>Solve:</strong> Automatically solve the puzzle either for an empty board or for partial configurations.</li>
+    </ul>
 </div>
 
 <p class="text-center">Challenge yourself by arranging pieces to complete the pyramid in different configurations!</p>
 
 <a href="{% url 'pyramid_puzzle' %}" class="btn btn-success">Go to puzzle</a>
-
-<!-- <a href="{% url 'pyramid_generator' %}" class='btn btn-primary'>Generate all possible solutions</a> -->
 
 
 {% endblock %}
