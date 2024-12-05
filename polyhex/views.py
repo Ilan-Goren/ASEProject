@@ -99,7 +99,7 @@ def polyhex_solutions(request):
             return redirect('polyhex_generator')
 
         elif button_pressed == 'save_puzzle':
-            board = []
+            new_board = []
             pieces_placed = set()
 
             for layer_num in range(6):
@@ -114,14 +114,23 @@ def polyhex_solutions(request):
                             value = int(value)
                             pieces_placed.add(value)
                     layer.append(row)
-                board.append(layer)
-            print(board)
-            print(pieces_placed)
+                new_board.append(layer)
 
-            polyhex_solver.board = board
-            polyhex_solver.pieces_placed = pieces_placed
-            solutions = manager.list()
-            return redirect('polyhex_generator')
+            # Create a temporary Board object to verify board validity
+            temp_board = board.Board(new_board)
+
+            # Check if the board is valid before saving
+            if temp_board.verify_board():
+                polyhex_solver.board = new_board
+                polyhex_solver.pieces_placed = pieces_placed
+                solutions = manager.list()
+                return redirect('polyhex_generator')
+            else:
+                # If the board is not valid, re-render the puzzle page with an error message
+                return render(request, 'polyhex/puzzle.html', {
+                    'board': new_board,
+                    'error': 'Invalid board configuration. Please check your piece placements.',
+                })
 
     return redirect('polyhex_puzzle')
 
