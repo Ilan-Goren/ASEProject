@@ -2,17 +2,23 @@
 {% block app_name %} Polyhex {% endblock %}
 {% block title %} Home {% endblock %}
 {% block main %}
-<h1 class="mb-3">Polyhex</h1>
+<h1 class="mb-3 text-center">Polyhex</h1>
 
 <!-- Section for game instructions, centered on the page -->
 <div class="instructions text-center">
     <p><strong>Game Instructions:</strong></p>
-    <!-- Instructions for interacting with puzzle pieces -->
+    <p>The puzzle is text-based, where each layer is represented as a grid of boxes. Follow these steps:</p>
+    <ul class="list-unstyled">
+        <li>1. Type the number (from 1 to 12) corresponding to a piece in the box where you want to place it.</li>
+        <li>2. Click <strong>Save and Go to Generator</strong> to store your configuration and start generating solutions.</li>
+    </ul>
+    <p>Each number represents a unique piece, and you can rearrange them to find creative solutions!</p>
 </div>
 
 <!-- Section for game controls, centered on the page -->
 <div class="controls text-center">
     <p><strong>Game Controls:</strong></p>
+    <p>Use the <strong>Save and Go to Generator</strong> button to save your current configuration and generate possible solutions.</p>
 </div>
 
 <p class="text-center">Challenge yourself by arranging pieces in different ways to find a solution!</p>

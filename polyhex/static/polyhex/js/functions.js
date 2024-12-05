@@ -4,6 +4,16 @@ import { colorMapping } from './defs.js';
 export var selected = null;
 export var overlapExists = false;
 
+/* 
+ * Creates a tetrahedron-shaped group of spheres based on the provided data.
+ * 
+ * Args:
+ *   data (Array): A 3D array representing the layers, rows, and columns of the tetrahedron, where each value corresponds 
+ *                 to a piece identifier (non-zero values are valid pieces).
+ * 
+ * Returns:
+ *   THREE.Group: A group containing all the spheres that form the tetrahedron.
+ */
 export function createTetrahedron(data) {
   const tetrahedronGroup = new THREE.Group();
   const layerCount = data.length;
@@ -45,7 +55,16 @@ export function createTetrahedron(data) {
   return tetrahedronGroup;
 }
 
-// Function to adjust spacing between layers in a pyramid group
+/* 
+ * Adjusts the spacing between layers in a pyramid group based on the specified orientation.
+ * 
+ * Args:
+ *   pyramidGroup (THREE.Group): The group of spheres representing the pyramid.
+ *   orientation (string, optional): The spacing orientation, either 'vertical' or 'horizontal'. Defaults to 'vertical'.
+ *
+ * Returns:
+ *   THREE.Group: A clone of the adjusted pyramid group.
+ */
 export function adjustPyramidSpacing(pyramidGroup, orientation = 'vertical') {
   pyramidGroup.children.forEach((sphere) => {
       const { x, y, z } = sphere.position;
@@ -62,6 +81,12 @@ export function adjustPyramidSpacing(pyramidGroup, orientation = 'vertical') {
   return pyramidGroup.clone()
 }
 
+/* 
+ * Removes all groups from the scene.
+ * 
+ * Args:
+ *   scene (THREE.Scene): The scene from which to remove all groups.
+ */
 export function removeAllGroupsFromScene(scene) {
   scene.children.forEach(child => {
       if (child instanceof THREE.Group) {
@@ -70,6 +95,15 @@ export function removeAllGroupsFromScene(scene) {
   });
 }
 
+/* 
+ * Sets the emissive properties for the selected piece group based on the state.
+ *
+ * Args:
+ *   selected (THREE.Group): The selected piece group whose spheres will have their emissive properties modified.
+ *   state (boolean): Determines whether to enable or disable the emissive effect. 
+ *                    - If true, sets the emissive color to a light gray with a moderate intensity.
+ *                    - If false, resets the emissive color to black and intensity to 0.
+ */
 export function setEmissiveForSelected(selected, state){
   if (selected) {
     if (state){
@@ -88,6 +122,16 @@ export function setEmissiveForSelected(selected, state){
   }
 }
 
+/* 
+ * Handles button actions to adjust the view of the pyramid in the scene.
+ *
+ * Args:
+ *   camera (THREE.Camera): The camera object that will be used to update the view.
+ *   scene (THREE.Scene): The scene where the pyramid is rendered.
+ *   pyramidClone (THREE.Group): The cloned pyramid group to be added to the scene.
+ *   pyramidGroup (THREE.Group): The original pyramid group from which the clone is created.
+ *   view (string): The current view mode, which can be 'h' for horizontal, 'v' for vertical, or 'n' for normal.
+ */
 export function buttonHandler (camera, scene, pyramidClone, pyramidGroup, view){
   var pyramidClone = pyramidGroup.clone();
   

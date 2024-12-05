@@ -6,10 +6,6 @@
  * Args:
  *   message1 (string): The first status message. Defaults to 'none' if not provided.
  *   message2 (string): The second status message. Defaults to 'none' if not provided.
- *
- * Notes:
- * - `message1` is shown for 3 seconds and then cleared.
- * - `message2` displays the count of pieces within bounds.
  */
 export function updateStatusMessage(message1='none', message2='none') {
     if (message1 != 'none'){
@@ -33,9 +29,6 @@ export function updateStatusMessage(message1='none', message2='none') {
  * Args:
  *   selected (THREE.Object3D): The currently selected piece object in the scene.
  *   state (boolean): Determines whether to activate or deactivate the emissive effect.
- *
- * Notes:
- * - Affects all spheres (children) of the selected piece.
  */
 export function setEmissiveForSelected(selected, state){
   if (selected) {

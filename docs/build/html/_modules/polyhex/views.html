@@ -258,7 +258,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">process</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">process</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">process</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
             <span class="c1"># Check if Process exists and is running first before terminating</span>
             <span class="n">process</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>  <span class="c1"># terminate process</span>
             <span class="n">process</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>

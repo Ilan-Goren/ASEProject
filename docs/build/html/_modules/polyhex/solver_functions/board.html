@@ -34,9 +34,18 @@
 <span></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">piece</span>
 
 <div class="viewcode-block" id="Board">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.board.Board">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.board.Board">[docs]</a>
 <span class="k">class</span> <span class="nc">Board</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a 3D board with layers and cells for placing polyhex pieces.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Board object. If no board is provided, creates a default 6 layer board.</span>
+
+<span class="sd">        :param board: A nested list representing the initial state of the board, or None for a default board.</span>
+<span class="sd">        :type board: list[list[list[int]]], optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">board</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">6</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span>
@@ -50,14 +59,28 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="n">board</span>
 
 <div class="viewcode-block" id="Board.count_cells">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.board.Board.count_cells">[docs]</a>
-    <span class="k">def</span> <span class="nf">count_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="c1">#</span>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.board.Board.count_cells">[docs]</a>
+    <span class="k">def</span> <span class="nf">count_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Counts the total number of cells in the board.</span>
+
+<span class="sd">        :return: The total number of cells.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">board</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Board.is_region_free">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.board.Board.is_region_free">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.board.Board.is_region_free">[docs]</a>
     <span class="k">def</span> <span class="nf">is_region_free</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if a given region of cells is free on the board.</span>
+
+<span class="sd">        :param region: A list of tuples representing cell coordinates (x, y, z).</span>
+<span class="sd">        :type region: list[tuple[int, int, int]]</span>
+<span class="sd">        :return: True if the region is free, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">region</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
@@ -71,8 +94,16 @@
 
 
 <div class="viewcode-block" id="Board.get_matching_empty_regions">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.board.Board.get_matching_empty_regions">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.board.Board.get_matching_empty_regions">[docs]</a>
     <span class="k">def</span> <span class="nf">get_matching_empty_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds all regions on the board that match the given region and are free.</span>
+
+<span class="sd">        :param region: A list of tuples representing cell coordinates (x, y, z).</span>
+<span class="sd">        :type region: list[tuple[int, int, int]]</span>
+<span class="sd">        :return: A list of matching empty regions.</span>
+<span class="sd">        :rtype: list[list[tuple[int, int, int]]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">matching_empty_regions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="p">[</span><span class="n">z</span><span class="p">])):</span>
@@ -86,8 +117,14 @@
 
 
 <div class="viewcode-block" id="Board.get_piece_locations">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.board.Board.get_piece_locations">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.board.Board.get_piece_locations">[docs]</a>
     <span class="k">def</span> <span class="nf">get_piece_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the locations of all placed pieces on the board.</span>
+
+<span class="sd">        :return: A dictionary where keys are piece IDs and values are lists of their cell coordinates.</span>
+<span class="sd">        :rtype: dict[int, list[tuple[int, int, int]]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">placed_pieces</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="p">)):</span>
@@ -103,8 +140,14 @@
 
 
 <div class="viewcode-block" id="Board.verify_board">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.board.Board.verify_board">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.board.Board.verify_board">[docs]</a>
     <span class="k">def</span> <span class="nf">verify_board</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifies the validity of the board by checking the placement of all pieces.</span>
+
+<span class="sd">        :return: True if the board is valid, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">piece_locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_piece_locations</span><span class="p">()</span>
         <span class="n">valid</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">piece_locations</span><span class="p">:</span>
@@ -144,8 +187,8 @@
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../pyramid.html">Pyramid App</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../polyhex.html">polyhex package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyramid.html">Pyramid Application Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../polyhex.html">Polyhex Application Documentation</a></li>
 </ul>
 
 <div class="relations">

@@ -180,6 +180,10 @@ function updatePyramids() {
       if (distance > loadingRadius || !cameraFrustum.containsPoint(pyramidPosition)) {
           if (loadedPyramids.has(index)) {
               const pyramidToRemove = loadedPyramids.get(index);
+              const indexToRemove = allPyramids.indexOf(pyramidToRemove);
+              if (indexToRemove > -1) {
+                allPyramids.splice(indexToRemove, 1);  // Remove the pyramid from the array
+              }
               scene.remove(pyramidToRemove);
               loadedPyramids.delete(index);
           }

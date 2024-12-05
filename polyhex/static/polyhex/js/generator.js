@@ -21,7 +21,12 @@ stopButton.addEventListener('click', stopSolver);
                                     MAIN FUNCTIONS
 ******************************************************************************************/
 
-// Start solver function
+/* 
+ * Starts the solver by initiating a POST request to start the generation process, hiding the start button
+ * 
+ * Args:
+ *   event (Event): The event triggered by clicking the start button.
+ */
 function startSolver() {
     startButton.style.display = 'none';
     wts.style.display = 'none';
@@ -39,22 +44,30 @@ function startSolver() {
     }, 1000);
 }
 
-// Stop solver function
+/* 
+ * Stops the solver by clearing the interval, hiding the stop button, and sending a POST request to stop the generation process.
+ * Reloads the page if the backend responds with a 200 status code, or logs an error message if the status is 400.
+ *
+ * Args: 
+ *   None
+ */
 function stopSolver() {
     clearInterval(intervalID); // Stop the interval
     startButton.style.display = 'inline-block'; // Hide stop button
     stopButton.style.display = 'none'; // Hide stop button
 
     fetch('stop_generator', { method: 'POST' })
-        .then(response => {
-            if (response.status === 200) {
-                window.location.reload(); // Reload the page if response is 200
-            } else if (response.status === 400) {
-                console.log('Error: js248'); // Alert the user if the response status is 400
-            }
-        })
+        .finally(() => {
+            window.location.reload(); // Reload the page
+        });
 }
-
+/* 
+ * Periodically checks for the number of solutions generated and updates the display. 
+ * If the generation process is complete, it stops the solver and updates the interface.
+ *
+ * Args: 
+ *   None
+ */
 function updateSolutions() {
     intervalID = setInterval(() => {
         fetch('get-solution-count')

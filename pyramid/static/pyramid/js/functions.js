@@ -22,18 +22,6 @@ export var overlapExists = false;
  *   raycaster (THREE.Raycaster): Used to calculate intersections with objects.
  *   mouse (THREE.Vector2): Stores the normalized mouse coordinates for raycasting.
  *   camera (THREE.Camera): The active camera used for raycasting.
- *
- * Notes:
- * - Normalizes mouse coordinates to the range [-1, 1] for compatibility with the raycaster.
- * - If a piece is clicked:
- *   - Sets the `selected` variable to the clicked object.
- *   - Updates the emissive material of the selected piece to indicate selection.
- * - If no piece is clicked:
- *   - Deselects the currently selected piece and resets its visual state.
- * - Emits console logs for debugging:
- *   - Logs the parent object of the selected piece.
- *   - Logs the position of the selected piece or "nothing selected" if deselected.
- * - Ensures that only valid pieces (within boundaries and without overlap) are highlighted.
  */
 
 export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
@@ -81,17 +69,6 @@ export function onClickHandler(event, piecesGroup, raycaster, mouse, camera) {
  *   event (KeyboardEvent): The keyboard event triggered by user input.
  *   camera (THREE.Camera): The active camera to determine movement direction.
  *   piecesGroup (THREE.Group): The group containing all pieces for boundary checks.
- *
- * Notes:
- * - Arrow keys are used for movement:
- *   - `ArrowUp` and `ArrowDown` move forward and backward, respectively.
- *   - `ArrowLeft` and `ArrowRight` move laterally (left and right).
- *   - Shift + `ArrowUp` or `ArrowDown` adjusts the vertical position.
- * - Movement is restricted to whole units in X and Z axes and a minimum Y value of 1.
- * - Calls:
- *   - `insideBoundariesHandler()` to detect pieces within bounds.
- *   - `highlightOverlappingPieces()` to detect overlaps.
- *   - `highlightPiecesPartiallyInsideBounds()` to detect incomplete placements.
  */
 
 export function keyboardHandler(event, camera, piecesGroup) {
@@ -149,17 +126,12 @@ export function keyboardHandler(event, camera, piecesGroup) {
                                      MAIN FUNCTIONS
 ******************************************************************************************/
 
-// Creates and positions groups of pieces in a circular arrangement.
-//
-// Returns:
-//   Array<THREE.Group>: An array of piece groups, each containing spheres.
-//
-// Notes:
-// - Each piece group is created from the `pieces` object, with positions defined for spheres.
-// - Materials are assigned dynamically based on `colorMapping` or default to white.
-// - Groups are evenly distributed in a circle of a defined radius and rotated around the x-axis by 90 degrees.
-// - The `partiallyInBounds` property is initialized as false for each group.
-// - Groups are stored in the `piecesGroup` array.
+/* 
+ * Creates and positions groups of pieces in a circular arrangement.
+ *
+ * Returns:
+ *   Array<THREE.Group>: An array of piece groups, each containing spheres that make up the pieces.
+ */
 export function createPieces() {
   const piecesGroup = [];
   const radius = 18;                               // Radius of the circle
@@ -214,18 +186,16 @@ export function createPieces() {
   return piecesGroup;
 }
 
-// Handles checking if pieces in a group are within defined boundaries.
-//
-// Args:
-//   piecesGroup (Array<THREE.Group>): The group of pieces to evaluate.
-//
-// Returns:
-//   Array|boolean: Returns an array of pieces with their positions if at least one group is fully in bounds; otherwise, returns false.
-//
-// Notes:
-// - Updates the `partiallyInBounds` property of each group to indicate whether it is partially within bounds.
-// - Calculates dynamic boundaries based on the vertical position of each group.
-// - Updates a status message based on the count of correctly placed pieces.
+/* 
+ * Checks if the pieces in a group are within the defined boundaries.
+ *
+ * Arguments:
+ *   piecesGroup (Array<THREE.Group>): The group of pieces to evaluate for boundary placement.
+ *
+ * Returns:
+ *   Array|boolean: Returns an array containing pieces with their positions if at least one group is fully within bounds; 
+ *                  otherwise, returns false.
+ */
 export function insideBoundariesHandler(piecesGroup) {
   const piecesCorrectlyPlaced = [];
   const piecesInBounds = [];
@@ -286,19 +256,16 @@ export function insideBoundariesHandler(piecesGroup) {
   return piecesCorrectlyPlaced.length > 0 ? piecesInBounds : false;
 }
 
-// Extracts data from the input and updates the pyramid structure, validating placement and checking for errors.
-//
-// Args:
-//   input (Array): Array of objects containing piece names and positions to be placed in the pyramid.
-//   piecesGroup (Array<THREE.Group>): The array of piece groups to validate.
-//
-// Returns:
-//   boolean: Returns true if the data was successfully extracted and processed, false otherwise.
-//
-// Notes:
-// - Checks for overlaps between pieces and partially placed pieces, showing alerts if issues are found.
-// - Constructs a pyramid structure (3D array) based on the given input and piece positions.
-// - Updates hidden form fields with the serialized pyramid structure and the list of placed pieces.
+/* 
+ * Extracts data from the input and updates the pyramid structure, ensuring placement is valid and checking for errors.
+ *
+ * Arguments:
+ *   input (Array): An array of objects containing piece names and positions to be placed in the pyramid.
+ *   piecesGroup (Array<THREE.Group>): An array of piece groups that will be validated during placement.
+ *
+ * Returns:
+ *   boolean: Returns true if the data is successfully extracted and the pyramid structure is updated, false otherwise.
+ */
 export function extractDataFromPlane(input, piecesGroup) {
   if (overlapExists){
     alert('Overlapping exists, fix it first to get accurate solutions.')
@@ -348,19 +315,16 @@ export function extractDataFromPlane(input, piecesGroup) {
   return true;
 }
 
-// Creates a 3D pyramid based on the given data.
-//
-// Args:
-//   data (Array): A 3D array representing the layers, rows, and columns of the pyramid where each value corresponds
-//                 to a piece identifier (non-zero values are valid pieces).
-//
-// Returns:
-//   THREE.Group: A group containing all the spheres that form the pyramid.
-//
-// Notes:
-// - Iterates through the data to create spheres for each valid piece, placing them in the correct 3D position.
-// - The color of each sphere is determined by a color mapping based on the piece identifier.
-// - Adds each sphere to the `pyramidGroup` which is returned as the final 3D structure.
+/* 
+ * Creates a 3D pyramid based on the provided data.
+ *
+ * Arguments:
+ *   data (Array): A 3D array representing the pyramid's layers, rows, and columns. Each value corresponds to a piece identifier 
+ *                 (non-zero values are valid pieces).
+ *
+ * Returns:
+ *   THREE.Group: A group containing all the spheres that make up the pyramid.
+ */
 export function createPyramid(data) {
   const pyramidGroup = new THREE.Group()
   data.forEach((layer, layerIndex) => {
@@ -399,14 +363,16 @@ export function createPyramid(data) {
                                      HELPER FUNCTIONS
 ******************************************************************************************/
 
-// Adjusts the spacing between layers in a pyramid group.
-// 
-// Args:
-//   pyramidGroup (THREE.Group): The group of spheres representing the pyramid.
-//   orientation (string, optional): The spacing orientation, either 'vertical' or 'horizontal'. Defaults to 'vertical'.
-// 
-// Returns:
-//   THREE.Group: A clone of the adjusted pyramid group.
+/* 
+ * Adjusts the spacing between layers in a pyramid group.
+ *
+ * Arguments:
+ *   pyramidGroup (THREE.Group): The group of spheres that form the pyramid.
+ *   orientation (string, optional): The orientation of the spacing, either 'vertical' or 'horizontal'. Defaults to 'vertical'.
+ *
+ * Returns:
+ *   THREE.Group: A new group with the adjusted pyramid layers.
+ */
 export function adjustPyramidSpacing(pyramidGroup, orientation = 'vertical') {
   pyramidGroup.children.forEach((sphere) => {
       const { x, y, z } = sphere.position;
@@ -423,10 +389,12 @@ export function adjustPyramidSpacing(pyramidGroup, orientation = 'vertical') {
   return pyramidGroup.clone()
 }
 
-// Removes all groups from the scene.
-//
-// Args:
-//   scene (THREE.Scene): The scene from which to remove all groups.
+/* 
+ * Removes all groups from the scene.
+ *
+ * Arguments:
+ *   scene (THREE.Scene): The scene from which all groups will be removed.
+ */
 export function removeAllGroupsFromScene(scene) {
   scene.children.forEach(child => {
       if (child instanceof THREE.Group) {
@@ -435,16 +403,14 @@ export function removeAllGroupsFromScene(scene) {
   });
 }
 
-// Rotates an object around a specified axis using a quaternion.
-//
-// Args:
-//   object (THREE.Object3D): The object to rotate. Must have a `quaternion` property.
-//   axis (string): The axis of rotation ('x', 'y', or 'z').
-//   angle (number): The rotation angle in degrees.
-//
-// Modifies:
-//   The `object.quaternion` property to apply the rotation.
-//   The `object.rotationTracker` property to track the cumulative rotation for each axis.
+/* 
+ * Rotates an object around a specified axis using a quaternion.
+ *
+ * Arguments:
+ *   object (THREE.Object3D): The object to rotate. It must have a `quaternion` property.
+ *   axis (string): The axis of rotation ('x', 'y', or 'z').
+ *   angle (number): The rotation angle in degrees.
+ */
 function rotateWithQuaternion(object, axis, angle) {
   if (!object.rotationTracker) {
     object.rotationTracker = { x: 0, y: 0, z: 0 };
@@ -475,15 +441,12 @@ function rotateWithQuaternion(object, axis, angle) {
   });
 }
 
-// Adjusts the position of a piece group to ensure it aligns correctly after rotation.
-//
-// Args:
-//   pieceGroup (THREE.Group): The group of objects whose position needs adjustment.
-//
-// Notes:
-// - Checks the bounding box of the group and aligns the bottom of the group (`min.y`) to the plane defined at `planeY` (default is 0).
-// - Offsets the group's vertical position (`y`) to correct any misalignment.
-// - Rounds the horizontal positions (`x` and `z`) to ensure they are integers, maintaining grid alignment.
+/* 
+ * Adjusts the position of a piece group to ensure it is properly aligned after rotation.
+ *
+ * Arguments:
+ *   pieceGroup (THREE.Group): The group of objects whose position needs to be adjusted.
+ */
 export function fixPositionAfterRotation(pieceGroup) {
   const boundingBox = new THREE.Box3().setFromObject(pieceGroup);
   const planeY = 0;
@@ -503,20 +466,17 @@ export function fixPositionAfterRotation(pieceGroup) {
   }
 }
 
-// Checks for overlapping spheres between a given piece group and other groups.
-//
-// Args:
-//   pieceGroup (THREE.Group): The group to check for overlaps.
-//   piecesGroup (Array<THREE.Group>): The array of all groups to compare against.
-//   tolerance (number, optional): The distance within which two spheres are considered overlapping. Defaults to 1.9.
-//
-// Returns:
-//   boolean: True if an overlap is detected; otherwise, false.
-//
-// Notes:
-// - Iterates over all other groups in `piecesGroup` and skips the comparison with the same group.
-// - Compares the world positions of each sphere in `pieceGroup` with each sphere in the other groups.
-// - Uses `distanceTo` to calculate the distance between spheres and checks against the `tolerance` value.
+/* 
+ * This function checks if there are any overlapping spheres between the given piece group and the other groups.
+ *
+ * Arguments:
+ *   pieceGroup (THREE.Group): The group of spheres to check for overlap.
+ *   piecesGroup (Array<THREE.Group>): The array containing all groups to compare with.
+ *   tolerance (number, optional): The distance within which two spheres are considered overlapping. Defaults to 1.9.
+ *
+ * Returns:
+ *   boolean: Returns true if an overlap is detected, otherwise false.
+ */
 export function checkOverlap(pieceGroup, piecesGroup, tolerance = 1.9) {
   // iterate over all groups in piecesGroup
   for (let i = 0; i < piecesGroup.length; i++) {
@@ -551,12 +511,6 @@ export function checkOverlap(pieceGroup, piecesGroup, tolerance = 1.9) {
  * Args:
  *   selected (THREE.Mesh): The selected piece (mesh) that was moved.
  *   piecesGroup (Array<THREE.Group>): The array of all piece groups to check for overlap.
- *
- * Notes:
- * - Checks if the selected piece overlaps with any other piece using the `checkOverlap` function.
- * - If an overlap is detected, the selected piece's emissive color is changed to red, and a status message is updated.
- * - If no overlap is detected, the emissive color is reset to its original state.
- * - The `overlapExists` flag is updated based on the overlap check.
  */
 export function highlightOverlappingPieces(selected, piecesGroup){
   if (selected){
@@ -586,11 +540,6 @@ export function highlightOverlappingPieces(selected, piecesGroup){
  *
  * Args:
  *   selected (THREE.Mesh): The selected piece (mesh) to check for boundary placement.
- *
- * Notes:
- * - If the piece's parent group is partially inside the boundaries, it highlights the piece with a red emissive color.
- * - If the piece is correctly placed or no overlap exists, the emissive color is reset to its original state.
- * - The `overlapExists` flag is used to ensure the piece is highlighted correctly when there is no overlap.
  */
 export function highlightPiecesPartiallyInsideBounds(selected){
   if (selected.parent.partiallyInBounds){
@@ -619,13 +568,6 @@ export function highlightPiecesPartiallyInsideBounds(selected){
  *
  * Returns:
  *   boolean: The updated orientation state of the piece (flat or not).
- *
- * Notes:
- * - Rotates the selected piece around both the X and Y axes based on the orientation state.
- * - If the piece is flat, it applies a -90 degree rotation along the X axis and a -45 degree rotation along the Y axis.
- * - If the piece is not flat, it applies a 90 degree rotation along the X axis and a 45 degree rotation along the Y axis.
- * - After rotation, the position is fixed, boundaries are checked, overlapping pieces are highlighted, and pieces partially inside the boundaries are highlighted.
- * - If no piece is selected, a status message is shown.
  */
 export function changeOrientationHandler(piecesGroup, isPieceFlat) {
   if (selected) {
@@ -722,13 +664,6 @@ export function uprightOrientationRotationHandler(piecesGroup) {
  * Args:
  *   piecesGroup (Array): Group of pieces to check for boundary placement.
  *   isPieceFlat (boolean): Indicates whether the piece is currently flat or not.
- *
- * Notes:
- * - Rotates the selected piece by 90 degrees around either the Z-axis (if flat) or Y-axis (if not flat).
- * - After rotating, the position is fixed, boundaries are checked, overlapping pieces are highlighted, and pieces partially inside the boundaries are highlighted.
- * - A status message is displayed indicating the success or failure of the rotation operation.
- * - Rotation values are logged in degrees.
- * - If no piece is selected, a status message is shown indicating that no piece is selected.
  */
 export function rotateHandler(piecesGroup, isPieceFlat) {
   if (selected) {
@@ -761,12 +696,6 @@ export function rotateHandler(piecesGroup, isPieceFlat) {
  * Args:
  *   piecesGroup (Array): Group of pieces to check for boundary placement.
  *   isPieceFlat (boolean): Indicates whether the piece is currently flat or not.
- *
- * Notes:
- * - Rotates the selected piece by 180 degrees along the Y-axis, regardless of its current orientation.
- * - After flipping, the position is fixed, boundaries are checked, overlapping pieces are highlighted, and pieces partially inside the boundaries are highlighted.
- * - A status message is displayed indicating the success or failure of the flip operation.
- * - If no piece is selected, a status message is shown indicating that no piece is selected.
  */
 export function flipHandler(piecesGroup, isPieceFlat) {
   if (selected) {

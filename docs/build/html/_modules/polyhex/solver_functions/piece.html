@@ -61,9 +61,20 @@
             <span class="mi">12</span><span class="p">:</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]}</span>
 
 <div class="viewcode-block" id="Piece">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.Piece">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.Piece">[docs]</a>
 <span class="k">class</span> <span class="nc">Piece</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a polyhex piece with all possible transformations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">piece_id</span><span class="p">,</span> <span class="n">custom_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a Piece object with its ID and transformations.</span>
+
+<span class="sd">        :param piece_id: The unique identifier of the piece. 1-12 is valid for using default shapes.</span>
+<span class="sd">        :type piece_id: int</span>
+<span class="sd">        :param custom_shape: A custom shape for the piece, represented as a list of cell coordinates.</span>
+<span class="sd">        :type custom_shape: list[tuple[int, int, int]], optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">piece_id</span>
         <span class="k">if</span> <span class="n">custom_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span> <span class="o">=</span> <span class="n">build_transformations</span><span class="p">(</span><span class="n">pieces</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">piece_id</span><span class="p">))</span>
@@ -72,8 +83,16 @@
 
 
 <div class="viewcode-block" id="build_transformations">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.build_transformations">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.build_transformations">[docs]</a>
 <span class="k">def</span> <span class="nf">build_transformations</span><span class="p">(</span><span class="n">cells</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates all unique transformations (rotations, reflections, leans, transposes) of a piece.</span>
+
+<span class="sd">    :param cells: The initial list of cell coordinates for the piece.</span>
+<span class="sd">    :type cells: list[tuple[int, int, int]]</span>
+<span class="sd">    :return: A list of unique transformations.</span>
+<span class="sd">    :rtype: list[list[tuple[int, int, int]]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">transformations</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
         <span class="n">cells</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">normalize_transformation</span><span class="p">([</span><span class="n">rotate_xy</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">]))</span>
@@ -99,16 +118,34 @@
 
 
 <div class="viewcode-block" id="rotate_xy">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.rotate_xy">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.rotate_xy">[docs]</a>
 <span class="k">def</span> <span class="nf">rotate_xy</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rotates a cell around the xy-plane.</span>
+
+<span class="sd">    :param cell: The cell coordinates to rotate.</span>
+<span class="sd">    :type cell: tuple[int, int, int]</span>
+<span class="sd">    :return: Rotated cell coordinates.</span>
+<span class="sd">    :rtype: tuple[int, int, int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="reflect">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.reflect">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.reflect">[docs]</a>
 <span class="k">def</span> <span class="nf">reflect</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reflects a cell across the xy-plane.</span>
+<span class="sd">        note: our representation of the board is slanted to align layers on x,y 0,0 instead of the center of the pyramid.</span>
+<span class="sd">        to account for this, &#39;reflecting&#39; a cell also means shifting it in the -x direction by its y value.</span>
+
+<span class="sd">    :param cell: The cell coordinates to reflect.</span>
+<span class="sd">    :type cell: tuple[int, int, int]</span>
+<span class="sd">    :return: Reflected cell coordinates.</span>
+<span class="sd">    :rtype: tuple[int, int, int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -116,32 +153,64 @@
 
 
 <div class="viewcode-block" id="lean">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.lean">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.lean">[docs]</a>
 <span class="k">def</span> <span class="nf">lean</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transforms a cell to its leaning position.</span>
+
+<span class="sd">    :param cell: The cell coordinates to transform.</span>
+<span class="sd">    :type cell: tuple[int, int, int]</span>
+<span class="sd">    :return: Transformed cell coordinates.</span>
+<span class="sd">    :rtype: tuple[int, int, int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="transpose_lean_1">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.transpose_lean_1">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.transpose_lean_1">[docs]</a>
 <span class="k">def</span> <span class="nf">transpose_lean_1</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies the first transposition to a leaned cell.</span>
+
+<span class="sd">    :param cell: The cell coordinates to transpose.</span>
+<span class="sd">    :type cell: tuple[int, int, int]</span>
+<span class="sd">    :return: Transposed cell coordinates.</span>
+<span class="sd">    :rtype: tuple[int, int, int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">-</span> <span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="transpose_lean_2">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.transpose_lean_2">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.transpose_lean_2">[docs]</a>
 <span class="k">def</span> <span class="nf">transpose_lean_2</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies the second transposition to a leaned cell (not to be used on an already transposed cell).</span>
+
+<span class="sd">    :param cell: The cell coordinates to transpose.</span>
+<span class="sd">    :type cell: tuple[int, int, int]</span>
+<span class="sd">    :return: Transposed cell coordinates.</span>
+<span class="sd">    :rtype: tuple[int, int, int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">5</span> <span class="o">-</span> <span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="normalize_transformation">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.normalize_transformation">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.normalize_transformation">[docs]</a>
 <span class="k">def</span> <span class="nf">normalize_transformation</span><span class="p">(</span><span class="n">cells</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Normalizes a set of cell coordinates to their minimum values.</span>
+
+<span class="sd">    :param cells: A list of cell coordinates.</span>
+<span class="sd">    :type cells: list[tuple[int, int, int]]</span>
+<span class="sd">    :return: Normalized cell coordinates.</span>
+<span class="sd">    :rtype: list[tuple[int, int, int]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Find minimum values in each dimension</span>
     <span class="n">min_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">)</span>
     <span class="n">min_y</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">)</span>
@@ -153,8 +222,14 @@
 
 
 <div class="viewcode-block" id="visualise_piece">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.visualise_piece">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.visualise_piece">[docs]</a>
 <span class="k">def</span> <span class="nf">visualise_piece</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Visualises a polyomino piece in 3D space using pyplot. For debugging and testing purposes.</span>
+
+<span class="sd">    :param coords: The cell coordinates to visualise.</span>
+<span class="sd">    :type coords: list[tuple[int, int, int]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">coords</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No coordinates to plot.&quot;</span><span class="p">)</span>
         <span class="k">return</span>
@@ -189,8 +264,18 @@
 
 
 <div class="viewcode-block" id="verify_placement">
-<a class="viewcode-back" href="../../../polyhex.solver_functions.html#polyhex.solver_functions.piece.verify_placement">[docs]</a>
+<a class="viewcode-back" href="../../../polyhex.html#polyhex.solver_functions.piece.verify_placement">[docs]</a>
 <span class="k">def</span> <span class="nf">verify_placement</span><span class="p">(</span><span class="n">piece</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verifies whether a given set of coordinates match any transformation of a piece when normalised.</span>
+
+<span class="sd">    :param piece: The Piece object to verify.</span>
+<span class="sd">    :type piece: Piece</span>
+<span class="sd">    :param coords: The cell coordinates to verify.</span>
+<span class="sd">    :type coords: list[tuple[int, int, int]]</span>
+<span class="sd">    :return: True if the placement is valid, False otherwise.</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">coords</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">normalize_transformation</span><span class="p">(</span><span class="n">coords</span><span class="p">))</span>
     <span class="n">options</span> <span class="o">=</span> <span class="n">piece</span><span class="o">.</span><span class="n">transformations</span>
     <span class="n">valid</span> <span class="o">=</span> <span class="kc">False</span>
@@ -229,8 +314,8 @@
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../pyramid.html">Pyramid App</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../polyhex.html">polyhex package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyramid.html">Pyramid Application Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../polyhex.html">Polyhex Application Documentation</a></li>
 </ul>
 
 <div class="relations">

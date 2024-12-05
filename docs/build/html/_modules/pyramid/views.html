@@ -128,7 +128,7 @@
                 <span class="s1">&#39;solutions&#39;</span><span class="p">:</span> <span class="n">solutions</span><span class="p">,</span>
                 <span class="s1">&#39;solutions_len&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">solutions</span><span class="p">)</span>
             <span class="p">})</span>
-        
+
         <span class="k">elif</span> <span class="n">button_pressed</span> <span class="o">==</span> <span class="s1">&#39;reset&#39;</span><span class="p">:</span>
             <span class="n">solutions</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
             <span class="n">pyramid_solver</span><span class="o">.</span><span class="n">array_board</span> <span class="o">=</span> <span class="p">[]</span>
@@ -137,32 +137,31 @@
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;pyramid_generator&#39;</span><span class="p">)</span>
         
         <span class="k">elif</span> <span class="n">button_pressed</span> <span class="o">==</span> <span class="s1">&#39;partialConfigSolutions&#39;</span><span class="p">:</span>
-            <span class="c1"># solutions = manager.list()</span>
+            <span class="n">solutions</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+            <span class="n">pyramid_solver</span><span class="o">.</span><span class="n">array_board</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">pyramid_solver</span><span class="o">.</span><span class="n">pieces_placed</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="kc">None</span>
+
             <span class="n">pyramid_json</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pyramid&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">pieces_placed_json</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;piecesPlaced&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">pyramid_json</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">pieces_placed_json</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;pyramid_puzzle&#39;</span><span class="p">)</span>
-            
-            <span class="n">pyramid</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pyramid_json</span><span class="p">)</span>
-            <span class="n">pieces_placed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pieces_placed_json</span><span class="p">)</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="p">[[</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">group</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">pyramid</span>
-            <span class="p">]</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">pyramid_json</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">pieces_placed_json</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;pyramid_home&#39;</span><span class="p">)</span>
-            
-            <span class="n">pieces_placed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pieces_placed</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pyramid_json</span> <span class="ow">and</span> <span class="n">pieces_placed_json</span><span class="p">:</span>
+                <span class="n">pyramid</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pyramid_json</span><span class="p">)</span>
+                <span class="n">pieces_placed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pieces_placed_json</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">[[</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">group</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">pyramid</span>
+                <span class="p">]</span>
 
-            <span class="n">pyramid_solver</span><span class="o">.</span><span class="n">array_board</span> <span class="o">=</span> <span class="n">result</span>
-            <span class="n">pyramid_solver</span><span class="o">.</span><span class="n">pieces_placed</span> <span class="o">=</span> <span class="n">pieces_placed</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">pyramid_json</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">pieces_placed_json</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;pyramid_home&#39;</span><span class="p">)</span>
+                
+                <span class="n">pieces_placed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pieces_placed</span><span class="p">)</span>
 
-            <span class="c1"># Render the solutions page</span>
-            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;pyramid/generator.html&#39;</span><span class="p">,</span> <span class="p">{</span>
-                <span class="s1">&#39;pieces_placed_len&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyramid_solver</span><span class="o">.</span><span class="n">pieces_placed</span><span class="p">),</span>
-                <span class="s1">&#39;solutions_len&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">solutions</span><span class="p">)</span>
-            <span class="p">})</span>
+                <span class="n">pyramid_solver</span><span class="o">.</span><span class="n">array_board</span> <span class="o">=</span> <span class="n">result</span>
+                <span class="n">pyramid_solver</span><span class="o">.</span><span class="n">pieces_placed</span> <span class="o">=</span> <span class="n">pieces_placed</span>
+
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;pyramid_generator&#39;</span><span class="p">)</span>
         
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;pyramid_home&#39;</span><span class="p">)</span></div>
 
@@ -256,7 +255,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">process</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">process</span><span class="p">:</span>  
+        <span class="k">if</span> <span class="n">process</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>  
             <span class="c1"># Check if Process exists and is running first before terminating</span>
             <span class="n">process</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>  <span class="c1"># terminate process</span>
             <span class="n">process</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
