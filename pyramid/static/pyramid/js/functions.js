@@ -188,6 +188,10 @@ export function createPieces() {
       const sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
       const sphereMesh = new THREE.Mesh(sphereGeometry, material);
       sphereMesh.position.set(pos[0], pos[1], pos[2]);
+
+      // Store the original position
+      sphereMesh.userData.originalPosition = sphereMesh.position.clone();
+
       pieceGroup.add(sphereMesh); // Add sphere to this piece's group
     });
 
@@ -625,27 +629,90 @@ export function highlightPiecesPartiallyInsideBounds(selected){
  */
 export function changeOrientationHandler(piecesGroup, isPieceFlat) {
   if (selected) {
-    const rotationAngleX = isPieceFlat ? -90 : 90;
-    const rotationAngleY = isPieceFlat ? -45 : 45;
-    if (isPieceFlat){
-      selected.parent.rotateX(THREE.MathUtils.degToRad(rotationAngleX));
-      selected.parent.rotateY(THREE.MathUtils.degToRad(rotationAngleY));
-    }
-    else {
-      selected.parent.rotateY(THREE.MathUtils.degToRad(rotationAngleY));
-      selected.parent.rotateX(THREE.MathUtils.degToRad(rotationAngleX));
-    }
-    
-    fixPositionAfterRotation(selected.parent)
+
+    // Apply the transformation to each child object of the selected parent group
+    selected.parent.children.forEach((child) => {
+      const pos = child.position;
+      if(isPieceFlat) {
+
+        child.originalPosition = child.position.clone();
+        child.plane = 1;
+
+        const newX = (pos.x - pos.y) / 2;
+        const newY = (pos.x - pos.y) / 2;
+        const newZ = (-pos.x - pos.y) ;
+
+
+        pos.set(newX, newY, newZ);
+
+      } else {
+        const originalPos = child.userData.originalPosition;
+        child.position.copy(originalPos); // Restore position
+      }
+    });
+
+    fixPositionAfterRotation(selected.parent);
     insideBoundariesHandler(piecesGroup);
     highlightOverlappingPieces(selected, piecesGroup);
     highlightPiecesPartiallyInsideBounds(selected);
-    isPieceFlat = !isPieceFlat;
-  }
-  else {
+
+    isPieceFlat = !isPieceFlat; // Toggle orientation state
+  } else {
     updateStatusMessage('No piece selected!');
   }
   return isPieceFlat;
+}
+
+export function uprightOrientationRotationHandler(piecesGroup) {
+    if (selected) {
+
+      // Apply the transformation to each child object of the selected parent group
+      selected.parent.children.forEach((child) => {
+        const pos = child.position;
+        const originalPos = child.userData.originalPosition;
+        let newX = originalPos.x;
+        let newY = originalPos.z;
+        let newZ = originalPos.z;
+        switch(child.plane) {
+          case 1:
+            newX = (originalPos.x - originalPos.y) / 2;
+            newY = (originalPos.x - originalPos.y) / 2;
+            newZ = (originalPos.x + originalPos.y) ;
+            child.plane = 2;
+            break;
+          case 2:
+            newX = (originalPos.x + originalPos.y) / 2;
+            newY = (originalPos.x + originalPos.y) / 2;
+            newZ = (originalPos.x - originalPos.y) ;
+            child.plane = 3;
+            // code block
+            break;
+          case 3:
+            newX = (originalPos.x - originalPos.y) / 2;
+            newY = (originalPos.x - originalPos.y) / 2;
+            newZ = (-originalPos.x - originalPos.y) ;
+            child.plane = 1;
+            break;
+          case 4:
+            newX = (originalPos.x + originalPos.y) / 2;
+            newY = (originalPos.x + originalPos.y) / 2;
+            newZ = (-originalPos.x + originalPos.y) ;
+            child.plane = 4;
+            break;
+        }
+
+          pos.set(newX, newY, newZ);
+
+      });
+
+      fixPositionAfterRotation(selected.parent);
+      insideBoundariesHandler(piecesGroup);
+      highlightOverlappingPieces(selected, piecesGroup);
+      highlightPiecesPartiallyInsideBounds(selected);
+
+  } else {
+    updateStatusMessage('No piece selected!');
+  }
 }
 
 /* 
@@ -669,7 +736,8 @@ export function rotateHandler(piecesGroup, isPieceFlat) {
       rotateWithQuaternion(selected.parent, 'z', 90);
     }
     else {
-      rotateWithQuaternion(selected.parent, 'y', 90);
+      uprightOrientationRotationHandler(piecesGroup)
+      //rotateWithQuaternion(selected.parent, 'y', 90);
     }
     fixPositionAfterRotation(selected.parent);
 
