@@ -121,8 +121,10 @@ const dataFromBackend = JSON.parse(document.getElementById('pyramid-data').textC
 
 const numPyramids = dataFromBackend.length;
 
-const forestWidth = Math.max(dataFromBackend.length, 150);
-const forestDepth = Math.max(dataFromBackend.length, 150);
+const baseDimension = 300;
+const scaleFactor = 0.2;
+const forestWidth = baseDimension + numPyramids * scaleFactor;
+const forestDepth = baseDimension + numPyramids * scaleFactor;
 
 const numColumns = Math.ceil(Math.sqrt(numPyramids));
 const numRows = Math.ceil(numPyramids / numColumns);

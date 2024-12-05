@@ -87,7 +87,7 @@ def polyhex_solutions(request):
     if request.method == "POST":
         button_pressed = request.POST.get('button')
         if button_pressed == 'go_solutions':
-            if solutions and not process.is_alive():
+            if solutions:
                 return render(request, 'polyhex/solutions.html', {
                     'solutions': solutions,
                     'solutions_len': len(solutions)
