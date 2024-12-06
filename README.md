@@ -1,11 +1,13 @@
-# ASEProject - N-Queens and Polysphere Solvers
+# ASEProject - N-Queens, Polysphere Pyramid, and Polyhex Tetrahedron Solvers
 
 ## Project Description
-This project is a Django-based web application that provides solutions to both the N-Queens and Polysphere puzzles. Users can solve the classic N-Queens problem by specifying the board size, or explore possible solutions for the Polysphere puzzle using a user-friendly interface.
+This project is a Django-based web application that provides solutions to the N-Queens, Polysphere pyramid, and Polyhex tetrahedron puzzles. Users can solve the classic N-Queens problem by specifying the board size or explore possible solutions for the Polysphere and Polyhex puzzles using a user-friendly interface.
 
 ## Features
 - **N-Queens Solver**: An interactive solver that supports various board sizes (e.g., 4x4, 8x8).
 - **Polysphere Solver**: Displays all possible solutions for arranging pieces on a puzzle board.
+- **Polysphere Pyramid Solver**: Displays all possible solutions for arranging pieces on a pyramid-shaped board.
+- **Polyhex Tetrahedron Solver**: Display all possible solutions for arranging pieces on a tetrahedron-shaped board.
 - **User-Friendly Interface**: Visual, intuitive, and easy to use.
 - **Puzzle Modes**: Options to solve puzzles yourself or view pre-generated solutions.
 
@@ -18,6 +20,8 @@ This project is a Django-based web application that provides solutions to both t
 - `ase_project/`: Core Django application code.
 - `nqueens/`: Logic and views for the N-Queens puzzle.
 - `polysphere/`: Logic and views for the Polysphere puzzle.
+- `pyramid/`: Logic and views for the 3D Polysphere Pyramid puzzle.
+- `polyhex/`: Logic and views for the Polyhex Tetrahedron puzzle.
 - `static/`: Static files including CSS, JavaScript, and images.
 - `templates/`: HTML templates for rendering views.
 - `Dockerfile`: Instructions for building a Docker image of the project.
@@ -102,6 +106,21 @@ If you prefer to use Docker, follow these steps:
 - Click "Start" to generate all possible solutions for a 5x11 board.
 - View all generated solutions by clicking "Go see them."
 - Use the filter to view specific solutions by providing a range.
+- You can attempt to solve the puzzle yourself or use the auto-solve function to complete the board.
+
+### 3D Polysphere Pyramid Solver
+- Access the Polysphere solver from the application menu.
+- Click “Start” to generate all possible solutions for a pyramid-shaped board.
+- View all generated solutions by clicking "Go see them."
+- Use the controls on the left to view specific solutions by providing a radius of sight and page size.
+- You can attempt to solve the puzzle yourself or use the auto-solve function to complete the board.
+
+### 3D Polyhex Tetrahedron Solver
+
+- Access the Polyhex tetrahedron solver from the application menu.
+- Click “Start” to generate all possible solutions for a tetrahedron-shaped board.
+- View all generated solutions by clicking “Go see them.”
+- Use the controls on the left to view specific solutions by providing a radius of sight and page size.
 - You can attempt to solve the puzzle yourself or use the auto-solve function to complete the board.
 
 ## Configuration
