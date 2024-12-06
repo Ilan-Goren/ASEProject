@@ -16,8 +16,8 @@ class Solver:
         """
         Generates mappings between board cell coordinates and their matrix column indices.
 
-        :param hex_board: The hexagonal board to index.
-        :type hex_board: Board
+        Args:
+            hex_board (Board): The hexagonal board to index.
         """
         i = 1
         for z in range(len(hex_board)):
@@ -31,12 +31,12 @@ class Solver:
         """
         Initializes the matrix for Algorithm X with all possible piece placements.
 
-        :param hex_board: The board to solve. Assumed to be empty.
-        :type hex_board: Board
-        :param pieces: A list of polyomino pieces for the board.
-        :type pieces: list[Piece]
-        :return: The initialized matrix for Algorithm X.
-        :rtype: algorithm_x_functions.Matrix
+        Args:
+            hex_board (Board): The board to solve. Assumed to be empty.
+            pieces (list[Piece]): A list of polyomino pieces for the board.
+
+        Returns:
+            algorithm_x_functions.Matrix: The initialized matrix for Algorithm X.
         """
         self.cell_to_index = {}
         self.index_to_cell = {}
@@ -67,12 +67,12 @@ class Solver:
         """
         Initializes the matrix for Algorithm X with a partially configured board.
 
-        :param hex_board: The partially configured board. Assumed to have pieces already placed.
-        :type hex_board: Board
-        :param remaining_pieces: The pieces left for the board.
-        :type remaining_pieces: list[Piece]
-        :return: The initialized matrix for Algorithm X.
-        :rtype: algorithm_x_functions.Matrix
+        Args:
+            hex_board (Board): The partially configured board. Assumed to have pieces already placed.
+            remaining_pieces (list[Piece]): The pieces left for the board.
+
+        Returns:
+            algorithm_x_functions.Matrix: The initialized matrix for Algorithm X.
         """
         self.cell_to_index = {}
         self.index_to_cell = {}
@@ -138,12 +138,12 @@ class Solver:
         """
         Solves the polyomino packing problem using Algorithm X.
 
-        :param pieces: The pieces to place on the board.
-        :type pieces: list[Piece]
-        :param hex_board: The board to solve, defaults to an empty board.
-        :type hex_board: Board, optional
-        :return: A list of rows representing a solution matrix, or False if no solution exists.
-        :rtype: list[list[int]] | bool
+        Args:
+            pieces (list[Piece]): The pieces to place on the board.
+            hex_board (Board, optional): The board to solve, defaults to an empty board.
+
+        Returns:
+            list[list[int]] | bool: A list of rows representing a solution matrix, or False if no solution exists.
         """
         if hex_board is None:
             hex_board = board.Board()
@@ -184,12 +184,12 @@ class Solver:
         """
         Converts a solution matrix to a 3D array representation of the solved board.
 
-        :param rows: The rows from the solution matrix.
-        :type rows: list[list[int]]
-        :param hex_board: The board used in the solver.
-        :type hex_board: Board
-        :return: A 3D array representation of the solved board.
-        :rtype: list[list[list[int]]]
+        Args:
+            rows (list[list[int]]): The rows from the solution matrix.
+            hex_board (Board): The board used in the solver.
+
+        Returns:
+            list[list[list[int]]]: A 3D array representation of the solved board.
         """
         solution_array = [
                 [[0] * (6 - i) for i in range(6)],
@@ -223,12 +223,12 @@ class Solver:
         """
         Generates all solutions for the polyhex packing problem.
 
-        :param pieces: The pieces to place on the board.
-        :type pieces: list[Piece]
-        :param hex_board: The board to solve, defaults to an empty board.
-        :type hex_board: Board, optional
-        :yield: A list of rows representing a solution matrix
-        :rtype: generator[list[list[int]]]
+        Args:
+            pieces (list[Piece]): The pieces to place on the board.
+            hex_board (Board, optional): The board to solve, defaults to an empty board.
+
+        Yields:
+            list[list[int]]: A list of rows representing a solution matrix.
         """
         if hex_board is None:
             hex_board = board.Board()

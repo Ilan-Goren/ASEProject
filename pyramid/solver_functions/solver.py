@@ -15,8 +15,8 @@ class Solver:
         """
         Generates a mapping between board cell coordinates and column indexes in the matrix.
 
-        :param board: The pyramid board object.
-        :type board: pyramid_board
+        Args:
+            board (pyramid_board): The pyramid board object.
         """
         for i, cell in enumerate(board.cells, start=1):
             self.cell_to_index[cell] = i
@@ -26,12 +26,12 @@ class Solver:
         """
         Initializes the exact cover matrix for the packing problem.
 
-        :param board: The pyramid board object.
-        :type board: pyramid_board
-        :param pieces: A list of pieces to pack onto the board.
-        :type pieces: list[Piece]
-        :return: The initialized matrix for the packing problem.
-        :rtype: algorithm_x_functions.Matrix
+        Args:
+            board (pyramid_board): The pyramid board object.
+            pieces (list[Piece]): A list of pieces to pack onto the board.
+
+        Returns:
+            algorithm_x_functions.Matrix: The initialized matrix for the packing problem.
         """
         self.cell_to_index = {}
         self.index_to_cell = {}
@@ -66,12 +66,12 @@ class Solver:
         """
         Initializes the exact cover matrix for a partially filled board configuration.
 
-        :param board: The pyramid board, assumed to have some pieces placed.
-        :type board: pyramid_board
-        :param remaining_pieces: A list of pieces yet to be placed on the board.
-        :type remaining_pieces: list[Piece]
-        :return: The initialized matrix for the packing problem.
-        :rtype: algorithm_x_functions.Matrix
+        Args:
+            board (pyramid_board): The pyramid board, assumed to have some pieces placed.
+            remaining_pieces (list[Piece]): A list of pieces yet to be placed on the board.
+
+        Returns:
+            algorithm_x_functions.Matrix: The initialized matrix for the packing problem.
         """
         self.cell_to_index = {}
         self.index_to_cell = {}
@@ -136,12 +136,12 @@ class Solver:
         """
         Solves the packing problem for the given board and pieces.
 
-        :param pieces: A list of pieces to place onto the board.
-        :type pieces: list[Piece]
-        :param board: The pyramid board object. If None, a default board is used.
-        :type board: pyramid_board, optional
-        :return: A list of rows of a solution matrix, or False if no solution exists.
-        :rtype: list[list[int]] | bool
+        Args:
+            pieces (list[Piece]): A list of pieces to place onto the board.
+            board (pyramid_board, optional): The pyramid board object. Defaults to None.
+
+        Returns:
+            list[list[int]] | bool: A list of rows of a solution matrix, or False if no solution exists.
         """
         if board is None:
             board = pyramid_board.pyramid_board(5)
@@ -174,12 +174,12 @@ class Solver:
         """
         Converts a solution in matrix row format into a 3D array representation.
 
-        :param rows: A list of rows representing the solution.
-        :type rows: list[list[int]]
-        :param board: The pyramid board object.
-        :type board: pyramid_board
-        :return: A 3D array representing the solution on the board.
-        :rtype: list[list[list[int]]]
+        Args:
+            rows (list[list[int]]): A list of rows representing the solution.
+            board (pyramid_board): The pyramid board object.
+
+        Returns:
+            list[list[list[int]]]: A 3D array representing the solution on the board.
         """
         # build empty array to populate
         solution_array = [
@@ -212,12 +212,12 @@ class Solver:
         """
         Generates all possible solutions for the given board and pieces.
 
-        :param pieces: A list of pieces to place onto the board.
-        :type pieces: list[Piece]
-        :param board: The pyramid board object. If None, a default board is used.
-        :type board: pyramid_board, optional
-        :yield: Rows representing individual solution matrices.
-        :rtype: generator[list[list[int]]]
+        Args:
+            pieces (list[Piece]): A list of pieces to place onto the board.
+            board (pyramid_board, optional): The pyramid board object. Defaults to None.
+
+        Yields:
+            list[list[int]]: Rows representing individual solution matrices.
         """
         if board is None:
             board = pyramid_board.pyramid_board(5)

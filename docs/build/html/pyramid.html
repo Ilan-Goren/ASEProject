@@ -39,8 +39,11 @@
 <section id="content">
 <h2>Content<a class="headerlink" href="#content" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>Pyramid Class</p></li>
 <li><p>Pyramid Views</p></li>
+<li><p>Pyramid Main</p></li>
+<li><p>Pyramid Board</p></li>
+<li><p>Pyramid Piece</p></li>
+<li><p>Pyramid Solver</p></li>
 </ol>
 </section>
 <section id="pyramid-class">
@@ -241,15 +244,10 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.piece.build_transformations">
 <span class="sig-prename descclassname"><span class="pre">pyramid.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">build_transformations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/piece.html#build_transformations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.piece.build_transformations" title="Link to this definition">¶</a></dt>
 <dd><p>Generates all unique transformations (rotations, reflections, leans) of a piece.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cells</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – The initial list of cell coordinates for the piece.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cells (list[tuple[int, int, int]]): The initial list of cell coordinates for the piece.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of unique transformations.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[list[tuple[int, int, int]]]</p>
+<dt>Returns:</dt><dd><p>list[list[tuple[int, int, int]]]: A list of unique transformations.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -258,15 +256,10 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.piece.normalize_transformation">
 <span class="sig-prename descclassname"><span class="pre">pyramid.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">normalize_transformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/piece.html#normalize_transformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.piece.normalize_transformation" title="Link to this definition">¶</a></dt>
 <dd><p>Normalizes a set of cell coordinates to their minimum values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cells</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – A list of cell coordinates.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cells (list[tuple[int, int, int]]): A list of cell coordinates.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Normalized cell coordinates.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[tuple[int, int, int]]</p>
+<dt>Returns:</dt><dd><p>list[tuple[int, int, int]]: Normalized cell coordinates.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -275,15 +268,10 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.piece.reflect">
 <span class="sig-prename descclassname"><span class="pre">pyramid.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">reflect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/piece.html#reflect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.piece.reflect" title="Link to this definition">¶</a></dt>
 <dd><p>Reflects a cell across the xy-plane.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cell</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The cell coordinates to reflect.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cell (tuple[int, int, int]): The cell coordinates to reflect.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Reflected cell coordinates.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[int, int, int]</p>
+<dt>Returns:</dt><dd><p>tuple[int, int, int]: Reflected cell coordinates.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -292,15 +280,10 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.piece.rotate_xy">
 <span class="sig-prename descclassname"><span class="pre">pyramid.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">rotate_xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/piece.html#rotate_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.piece.rotate_xy" title="Link to this definition">¶</a></dt>
 <dd><p>Rotates a cell around the xy-plane.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cell</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The cell coordinates to rotate.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cell (tuple[int, int, int]): The cell coordinates to rotate.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Rotated cell coordinates.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[int, int, int]</p>
+<dt>Returns:</dt><dd><p>tuple[int, int, int]: Rotated cell coordinates.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -309,15 +292,10 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.piece.rotate_z">
 <span class="sig-prename descclassname"><span class="pre">pyramid.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">rotate_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/piece.html#rotate_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.piece.rotate_z" title="Link to this definition">¶</a></dt>
 <dd><p>Rotates a cell around the z-plane for upright piece placements.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cell</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The cell coordinates to rotate.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cell (tuple[int, int, int]): The cell coordinates to rotate.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Rotated cell coordinates.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[int, int, int]</p>
+<dt>Returns:</dt><dd><p>tuple[int, int, int]: Rotated cell coordinates.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -325,10 +303,11 @@ solutions (list): The list of generated solutions.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyramid.solver_functions.piece.visualise_piece">
 <span class="sig-prename descclassname"><span class="pre">pyramid.solver_functions.piece.</span></span><span class="sig-name descname"><span class="pre">visualise_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/piece.html#visualise_piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.piece.visualise_piece" title="Link to this definition">¶</a></dt>
-<dd><p>Visualises a polyomino piece in 3D space using pyplot. For debugging and testing purposes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>coords</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – The cell coordinates to visualise.</p>
+<dd><p>Visualizes a polyomino piece in 3D space using pyplot.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>coords (list[tuple[int, int, int]]): The cell coordinates to visualize.</p>
+</dd>
+<dt>Note:</dt><dd><p>This function is primarily for debugging and testing purposes.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -351,9 +330,8 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.solver.Solver.generate_board_cell_indexes">
 <span class="sig-name descname"><span class="pre">generate_board_cell_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/solver.html#Solver.generate_board_cell_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.solver.Solver.generate_board_cell_indexes" title="Link to this definition">¶</a></dt>
 <dd><p>Generates a mapping between board cell coordinates and column indexes in the matrix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>board</strong> (<em>pyramid_board</em>) – The pyramid board object.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>board (pyramid_board): The pyramid board object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -362,18 +340,11 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.solver.Solver.generate_solutions">
 <span class="sig-name descname"><span class="pre">generate_solutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/solver.html#Solver.generate_solutions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.solver.Solver.generate_solutions" title="Link to this definition">¶</a></dt>
 <dd><p>Generates all possible solutions for the given board and pieces.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pieces</strong> (<em>list</em><em>[</em><a class="reference internal" href="polyhex.html#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a><em>]</em>) – A list of pieces to place onto the board.</p></li>
-<li><p><strong>board</strong> (<em>pyramid_board</em><em>, </em><em>optional</em>) – The pyramid board object. If None, a default board is used.</p></li>
-</ul>
+<dl class="simple">
+<dt>Args:</dt><dd><p>pieces (list[Piece]): A list of pieces to place onto the board.
+board (pyramid_board, optional): The pyramid board object. Defaults to None.</p>
 </dd>
-<dt class="field-even">Yield<span class="colon">:</span></dt>
-<dd class="field-even"><p>Rows representing individual solution matrices.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>generator[list[list[int]]]</p>
+<dt>Yields:</dt><dd><p>list[list[int]]: Rows representing individual solution matrices.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -392,18 +363,11 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.solver.Solver.initialise_packing_matrix">
 <span class="sig-name descname"><span class="pre">initialise_packing_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/solver.html#Solver.initialise_packing_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.solver.Solver.initialise_packing_matrix" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the exact cover matrix for the packing problem.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>board</strong> (<em>pyramid_board</em>) – The pyramid board object.</p></li>
-<li><p><strong>pieces</strong> (<em>list</em><em>[</em><a class="reference internal" href="polyhex.html#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a><em>]</em>) – A list of pieces to pack onto the board.</p></li>
-</ul>
+<dl class="simple">
+<dt>Args:</dt><dd><p>board (pyramid_board): The pyramid board object.
+pieces (list[Piece]): A list of pieces to pack onto the board.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The initialized matrix for the packing problem.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>algorithm_x_functions.Matrix</p>
+<dt>Returns:</dt><dd><p>algorithm_x_functions.Matrix: The initialized matrix for the packing problem.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -412,18 +376,11 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.solver.Solver.initialise_packing_matrix_partial_config">
 <span class="sig-name descname"><span class="pre">initialise_packing_matrix_partial_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remaining_pieces</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/solver.html#Solver.initialise_packing_matrix_partial_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.solver.Solver.initialise_packing_matrix_partial_config" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the exact cover matrix for a partially filled board configuration.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>board</strong> (<em>pyramid_board</em>) – The pyramid board, assumed to have some pieces placed.</p></li>
-<li><p><strong>remaining_pieces</strong> (<em>list</em><em>[</em><a class="reference internal" href="polyhex.html#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a><em>]</em>) – A list of pieces yet to be placed on the board.</p></li>
-</ul>
+<dl class="simple">
+<dt>Args:</dt><dd><p>board (pyramid_board): The pyramid board, assumed to have some pieces placed.
+remaining_pieces (list[Piece]): A list of pieces yet to be placed on the board.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The initialized matrix for the packing problem.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>algorithm_x_functions.Matrix</p>
+<dt>Returns:</dt><dd><p>algorithm_x_functions.Matrix: The initialized matrix for the packing problem.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -437,18 +394,11 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.solver.Solver.rows_to_array_sol">
 <span class="sig-name descname"><span class="pre">rows_to_array_sol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">board</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/solver.html#Solver.rows_to_array_sol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.solver.Solver.rows_to_array_sol" title="Link to this definition">¶</a></dt>
 <dd><p>Converts a solution in matrix row format into a 3D array representation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rows</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em>) – A list of rows representing the solution.</p></li>
-<li><p><strong>board</strong> (<em>pyramid_board</em>) – The pyramid board object.</p></li>
-</ul>
+<dl class="simple">
+<dt>Args:</dt><dd><p>rows (list[list[int]]): A list of rows representing the solution.
+board (pyramid_board): The pyramid board object.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A 3D array representing the solution on the board.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[list[list[int]]]</p>
+<dt>Returns:</dt><dd><p>list[list[list[int]]]: A 3D array representing the solution on the board.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -457,18 +407,11 @@ solutions (list): The list of generated solutions.</p>
 <dt class="sig sig-object py" id="pyramid.solver_functions.solver.Solver.solve">
 <span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyramid/solver_functions/solver.html#Solver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyramid.solver_functions.solver.Solver.solve" title="Link to this definition">¶</a></dt>
 <dd><p>Solves the packing problem for the given board and pieces.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pieces</strong> (<em>list</em><em>[</em><a class="reference internal" href="polyhex.html#polyhex.solver_functions.piece.Piece" title="polyhex.solver_functions.piece.Piece"><em>Piece</em></a><em>]</em>) – A list of pieces to place onto the board.</p></li>
-<li><p><strong>board</strong> (<em>pyramid_board</em><em>, </em><em>optional</em>) – The pyramid board object. If None, a default board is used.</p></li>
-</ul>
+<dl class="simple">
+<dt>Args:</dt><dd><p>pieces (list[Piece]): A list of pieces to place onto the board.
+board (pyramid_board, optional): The pyramid board object. Defaults to None.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of rows of a solution matrix, or False if no solution exists.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[list[int]] | bool</p>
+<dt>Returns:</dt><dd><p>list[list[int]] | bool: A list of rows of a solution matrix, or False if no solution exists.</p>
 </dd>
 </dl>
 </dd></dl>

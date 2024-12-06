@@ -6,8 +6,8 @@ class pyramid_board:
         """
         Initializes the pyramid board with the specified number of layers.
 
-        :param layers: The number of layers in the pyramid board.
-        :type layers: int
+        Args:
+            layers (int): The number of layers in the pyramid board.
         """
         self.layers = layers
         board_spaces = [(x + z, y + z, z) for z in range(layers) for x in range(0, ((2*layers)-1) - (2 * z), 2) for y in range(0, ((2*layers)-1) - (2 * z), 2)]
@@ -17,8 +17,8 @@ class pyramid_board:
         """
         Counts the total number of cells in the pyramid board.
 
-        :return: The total number of cells.
-        :rtype: int
+        Returns:
+            int: The total number of cells.
         """
         return len(self.cells.keys())
 
@@ -26,8 +26,8 @@ class pyramid_board:
         """
         Converts the pyramid board to a 3D nested list representation.
 
-        :return: A 3D array representing the board state.
-        :rtype: list[list[list[int]]]
+        Returns:
+            list[list[list[int]]]: A 3D array representing the board state.
         """
         #create an empty 3D array of the right shape
         board_array = [
@@ -44,8 +44,8 @@ class pyramid_board:
         """
         Converts a 3D nested list representation into the pyramid board dictionary format used for the solver.
 
-        :param board_array: A 3D array representing the board state.
-        :type board_array: list[list[list[int]]]
+        Args:
+            board_array (list[list[list[int]]]): A 3D array representing the board state.
         """
         #reset cells and layer count
         self.cells = {}
@@ -60,10 +60,11 @@ class pyramid_board:
         """
         Converts board representation coordinates to 3D array coordinates.
 
-        :param board_coords: A tuple representing the board coordinates (x, y, z).
-        :type board_coords: tuple[int, int, int]
-        :return: A tuple representing the 3D array coordinates (x, y, z).
-        :rtype: tuple[float, float, int]
+        Args:
+            board_coords (tuple[int, int, int]): A tuple representing the board coordinates (x, y, z).
+
+        Returns:
+            tuple[float, float, int]: A tuple representing the 3D array coordinates (x, y, z).
         """
         x,y,z = board_coords
         return ((x - z) / 2),((y - z) / 2),z
@@ -72,10 +73,11 @@ class pyramid_board:
         """
         Converts 3D array coordinates to board representation coordinates.
 
-        :param array_coords: A tuple representing the array coordinates (x, y, z).
-        :type array_coords: tuple[float, float, int]
-        :return: A tuple representing the board coordinates (x, y, z).
-        :rtype: tuple[int, int, int]
+        Args:
+            array_coords (tuple[float, float, int]): A tuple representing the array coordinates (x, y, z).
+
+        Returns:
+            tuple[int, int, int]: A tuple representing the board coordinates (x, y, z).
         """
         x,y,z = array_coords
         return ((x * 2) + z), ((y * 2) + z), z
@@ -84,10 +86,11 @@ class pyramid_board:
         """
         Checks if a given region of cells is free on the board.
 
-        :param region: A list of tuples representing cell coordinates (x, y, z).
-        :type region: list[tuple[int, int, int]]
-        :return: True if the region is free, False otherwise.
-        :rtype: bool
+        Args:
+            region (list[tuple[int, int, int]]): A list of tuples representing cell coordinates (x, y, z).
+
+        Returns:
+            bool: True if the region is free, False otherwise.
         """
         for cell in region:
             # check if cell is a valid space on the board
@@ -102,10 +105,11 @@ class pyramid_board:
         """
         Finds all regions on the board that match the given region and are free.
 
-        :param region: A list of tuples representing cell coordinates (x, y, z).
-        :type region: list[tuple[int, int, int]]
-        :return: A list of matching empty regions.
-        :rtype: list[list[tuple[int, int, int]]]
+        Args:
+            region (list[tuple[int, int, int]]): A list of tuples representing cell coordinates (x, y, z).
+
+        Returns:
+            list[list[tuple[int, int, int]]]: A list of matching empty regions.
         """
         matching_empty_regions = []
         for z in range(self.layers):

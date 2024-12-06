@@ -35,10 +35,9 @@ class Piece:
         """
         Initializes a Piece object with its ID and transformations.
 
-        :param piece_id: The unique identifier of the piece.
-        :type piece_id: int
-        :param custom_shape: A custom shape for the piece, represented as a list of cell coordinates.
-        :type custom_shape: list[tuple[int, int, int]], optional
+        Args:
+            piece_id (int): The unique identifier of the piece.
+            custom_shape (list[tuple[int, int, int]], optional): A custom shape for the piece, represented as a list of cell coordinates.
         """
         self.id = piece_id
         if custom_shape is None:
@@ -53,10 +52,11 @@ def build_transformations(cells):
     """
     Generates all unique transformations (rotations, reflections, leans) of a piece.
 
-    :param cells: The initial list of cell coordinates for the piece.
-    :type cells: list[tuple[int, int, int]]
-    :return: A list of unique transformations.
-    :rtype: list[list[tuple[int, int, int]]]
+    Args:
+        cells (list[tuple[int, int, int]]): The initial list of cell coordinates for the piece.
+
+    Returns:
+        list[list[tuple[int, int, int]]]: A list of unique transformations.
     """
     transformations = []
     initial = [cells]
@@ -83,10 +83,11 @@ def rotate_z(cells):
     """
     Rotates a cell around the z-plane for upright piece placements.
 
-    :param cell: The cell coordinates to rotate.
-    :type cell: tuple[int, int, int]
-    :return: Rotated cell coordinates.
-    :rtype: tuple[int, int, int]
+    Args:
+        cell (tuple[int, int, int]): The cell coordinates to rotate.
+
+    Returns:
+        tuple[int, int, int]: Rotated cell coordinates.
     """
     transformations = [[(int((c[0] - c[1]) / 2), int((c[0] - c[1]) / 2), int((c[0] + c[1]) / 2)) for c in cells],
                        [(int((c[0] - c[1]) / 2), int((c[0] - c[1]) / 2), int((-c[0] - c[1]) / 2)) for c in cells],
@@ -98,10 +99,11 @@ def rotate_xy(cell):
     """
     Rotates a cell around the xy-plane.
 
-    :param cell: The cell coordinates to rotate.
-    :type cell: tuple[int, int, int]
-    :return: Rotated cell coordinates.
-    :rtype: tuple[int, int, int]
+    Args:
+        cell (tuple[int, int, int]): The cell coordinates to rotate.
+
+    Returns:
+        tuple[int, int, int]: Rotated cell coordinates.
     """
     vec = list(cell)
     vec[0], vec[1] = vec[1], -vec[0]
@@ -111,10 +113,11 @@ def reflect(cell):
     """
     Reflects a cell across the xy-plane.
 
-    :param cell: The cell coordinates to reflect.
-    :type cell: tuple[int, int, int]
-    :return: Reflected cell coordinates.
-    :rtype: tuple[int, int, int]
+    Args:
+        cell (tuple[int, int, int]): The cell coordinates to reflect.
+
+    Returns:
+        tuple[int, int, int]: Reflected cell coordinates.
     """
     vec = list(cell)
     vec[0] = -vec[0]
@@ -124,10 +127,11 @@ def normalize_transformation(cells):
     """
     Normalizes a set of cell coordinates to their minimum values.
 
-    :param cells: A list of cell coordinates.
-    :type cells: list[tuple[int, int, int]]
-    :return: Normalized cell coordinates.
-    :rtype: list[tuple[int, int, int]]
+    Args:
+        cells (list[tuple[int, int, int]]): A list of cell coordinates.
+
+    Returns:
+        list[tuple[int, int, int]]: Normalized cell coordinates.
     """
     # Find minimum values in each dimension
     min_x = min(cell[0] for cell in cells)
@@ -140,10 +144,13 @@ def normalize_transformation(cells):
 
 def visualise_piece(coords):
     """
-    Visualises a polyomino piece in 3D space using pyplot. For debugging and testing purposes.
+    Visualizes a polyomino piece in 3D space using pyplot.
 
-    :param coords: The cell coordinates to visualise.
-    :type coords: list[tuple[int, int, int]]
+    Args:
+        coords (list[tuple[int, int, int]]): The cell coordinates to visualize.
+
+    Note:
+        This function is primarily for debugging and testing purposes.
     """
     if not coords:
         print("No coordinates to plot.")

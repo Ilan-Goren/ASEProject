@@ -52,8 +52,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates a mapping between board cell coordinates and column indexes in the matrix.</span>
 
-<span class="sd">        :param board: The pyramid board object.</span>
-<span class="sd">        :type board: pyramid_board</span>
+<span class="sd">        Args:</span>
+<span class="sd">            board (pyramid_board): The pyramid board object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cell_to_index</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
@@ -66,12 +66,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the exact cover matrix for the packing problem.</span>
 
-<span class="sd">        :param board: The pyramid board object.</span>
-<span class="sd">        :type board: pyramid_board</span>
-<span class="sd">        :param pieces: A list of pieces to pack onto the board.</span>
-<span class="sd">        :type pieces: list[Piece]</span>
-<span class="sd">        :return: The initialized matrix for the packing problem.</span>
-<span class="sd">        :rtype: algorithm_x_functions.Matrix</span>
+<span class="sd">        Args:</span>
+<span class="sd">            board (pyramid_board): The pyramid board object.</span>
+<span class="sd">            pieces (list[Piece]): A list of pieces to pack onto the board.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            algorithm_x_functions.Matrix: The initialized matrix for the packing problem.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell_to_index</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index_to_cell</span> <span class="o">=</span> <span class="p">{}</span>
@@ -109,12 +109,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the exact cover matrix for a partially filled board configuration.</span>
 
-<span class="sd">        :param board: The pyramid board, assumed to have some pieces placed.</span>
-<span class="sd">        :type board: pyramid_board</span>
-<span class="sd">        :param remaining_pieces: A list of pieces yet to be placed on the board.</span>
-<span class="sd">        :type remaining_pieces: list[Piece]</span>
-<span class="sd">        :return: The initialized matrix for the packing problem.</span>
-<span class="sd">        :rtype: algorithm_x_functions.Matrix</span>
+<span class="sd">        Args:</span>
+<span class="sd">            board (pyramid_board): The pyramid board, assumed to have some pieces placed.</span>
+<span class="sd">            remaining_pieces (list[Piece]): A list of pieces yet to be placed on the board.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            algorithm_x_functions.Matrix: The initialized matrix for the packing problem.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell_to_index</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index_to_cell</span> <span class="o">=</span> <span class="p">{}</span>
@@ -182,12 +182,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Solves the packing problem for the given board and pieces.</span>
 
-<span class="sd">        :param pieces: A list of pieces to place onto the board.</span>
-<span class="sd">        :type pieces: list[Piece]</span>
-<span class="sd">        :param board: The pyramid board object. If None, a default board is used.</span>
-<span class="sd">        :type board: pyramid_board, optional</span>
-<span class="sd">        :return: A list of rows of a solution matrix, or False if no solution exists.</span>
-<span class="sd">        :rtype: list[list[int]] | bool</span>
+<span class="sd">        Args:</span>
+<span class="sd">            pieces (list[Piece]): A list of pieces to place onto the board.</span>
+<span class="sd">            board (pyramid_board, optional): The pyramid board object. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[list[int]] | bool: A list of rows of a solution matrix, or False if no solution exists.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">board</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">board</span> <span class="o">=</span> <span class="n">pyramid_board</span><span class="o">.</span><span class="n">pyramid_board</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -223,12 +223,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a solution in matrix row format into a 3D array representation.</span>
 
-<span class="sd">        :param rows: A list of rows representing the solution.</span>
-<span class="sd">        :type rows: list[list[int]]</span>
-<span class="sd">        :param board: The pyramid board object.</span>
-<span class="sd">        :type board: pyramid_board</span>
-<span class="sd">        :return: A 3D array representing the solution on the board.</span>
-<span class="sd">        :rtype: list[list[list[int]]]</span>
+<span class="sd">        Args:</span>
+<span class="sd">            rows (list[list[int]]): A list of rows representing the solution.</span>
+<span class="sd">            board (pyramid_board): The pyramid board object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[list[list[int]]]: A 3D array representing the solution on the board.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># build empty array to populate</span>
         <span class="n">solution_array</span> <span class="o">=</span> <span class="p">[</span>
@@ -264,12 +264,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates all possible solutions for the given board and pieces.</span>
 
-<span class="sd">        :param pieces: A list of pieces to place onto the board.</span>
-<span class="sd">        :type pieces: list[Piece]</span>
-<span class="sd">        :param board: The pyramid board object. If None, a default board is used.</span>
-<span class="sd">        :type board: pyramid_board, optional</span>
-<span class="sd">        :yield: Rows representing individual solution matrices.</span>
-<span class="sd">        :rtype: generator[list[list[int]]]</span>
+<span class="sd">        Args:</span>
+<span class="sd">            pieces (list[Piece]): A list of pieces to place onto the board.</span>
+<span class="sd">            board (pyramid_board, optional): The pyramid board object. Defaults to None.</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            list[list[int]]: Rows representing individual solution matrices.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">board</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">board</span> <span class="o">=</span> <span class="n">pyramid_board</span><span class="o">.</span><span class="n">pyramid_board</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>

@@ -6,8 +6,11 @@ This documentation provides an overview of the Pyramid application, its class st
 Content
 -------
 
-1. Pyramid Class
-2. Pyramid Views
+1. Pyramid Views
+2. Pyramid Main
+3. Pyramid Board
+4. Pyramid Piece
+5. Pyramid Solver
 
 Pyramid Class
 --------------

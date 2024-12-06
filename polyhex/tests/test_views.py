@@ -39,7 +39,7 @@ class ViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'polyhex/puzzle.html')
 
 ##########################################################################################
-#                                  PUZZLE TESTS                                          #
+#                               VIEWS SOLUTIONS TESTS                                    #
 ##########################################################################################
  
     @patch('polyhex.views.solutions')
@@ -91,7 +91,7 @@ class ViewsTestCase(TestCase):
 
 
 ##########################################################################################
-#                                  GENERATOR TESTS                                       #
+#                               VIEWS GENERATOR TESTS                                    #
 ##########################################################################################
 
     @patch('polyhex.views.process', None)

@@ -70,10 +70,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a Piece object with its ID and transformations.</span>
 
-<span class="sd">        :param piece_id: The unique identifier of the piece.</span>
-<span class="sd">        :type piece_id: int</span>
-<span class="sd">        :param custom_shape: A custom shape for the piece, represented as a list of cell coordinates.</span>
-<span class="sd">        :type custom_shape: list[tuple[int, int, int]], optional</span>
+<span class="sd">        Args:</span>
+<span class="sd">            piece_id (int): The unique identifier of the piece.</span>
+<span class="sd">            custom_shape (list[tuple[int, int, int]], optional): A custom shape for the piece, represented as a list of cell coordinates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">piece_id</span>
         <span class="k">if</span> <span class="n">custom_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -91,10 +90,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates all unique transformations (rotations, reflections, leans) of a piece.</span>
 
-<span class="sd">    :param cells: The initial list of cell coordinates for the piece.</span>
-<span class="sd">    :type cells: list[tuple[int, int, int]]</span>
-<span class="sd">    :return: A list of unique transformations.</span>
-<span class="sd">    :rtype: list[list[tuple[int, int, int]]]</span>
+<span class="sd">    Args:</span>
+<span class="sd">        cells (list[tuple[int, int, int]]): The initial list of cell coordinates for the piece.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[list[tuple[int, int, int]]]: A list of unique transformations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">transformations</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">initial</span> <span class="o">=</span> <span class="p">[</span><span class="n">cells</span><span class="p">]</span>
@@ -124,10 +124,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rotates a cell around the z-plane for upright piece placements.</span>
 
-<span class="sd">    :param cell: The cell coordinates to rotate.</span>
-<span class="sd">    :type cell: tuple[int, int, int]</span>
-<span class="sd">    :return: Rotated cell coordinates.</span>
-<span class="sd">    :rtype: tuple[int, int, int]</span>
+<span class="sd">    Args:</span>
+<span class="sd">        cell (tuple[int, int, int]): The cell coordinates to rotate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[int, int, int]: Rotated cell coordinates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">transformations</span> <span class="o">=</span> <span class="p">[[(</span><span class="nb">int</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">],</span>
                        <span class="p">[(</span><span class="nb">int</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="o">-</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">],</span>
@@ -142,10 +143,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rotates a cell around the xy-plane.</span>
 
-<span class="sd">    :param cell: The cell coordinates to rotate.</span>
-<span class="sd">    :type cell: tuple[int, int, int]</span>
-<span class="sd">    :return: Rotated cell coordinates.</span>
-<span class="sd">    :rtype: tuple[int, int, int]</span>
+<span class="sd">    Args:</span>
+<span class="sd">        cell (tuple[int, int, int]): The cell coordinates to rotate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[int, int, int]: Rotated cell coordinates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -158,10 +160,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reflects a cell across the xy-plane.</span>
 
-<span class="sd">    :param cell: The cell coordinates to reflect.</span>
-<span class="sd">    :type cell: tuple[int, int, int]</span>
-<span class="sd">    :return: Reflected cell coordinates.</span>
-<span class="sd">    :rtype: tuple[int, int, int]</span>
+<span class="sd">    Args:</span>
+<span class="sd">        cell (tuple[int, int, int]): The cell coordinates to reflect.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[int, int, int]: Reflected cell coordinates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -174,10 +177,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Normalizes a set of cell coordinates to their minimum values.</span>
 
-<span class="sd">    :param cells: A list of cell coordinates.</span>
-<span class="sd">    :type cells: list[tuple[int, int, int]]</span>
-<span class="sd">    :return: Normalized cell coordinates.</span>
-<span class="sd">    :rtype: list[tuple[int, int, int]]</span>
+<span class="sd">    Args:</span>
+<span class="sd">        cells (list[tuple[int, int, int]]): A list of cell coordinates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[tuple[int, int, int]]: Normalized cell coordinates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Find minimum values in each dimension</span>
     <span class="n">min_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">)</span>
@@ -193,10 +197,13 @@
 <a class="viewcode-back" href="../../../pyramid.html#pyramid.solver_functions.piece.visualise_piece">[docs]</a>
 <span class="k">def</span> <span class="nf">visualise_piece</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Visualises a polyomino piece in 3D space using pyplot. For debugging and testing purposes.</span>
+<span class="sd">    Visualizes a polyomino piece in 3D space using pyplot.</span>
 
-<span class="sd">    :param coords: The cell coordinates to visualise.</span>
-<span class="sd">    :type coords: list[tuple[int, int, int]]</span>
+<span class="sd">    Args:</span>
+<span class="sd">        coords (list[tuple[int, int, int]]): The cell coordinates to visualize.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This function is primarily for debugging and testing purposes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">coords</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No coordinates to plot.&quot;</span><span class="p">)</span>

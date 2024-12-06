@@ -2,6 +2,8 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.http import JsonResponse
 from unittest.mock import patch, Mock
+import json
+from time import sleep
 
 class ViewsTestCase(TestCase):
     def setUp(self):
@@ -39,7 +41,7 @@ class ViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'pyramid/puzzle.html')
 
 ##########################################################################################
-#                                  PUZZLE TESTS                                          #
+#                               VIEWS SOLUTIONS TESTS                                    #
 ##########################################################################################
 
     @patch('pyramid.views.solutions')
@@ -56,6 +58,19 @@ class ViewsTestCase(TestCase):
         self.assertIn('solutions_len', response.context)
         self.assertEqual(response.context['solutions_len'], len(solutions))
 
+    def test_pyramid_solutions_view_post_partialConfigSolutions(self):
+            """
+            Test processing a partial configuration.
+            """
+            pyramid_data = [[[1, 0], [0, 1]], [[1, 0]]]
+            pieces_placed_data = [1, 2]
+
+            response = self.client.post(reverse('pyramid_solutions'), {
+                'button': 'partialConfigSolutions',
+                'pyramid': json.dumps(pyramid_data),
+                'piecesPlaced': json.dumps(pieces_placed_data)
+            })
+            self.assertRedirects(response, reverse('pyramid_generator'))
 
     def test_pyramid_solutions_view_post_reset(self):
         """
@@ -91,7 +106,7 @@ class ViewsTestCase(TestCase):
 
 
 ##########################################################################################
-#                                  GENERATOR TESTS                                       #
+#                               VIEWS GENERATOR TESTS                                    #
 ##########################################################################################
 
     @patch('pyramid.views.process', None)
